@@ -22,51 +22,30 @@ document.addEventListener("DOMContentLoaded", function(evt) {
   let page_right_margin = parseInt(body_style.getPropertyValue("--page-right-margin"));
   let page_width = pages_container_width/2 - page_left_margin - page_right_margin;
 
-  let interactives = document.querySelectorAll(".interactive");
-  let w;
-  let h;
-  let scale;
-  let src;
-  let new_iframe;
-  let new_expand;
-  let window_size;
-  let margin = 30;
-  for (let i=0, l=interactives.length; i<l; i++) {
-    w = parseInt(interactives[i].getAttribute("width") || 0);
-    h = parseInt(interactives[i].getAttribute("height") || 0);
-    scale = parseInt( interactives[i].getAttribute("scale") || 100 ) / 100;
-    src = interactives[i].getAttribute("src") || "";
-    window_size = interactives[i].getAttribute("window-size") || false;
+  // add interactive
+  addInteractive(page_width);
 
-    interactives[i].setAttribute("style", `width:${w * ((page_width-margin)*scale)/w + margin}px; height:${h * ((page_width-margin)*scale)/w + margin}px;`);
-    
-    if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
-      interactives[i].style.overflow = "hidden";
-    }
-    
-    new_iframe = document.createElement("iframe");
-    new_iframe.setAttribute("width", w * ((page_width-margin)*scale)/w);
-    new_iframe.setAttribute("height", h * ((page_width-margin)*scale)/w);
-    new_iframe.setAttribute("data-src", src);
-    new_iframe.setAttribute("src", "about:blank");
+  // 
+  let img_links = document.querySelectorAll(".image_link");
+  let image_width;
+  let div_img_links;
+  let btn_link;
+  for (let i=0, l=img_links.length; i<l; i++) {
+    image_width = img_links[i].getAttribute("width") || "100%";
+    img_links[i].setAttribute("width", "100%");
 
-    new_expand = document.createElement("div");
-    // new_expand.setAttribute("style", "position:relative; z-index:1000000;");
-    new_expand.setAttribute("style", "position:relative; top:-15px; z-index:1000;")
+    div_img_links = document.createElement("div");
+    img_links[i].parentNode.replaceChild(div_img_links, img_links[i]);
 
-    let btn = document.createElement("button");
-    btn.className = "btn_ampliar";
-    new_expand.appendChild(btn);
+    let tmp_div = document.createElement("div");
+    tmp_div.setAttribute("style", `margin:0 auto; position:relative; width:${image_width};`);
+    div_img_links.appendChild(tmp_div);
 
-    if (window_size) {
-      w = window.innerWidth;
-      h = window.innerHeight;
-    }
-    new_expand.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
+    tmp_div.appendChild(img_links[i]);
 
-    // interactives[i].parentNode.insertBefore(new_expand, interactives[i]);
-    interactives[i].appendChild(new_expand);
-    interactives[i].appendChild(new_iframe);
+    btn_link = document.createElement("button");
+    btn_link.className = "btn_link";
+    tmp_div.appendChild(btn_link);
   }
 
   // make foot notes
@@ -97,6 +76,60 @@ document.addEventListener("DOMContentLoaded", function(evt) {
   }
 });
 
+/**
+ * 
+ */
+function addInteractive(page_width) {
+  let interactive = document.querySelectorAll(".interactive");
+  let w;
+  let h;
+  let scale;
+  let src;
+  let new_iframe;
+  let new_expand;
+  let window_size;
+  let margin = 30;
+  let btn;
+  for (let i=0, l=interactive.length; i<l; i++) {
+    w = parseInt(interactive[i].getAttribute("width") || 0);
+    h = parseInt(interactive[i].getAttribute("height") || 0);
+    scale = parseInt( interactive[i].getAttribute("scale") || 100 ) / 100;
+    src = interactive[i].getAttribute("src") || "";
+    window_size = interactive[i].getAttribute("window-size") || false;
+
+    interactive[i].setAttribute("style", `width:${w * ((page_width-margin)*scale)/w + margin}px; height:${h * ((page_width-margin)*scale)/w + margin}px;`);
+    
+    if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
+      interactive[i].style.overflow = "hidden";
+    }
+    
+    new_iframe = document.createElement("iframe");
+    new_iframe.setAttribute("width", w * ((page_width-margin)*scale)/w);
+    new_iframe.setAttribute("height", h * ((page_width-margin)*scale)/w);
+    new_iframe.setAttribute("data-src", src);
+    new_iframe.setAttribute("src", "about:blank");
+
+    new_expand = document.createElement("div");
+    new_expand.setAttribute("style", "position:relative; top:-15px; z-index:1000;");
+
+    btn = document.createElement("button");
+    btn.className = "btn_ampliar";
+    new_expand.appendChild(btn);
+
+    if (window_size) {
+      w = window.innerWidth;
+      h = window.innerHeight;
+    }
+    new_expand.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
+
+    interactive[i].appendChild(new_expand);
+    interactive[i].appendChild(new_iframe);
+  }
+}
+
+/**
+ * 
+ */
 window.addEventListener("load", function(evt) {
   let current_page = 0;
 

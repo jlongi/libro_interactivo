@@ -21,7 +21,7 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  box-sizing:border-box;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -160,6 +160,27 @@ h1 {
   margin: 0.5em auto 1em auto;
   cursor: pointer;
 }
+.image_link {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+.btn_link {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  right: -3px;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-radius:0;
+  background-color: white;
+  background-size: cover;
+  background-image: url("img/link.svg");
+  cursor: pointer;
+}
 iframe {
   border: none;
 }
@@ -183,6 +204,7 @@ video {
   background-image: url("img/ampliar.svg");
   cursor: pointer;
 }
+
 .interactive {
   position: relative;
   margin: 0 auto;
