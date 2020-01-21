@@ -1,0 +1,273 @@
+/**
+ * @author Joel Espinosa Longi
+ * @licencia Atribución-CompartirIgual 4.0 Internacional  - https://creativecommons.org/licenses/by-sa/4.0/deed.es
+ */
+
+:root {
+  --pages_container_width: 1280px;
+  --pages_container_height: 825px;
+  --left_right_margin_pages: 30px;
+
+  --page-left-margin: 50px;
+  --page-right-margin: 50px;
+  --page-top-margin: 30px;
+  --page-bottom-margin: 20px;
+}
+
+@page {
+  margin: 0cm;
+  size: 640px 825px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 640px;
+  height: 825px;
+  box-sizing: border-box;
+}
+
+#book_container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #ecf0f1;
+}
+
+#go_to_table_of_content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  z-index: 1;
+  background-color: #ecf0f1;
+  background-size: cover;
+  padding: 0;
+}
+
+#go_to_table_of_content {
+  background-image: url("img/table_of_content.svg");
+  display: none;
+}
+
+#btn_back_page,
+#btn_next_page {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  cursor: pointer;
+  z-index: 1;
+}
+
+#btn_back_page {
+  background-image: url("img/back.svg");
+  left: 0;
+  display: none;
+}
+
+#btn_next_page {
+  background-image: url("img/next.svg");
+  right: 0;
+  display: none;
+}
+
+.page {
+  position: relative;
+  width: calc(var(--pages_container_width) / 2);
+  height: 100%;
+  background-color: white;
+  box-sizing: border-box;
+  padding: var(--page-top-margin) var(--page-right-margin) var(--page-bottom-margin) var(--page-left-margin);
+  text-align: justify;
+  page-break-before: always;
+  break-before: always;
+}
+
+.page_viewer {
+  position: absolute;
+  transform-origin: 0 0 0;
+  transform: none !important;
+  width: 640px !important;
+  top: calc(-1 * var(--pages_container_height)) !important;
+}
+
+#pages_container {
+  position: absolute;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  background-color: red;
+  left: 0px !important;
+}
+
+#pages_container .page:nth-child(odd) {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.toc_link {
+  font-size: 95%;
+  padding: 0;
+  margin-bottom: 0.5em;
+  color: #222f3e;
+  cursor: pointer;
+  background-image: url("img/dot.svg");
+}
+
+.toc_link:hover,
+.toc_link:hover a,
+.toc_link:hover .toc_number {
+  background-color: hsl(205, 87%, 90%);
+}
+
+.toc_link a {
+  padding-left: 1em;
+  padding-right: 0.2em;
+  background-color: white;
+  text-decoration: none;
+  color: inherit;
+}
+
+.toc_number {
+  background-color: white;
+  float: right;
+}
+
+.page_number {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 80%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.footnote {
+  display: block;
+}
+
+.footnote::before {
+  content: attr(number);
+  position: absolute;
+  display: inline;
+  font-size: 75%;
+  left: -0;
+}
+
+.footnote_container {
+  position: absolute;
+  width: calc(100% - var(--page-left-margin) - var(--page-right-margin));
+  bottom: 48px;
+  font-size: 75%;
+  border-top: 2px solid #3c6382;
+  padding-left: 1em;
+}
+
+/*  */
+sup {
+  font-size: 65%;
+  font-weight: bold;
+  padding-left: 0.2em;
+}
+
+sub {
+  font-size: 65%;
+}
+
+h1 {
+  font-size: 160%;
+  margin-top: 0;
+}
+
+.note {
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 90%;
+}
+
+.image_expand {
+  display: block;
+  margin: 0.5em auto 1em auto;
+  cursor: pointer;
+}
+
+.image_link {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.btn_link {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  right: -3px;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  background-color: white;
+  background-size: cover;
+  background-image: url("img/link.svg");
+  cursor: pointer;
+}
+
+iframe {
+  border: none;
+}
+
+video {
+  display: block;
+  margin: 1.25 auto 0 auto;
+}
+
+.btn_ampliar {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  right: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-radius: 0;
+  background-color: white;
+  background-size: cover;
+  background-image: url("img/ampliar.svg");
+  cursor: pointer;
+}
+
+.interactive {
+  position: relative;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 15px 0;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}
+
+figure {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+figcaption {
+  text-align: center;
+  font-size: 80%;
+  margin-top: 1.5em;
+  margin-bottom: 2em;
+}

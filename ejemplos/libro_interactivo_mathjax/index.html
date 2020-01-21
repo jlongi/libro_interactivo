@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <title>Libro digital interactivo</title>
+
+  <!-- configuración del libro -->
+  <script>
+  window.book_config = {
+    // parámetro que indica si los capítulos, secciones y figura se auto numeran
+    // para que los capítulos se auto numeren deben utilizar la etiqueta <h1>
+    // para que las secciones se auto numeren deben utilizar la etiqueta <h2>
+    auto_numerate_sections_and_figures: true, 
+  }
+  </script>
+
+  <!-- núcleo del libro interactivo -->
+  <link rel="stylesheet" href="../../css/style.css" type="text/css">
+  <script type="text/javascript" src="../../js/book.js" charset="utf-8"></script>
+  
+  <!-- personalización del usuario -->
+  <link rel="stylesheet" href="extra/fonts.css" type="text/css">
+  <link rel="stylesheet" href="extra/style.css" type="text/css">
+
+  <!-- inclusión de los componente necesarios para utilizar la biblioteca MathJax -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      //Las opciones para el zoom son: Double-Click, Click y Hover
+      menuSettings: {
+        zoom: "Double-Click",
+        zscale: "170%",
+        mpContext: true,
+        mpMouse: true
+      },
+      errorSettings: { message: ["[Math Error]"] },
+      extensions: ["tex2jax.js"],
+      jax: ["input/TeX","output/HTML-CSS"],
+      tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+    });
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros, {
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+  </script>
+  <script type="text/javascript" src="extra/MathJax/MathJax.js"></script>
+  <script type="text/javascript" src="extra/MathJax/mhchem.js"></script>
+</head>
+
+<body>
+  <div id="book_loader_container"><div id="book_loader"></div></div>
+
+  <div id="book_container">
+    <div id="btn_back_page"></div>
+    <div id="btn_next_page"></div>
+    <button id="go_to_table_of_content"></button>
+
+    <div id="table_of_content"></div>
+
+    <div id="pages_container">
+      <!--  -->
+      <div class="page" style="background-color:transparent;">
+      </div>
+
+      <!--  -->
+      <div class="page" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
+        <div class="cover_title">Título</div>
+
+        <div class="cover_subtitle">Libro interactivo</div>
+      </div>
+
+      <!--  -->
+      <div class="page" style="display:flex; align-items:center; justify-content:center;">
+        <a style="width:50%" target="_blank" href="http://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
+      </div>
+
+      <!--  -->
+      <!-- init-page-num="true" es un parámetro que indica que a partir de esta página comienza la numeración -->
+      <!-- inicialmente los números de las páginas se numeran con numerales romanos -->
+      <!-- num="" es un parámetro que indica que esta página no lleva numeración visible -->
+      <!--  -->
+      <div class="page" style="text-align:center; font-size:120%;" init-page-num="true" num="">
+        <p>Nombre de la obra y autores</p>
+
+      </div>
+
+      <!--  -->
+      <div class="page" num="">
+        <p>
+          Título de la obra:
+          <br> 
+          TÍTULO
+        </p>
+        <br>
+
+        <p>
+          Autores:
+          <br> 
+          AUTORES
+        </p>
+        <br><br>
+
+        <p>
+          Diseño del libro: Juan Guillermo Rivera Berrío
+          <br> 
+          Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
+          <br> 
+          Recursos interactivos: <a href="http://descartes.matem.unam.mx/" target="_blank">DescartesJS</a>
+          <br> 
+          Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a>
+          <br>
+          Fórmulas matemáticas: <a href="https://www.mathjax.org" target="_blank">MathJax</a>
+        </p>
+        <br>
+
+        <p>
+          DATOS DE LA EDICIÓN
+        </p>
+        <br><br>
+
+        <p>
+          <p>LICENCIA</p>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img src="images/general/by-nc-sa.svg" style="height:1.75em; margin-right:0.75em;"></a>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons Attribution License 4.0</a>.
+        </p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2>Tabla de contenido</h2>
+
+       <!-- con esto se agrega una entrada en la tabla de contenido,
+        href="#prefacio" indica una referencia a una elemento html con 
+        el parámetro id="prefacio", automáticamente se busca está referencia
+        y se agrega el título correspondiente y la página donde se encuentra -->
+          
+        <div class="toc_link" href="#prefacio"></div>
+
+        <div class="toc_link" href="#capitulo_1"></div>
+        <div class="toc_link" href="#notas_generales_pie_de_pagina"></div>
+        <div class="toc_link" href="#interactivos"></div>
+        <div class="toc_link" href="#videos"></div>
+        <div class="toc_link" href="#imagenes"></div>
+        <div class="toc_link" href="#codigo"></div>
+
+        <div class="toc_link" href="#capitulo_2"></div>
+        <div class="toc_link" href="#expresiones_simples"></div>
+        <div class="toc_link" href="#expresiones_complejas"></div>
+        <div class="toc_link" href="#matrices"></div>
+        <div class="toc_link" href="#delimitadores"></div>
+        <div class="toc_link" href="#espaciado"></div>
+        <div class="toc_link" href="#tachar"></div>
+	    	<div class="toc_link" href="#otros"></div>
+        
+        <div class="toc_link" href="#capitulo_3"></div>
+        <div class="toc_link" href="#formulas_quimicas"></div>
+        <div class="toc_link" href="#ecuaciones_quimicas"></div>
+        <div class="toc_link" href="#numeros_estequiometricos"></div>
+        <div class="toc_link" href="#isotopos"></div>
+        <div class="toc_link" href="#reacciones"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <div class="toc_link" href="#enlaces"></div>
+        <div class="toc_link" href="#precipitado"></div>
+        <div class="toc_link" href="#unidades"></div>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
+      <!--  -->
+      <div class="page" num-type-arabic="true">
+        <h1 id="prefacio">Prefacio</h1>
+
+        <p>Este es un pequeño ejemplo que presenta la funcionalidad básica que el libro interactivo ofrece. El libro puede personalizarse al gusto del autor, así como agregar otros componentes para potenciar la presentación. Este libro presenta el uso de la biblioteca <a href="https://www.mathjax.org" target="_blank">MathJax</a> para el uso de fórmulas matemáticas y <a href="https://mhchem.github.io/MathJax-mhchem/" target="_blank">mhchem.js</a> para el desplegado de fórmulas químicas. Es aconsejable no modificar directamente los archivos dentro del directorio <code>book</code> ya estos son los encargados del funcionamiento del libro.</p>
+        
+        <p>Un zip con el código fuente de este ejemplo puede ser descargado desde <a href="https://github.com/jlongi/libro_interactivo/releases/download/ejemplos/libro_interactivo_mathjax.zip">aquí</a>. El código correspondiente al núcleo del libro, se encuentra alojado en el siguiente repositorio de Github: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">https://github.com/jlongi/libro_interactivo</a>, cualquier corrección, sugerencia o cambio favor de reportarlo en el repositorio para su consideración.</p>
+
+        <p>Para más información sobre el funcionamiento de este libro interactivo, lo mejor es revisar el contenido del archivo <code>index.html</code> el cual contiene comentarios sobre diversas partes del libro. Como el funcionamiento de la tabla de contenido.</p>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- Un nuevo capitulo -->
+      <!--  -->
+      <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+        <div class="chap_text">Capítulo I</div>
+        <h1 class="chap_name" id="capitulo_1">Elementos gráficos e interactivos</h1>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="notas_generales_pie_de_pagina">Notas generales y al pie de página</h2>
+
+        <p>Para agregar una nota general dentro del texto se utiliza el siguiente código html:</p>
+<xmp><div class="note">
+  Esta es una nota
+</div>
+</xmp>
+
+        <p>Lo que muestra el siguiente texto:</p>
+
+        <div class="note">
+          Esta es una nota
+        </div>
+
+        <p>Para agregar un nota al pie de página es necesario utilizar lo siguiente:</p>
+<xmp><p>La herramienta para hacer los recursos interactivos 
+se llama DescartesJS<span class="footnote">
+<a href="https://descartes.matem.unam.mx" 
+target="_blank">https://descartes.matem.unam.mx</a>
+</span>.</p>
+</xmp>
+
+        <p>Lo que muestra el siguiente párrafo:</p>
+
+        <p>La herramienta para hacer los recursos interactivos se llama DescartesJS<span class="footnote"><a href="http://descartes.matem.unam.mx" target="_blank">http://descartes.matem.unam.mx</a></span>.</p>
+
+        <p>Lo que se encuentra entre las etiquetas: <xmp style="display:inline"><span class="footnote"></xmp> y <xmp style="display:inline;"></span></xmp> es el contenido de la nota al pie de página.</p>
+
+        <p>Las notas al pie de página se auto numeran.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="interactivos">Interactivos</h2>
+
+        <p>Para agregar un interactivo se hace de la siguiente manera:</p>
+<xmp><div class="interactive" width="819" height="588" 
+src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <p>Los valores de los parámetros <code>width</code> y <code>height</code> deben coincidir con el ancho y alto de la escena, para que se muestre con las proporciones correctas. El valor del parámetro <code>src</code> es la dirección del interactivo, puede ser absoluta o relativa a la ubicación del archivo <code>index.html</code></p>
+
+        <div class="interactive" width="819" height="588" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Al presionar el botón <img style="width:1em;" src="../../css/img/ampliar.svg"> (que se muestra en la esquina superior derecha del interactivo) el interactivo se abre en una nueva ventana con las dimensiones especificadas por los valores de los parámetros <code>width</code> y <code>height</code>.</p>
+
+        <p>Si se quiere que el interactivo se muestre en una nueva ventana con las dimensiones de la ventana que muestra el libro, se utiliza el parámetro <code>window-size="true"</code>.</p>
+
+<xmp><div class="interactive" width="819" height="588" 
+window-size="true" 
+src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <div class="interactive" width="819" height="588" window-size="true" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Por omisión los interactivos se muestran con un ancho igual al 100% del ancho de la página, si se desea que ocupen una área más pequeña, con el parámetro <code>scale</code> se puede reducir el tamaño a un porcentaje del ancho de la página. Por ejemplo, el siguiente interactivo se muestra con un ancho del 50% del tamaño de la página:</p>
+
+<xmp><div class="interactive" width="819" height="588" 
+scale="50%" src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <div class="interactive" width="819" height="588" scale="50%" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>En general se puede agregar cualquier tipo de recurso interactivo que funcione con HTML. Por ejemplo, aquí se agrega el editor de GeoGebra.</p>
+<xmp><div class="interactive" width="819" height="588" 
+src="https://www.geogebra.org/geometry"></div>
+</xmp>
+        <div class="interactive" width="819" height="588" src="https://www.geogebra.org/geometry"></div>
+
+        <p>Solo hay que considerar que los recursos interactivos deben poder ajustar su tamaño para que se muestren correctamente en el área reducida del libro.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="videos">Vídeos</h2>
+
+        <p>Para agregar un video local, se utiliza lo siguiente:</p>
+
+<xmp><video width="100%" controls="" 
+poster="videos/poster/ejemplo.png">
+<source src="videos/ejemplo.mp4" type="video/mp4">
+</video>
+</xmp>
+
+        <video width="100%" controls="" poster="videos/poster/ejemplo.png">
+          <source src="videos/ejemplo.mp4" type="video/mp4">
+        </video>
+
+        <p>El valor del parámetro <code>width</code> permite controlar el ancho del video como un porcentaje del ancho de la página. Es aconsejable agregar una imagen que muestre el primer cuadro del video y colocar la dirección en el parámetro <code>poster</code>, para que se muestre mientras el navegador precarga el vídeo.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>También es posible agregar videos desde YouTube, pero en este caso, se utiliza el mismo mecanismo para agregar un interactivo. Ejemplo:</p>
+
+<xmp><div class="interactive" width="560" height="315" 
+src="https://www.youtube.com/embed/podf-jQjxaM"></div>
+</xmp>
+
+        <div class="interactive" width="560" height="315" src="https://www.youtube.com/embed/podf-jQjxaM"></div>
+
+        <p>Para agregar un video desde YouTube, es necesaria la dirección del video que incluye <code>embed</code> en el código. Como regla general las direcciones de YouTube tienen la siguiente forma <code>https://www.youtube.com/<b>watch?v=</b>podf-jQjxaM</code>, solamente hay que sustituir <code>watch?v=</code> por <code>embed/</code> en la dirección.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="imagenes">Imágenes</h2>
+
+        <p>Si se quiere agregar una imagen que tenga el comportamiento de que que al darle clic se muestre en una nueva ventana, se utiliza lo siguiente:</p>
+
+<xmp><img class="image_expand" onclick="openImage(this)" 
+src="https://proyectodescartes.org/descartescms/images/
+logodescartes.gif" width="100%"></xmp>
+
+        <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="100%">
+
+        <p>Con el valor del parámetro <code>width</code> se define el ancho de la imagen como un porcentaje del ancho de la página.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Si se quiere agregar una imagen como una figura, es decir con texto descriptivo debajo, hay que utilizar lo siguiente:</p>
+
+<xmp><figure>
+<img class="image_expand" onclick="openImage(this)" 
+src="https://proyectodescartes.org/descartescms/images/
+logodescartes.gif" width="70%">
+<figcaption>Banner del proyecto descartes.</figcaption>
+</figure></xmp>
+
+        <figure>
+          <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
+          <figcaption>Banner del proyecto descartes.</figcaption>
+        </figure>
+
+        <p>El código <code>class="image_expand" onclick="openImage(this)"</code> es lo que permite que la imagen se muestre en una nueva ventana, entonces, para tener una imagen que no se muestre en una ventana nueva al dar clic sobre ella, solo hay que omitir el código <code>class="image_expand" onclick="openImage(this)"</code>, por ejemplo:</p>
+
+<xmp><img src="https://proyectodescartes.org/descartescms/
+images/logodescartes.gif" width="40%"></xmp>
+
+        <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="40%">
+      </div>
+
+      <!-- -->
+      <div class="page">
+        <p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente hacia algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
+
+<xmp><img class="image_link" 
+onclick="openInteractive('https://proyectodescartes.org/
+Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/
+index.html', '790', '530')" 
+src="https://proyectodescartes.org/Telesecundaria/
+imagenes_descripcion_materiales/3m_b01_t01_s01.png" 
+width="75%"></xmp>
+
+        <img class="image_link" onclick="openInteractive('https://proyectodescartes.org/Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/index.html', '790', '570')" src="https://proyectodescartes.org/Telesecundaria/imagenes_descripcion_materiales/3m_b01_t01_s01.png" width="75%">
+
+        <p>El código <code>openInteractive('url', 'ancho', 'alto)</code>, es el que se encarga de abrir el vínculo en una nueva ventana emergente, de tal manera que <code>url</code> corresponde a la dirección del recurso a mostrar, <code>ancho</code> y <code>alto</code> determinan el tamaño de la ventana emergente.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="codigo">Código</h2>
+
+        <p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
+
+<xmp><code>x=100</code></xmp>
+        <p>Código en línea <code>x=100</code>.</p>
+
+        <p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
+
+<xmp><pre>
+x=4
+y=10
+  r=x+y
+</pre></xmp>
+
+      <pre>
+x=4
+y=10
+  r=x+y
+</pre>
+
+        <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+        <div class="chap_text">Capítulo II</div>
+        <h1 class="chap_name" id="capitulo_2">Expresiones matemáticas con MathJax</h1>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <div class="page">
+        <p>Para mostrar formulas matemáticas se utiliza la biblioteca <a href="https://www.mathjax.org/" target="_blank">MathJax</a>, la cual permite utilizar notación de latex para la representación de formulas matemáticas dentro de código HTML.</p>
+
+        <p>Por ejemplo, la siguiente expresión:</p>
+
+        <code>&#36;x = {-b \pm \sqrt{b^2-4ac} \over 2a}&#36;</code>
+
+        <p>genera lo siguiente:</p>
+
+        <p>$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$</p>
+
+        <p>Al utilizar un solo signo de pesos, se generan formulas matemáticas en línea, mientras que si se quieren mostrar formulas en una línea aparte y más grandes, se deben utilizar dos signos de pesos, por ejemplo:</p>
+
+        <code>&#36;&#36;x = {-b \pm \sqrt{b^2-4ac} \over 2a}&#36;&#36;</code>
+
+        <p>genera lo siguiente:</p>
+
+        <p>$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</p>
+
+        <p>Esto genera que para usar el signo de pesos dentro del texto del libro, se tenga que utilizar la entidad HTML, <xmp>&#36;</xmp> de lo contrario MathJax intentará parsear lo que sigue después del signo de pesos (&#36;), como si fuera código latex.</p>
+      </div>
+
+  	  <div class="page">
+	    	<h2 id="expresiones_simples">Expresiones simples</h2>
+
+        <p><b>2.1.1. Exponentes y subíndices</b>:  <code>&#36;&#36;H_2O   H^2  O^{2+}&#36;&#36;</code></p>
+        $$H_2O\space\space   H^2\space\space  O^{2+}$$
+  
+        <p><b>2.1.2. Vectores</b>:  <code>&#36;&#36;\vec{A} \space \widehat{r}&#36;&#36;</code></p>
+        $$\vec{A} \space \widehat{r}$$
+  
+        <p><b>2.1.3. Derivación</b>:  <code>&#36;&#36;\nabla \partial x dx \dot x \ddot y&#36;&#36;</code></p>
+        $$\nabla \partial x dx \dot x \ddot y$$
+  
+        <p><b>2.1.4. Conjuntos</b>:  <code>&#36;&#36;\forall x \subseteq A \cap B     \cup \exists&#36;&#36;</code></p>
+        $$\forall x \subseteq A \cap B     \cup \exists$$
+
+        <p><b>2.1.5. Lógica</b>:  <code>&#36;&#36; p \land \bar{q} \to p\lor \lnot q&#36;&#36;</code></p>
+        $$p \land \bar{q} \to p\lor \lnot q$$
+
+        <p><b>2.1.6. Raíces</b>:  <code>&#36;&#36;\sqrt{2}\approx 1,4142 \\ \sqrt[n]{x}&#36;&#36;</code></p>
+        $$\sqrt{2}\approx 1,4142 \\ \sqrt[n]{x}$$
+
+        <p><b>2.1.7. Relaciones</b>:  <code>&#36;&#36;\sim \simeq \cong \le \ge \equiv \equiv\not \approx&#36;&#36;</code></p>
+        $$\sim \space \simeq \space\cong\space \le\space \ge\space \equiv\space \equiv\not\space \approx $$
+    	</div>	
+
+  	  <div class="page">
+        <p><b>2.1.8. Geometría</b>:  <code>&#36;&#36;\triangle    \angle     \perp     \|     45^\circ&#36;&#36;</code></p>
+        $$\triangle    \angle     \perp     \|     45^\circ$$
+
+        <h2 id="expresiones_complejas">Expresiones complejas</h2>
+
+        <p><b>2.2.1. Sumatorio</b>:  <code>&#36;&#36;\sum_{k=1}^N k^2&#36;&#36;</code></p>
+        $$\sum_{k=1}^N k^2$$
+
+        <p><b>2.2.1. Integral</b>:  <code>&#36;&#36;\int_{-a}^{b} e^x\, dx&#36;&#36;</code></p>
+        $$\int_{-a}^{b} e^x\, dx$$
+
+        <p><b>2.2.2. Integral de línea</b>:  <code>&#36;&#36;\oint_{C} x^3\, dx + 4y^2\,dy&#36;&#36;</code></p>
+        $$\oint_{C} x^3\, dx + 4y^2\,dy$$
+
+        <p><b>2.2.3. Límite</b>:  <code>&#36;&#36;\lim_{x \to{+}\infty}{f(x)}&#36;&#36;</code></p>
+        $$\lim_{x \to{+}\infty}{f(x)}$$
+
+        <p><b>2.2.4. Productorio</b>:  <code>&#36;&#36;\prod_{i=1}^n p_i&#36;&#36;</code></p>
+        $$\prod_{i=1}^n p_i$$
+    	</div>
+
+      <div class="page">
+        <p><b>2.2.5. Binomial</b>:  <code>&#36;&#36; \binom{n}{k}&#36;&#36;</code></p>
+        $$ \binom{n}{k}$$	  
+
+        <h2 id="matrices">Matrices</h2>
+
+        <p><b>2.3.1. Tipo 1</b>:  <code>&#36;&#36; \begin{matrix} x & y \\ z & v \end{matrix}&#36;&#36;</code></p>
+        $$\begin{matrix} x & y \\ z & v \end{matrix}$$
+
+        <p><b>2.3.2. Tipo 2</b>:  <code>&#36;&#36; \begin{bmatrix} x & y \\ z & v \end{bmatrix}&#36;&#36;</code></p>
+        $$\begin{bmatrix} x & y \\ z & v \end{bmatrix}$$
+
+        <p><b>2.3.3. Tipo 3</b>:  <code>&#36;&#36; \begin{Bmatrix} x & y \\ z & v \end{Bmatrix}&#36;&#36;</code></p>
+        $$\begin{Bmatrix} x & y \\ z & v \end{Bmatrix}$$
+
+        <p><b>2.3.4. Tipo 4</b>:  <code>&#36;&#36; \begin{pmatrix} x & y \\ z & v \end{pmatrix}&#36;&#36;</code></p>
+        $$\begin{pmatrix} x & y \\ z & v \end{pmatrix}$$
+    	</div>	  
+	
+	    <div class="page">
+        <p><b>2.3.5. Tipo 5</b>:  <code>&#36;&#36; \begin{vmatrix} x & y \\ z & v \end{vmatrix}&#36;&#36;</code></p>
+        $$\begin{vmatrix} x & y \\ z & v \end{vmatrix}$$
+
+        <p><b>2.3.6. Tipo 6</b>:  <code>&#36;&#36; \begin{Vmatrix} x & y \\ z & v \end{Vmatrix}&#36;&#36;</code></p>
+        $$\begin{Vmatrix} x & y \\ z & v \end{Vmatrix}$$
+
+        <p><b>2.3.7.  Ecuaciones en varias líneas</b>:  <code>&#36;&#36;\begin{matrix}f(n+1) & = & (n+1)^2 \\ \ & = & n^2 + 2n + 1 \end{matrix}&#36;&#36;</code></p>
+
+        $$\begin{matrix}f(n+1) & = & (n+1)^2 \\ \ & = & n^2 + 2n + 1 \end{matrix}$$
+
+        <p><b>2.3.8.  Funciones a intervalos</b>:  <code>&#36;&#36;x = \begin{cases} a &\text{si } b \\ c &\text{si } d\end{cases} &#36;&#36;</code></p>
+        $$x = \begin{cases} a &\text{si } b \\ c &\text{si } d\end{cases}$$
+
+        <h2 id="delimitadores">Delimitadores</h2>
+
+        <p><b>2.4.1. Paréntesis tipo 1</b>:  <code>&#36;&#36; \left(\frac{1}{2} \right) &#36;&#36;</code></p>
+        $$\left(\frac{1}{2} \right) $$
+    	</div>
+
+    	<div class="page">
+        <p><b>2.4.2. Paréntesis tipo 2</b>:  <code>&#36;&#36; \bigg(\frac{1}{2} \bigg) &#36;&#36;</code></p>
+        $$\bigg(\frac{1}{2} \bigg) $$
+
+        <p><b>2.4.3. Para integral</b>:  <code>&#36;&#36;e^x\bigg|_a^b&#36;&#36;  &#36;&#36;I=F(x)\Big]_a^b&#36;&#36;</code></p>
+        $$e^x\bigg|_a^b$$
+        $$I = F(x)\Big ]_a^b$$
+
+        <h2 id="espaciado">Espaciado</h2>
+
+        <p><b>2.5.1. Tipo 1 (\quad)</b>:  <code>&#36;&#36;\bullet \quad  \infty \quad \ell&#36;&#36;</code></p>
+        $$\bullet \quad  \infty \quad \ell$$
+
+        <p><b>2.5.2. Tipo 2 (\space)</b>:  <code>&#36;&#36;\bullet \space  \infty \space \ell&#36;&#36;</code></p>
+        $$\bullet \space  \infty \space \ell$$
+
+        <p><b>2.5.3. Tipo 3 (\qquad)</b>:  <code>&#36;&#36;\bullet \qquad  \infty \qquad \ell&#36;&#36;</code></p>
+        $$\bullet \qquad  \infty \qquad \ell$$
+
+        <p><b>2.5.4. Tipo 4 (\;)</b>:  <code>&#36;&#36;\bullet \;  \infty \;\; \ell&#36;&#36;</code></p>
+        $$\bullet \;  \infty \;\;\ell$$
+    	</div>
+
+    	<div class="page">
+        <h2 id="tachar">Tachar o cancelar</h2>
+        
+        <p><code>\color{Red}{\cancel{\color{black}{Expresión}}} \quad \bcancel{Expresión}  \quad \quad \xcancel{Expresión} \cancelto{Corregir} {Expresión}</code>
+    		$$\color{Red}{\cancel{\color{black}{Expresión}}}  \quad \bcancel{Expresión}  \quad \xcancel{Expresión} \cancelto{Corregir} {Expresión}$$
+
+        <h2 id="otros">Otros</h2>
+
+        <p><b>2.7.1 Una matriz de 5x5</b></p>
+    		<p><code>$$ \mathbb{A} = \;<br>\begin{bmatrix}
+				a_{(1,1)} & a_{(1,2)} & a_{(1,3)} & a_{(1,4)} & a_{(1,5)} \\
+				a_{(2,1)} & a_{(2,2)} & a_{(2,3)} & a_{(2,4)} & a_{(2,5)} \\
+				a_{(3,1)} & a_{(3,2)} & a_{(3,3)} & a_{(3,4)} & a_{(3,5)} \\
+				a_{(4,1)} & a_{(4,2)} & a_{(4,3)} & a_{(4,4)} & a_{(4,5)} \\
+				a_{(5,1)} & a_{(5,2)} & a_{(5,3)} & a_{(5,4)} & a_{(5,5)}
+        \end{bmatrix}$$</code></p>
+        $$\mathbb{A} = \; \begin{bmatrix}
+        a_{(1,1)} & a_{(1,2)} & a_{(1,3)} & a_{(1,4)} & a_{(1,5)} \\
+        a_{(2,1)} & a_{(2,2)} & a_{(2,3)} & a_{(2,4)} & a_{(2,5)} \\
+        a_{(3,1)} & a_{(3,2)} & a_{(3,3)} & a_{(3,4)} & a_{(3,5)} \\
+        a_{(4,1)} & a_{(4,2)} & a_{(4,3)} & a_{(4,4)} & a_{(4,5)} \\
+        a_{(5,1)} & a_{(5,2)} & a_{(5,3)} & a_{(5,4)} & a_{(5,5)}
+        \end{bmatrix}$$
+	  	</div>
+		
+      <div class="page">
+    		<p><b>2.7.2 Ecuaciones alineadas</b></p>
+
+    		<code>&#36;&#36;\color{blue}\begin{aligned}<br>
+        (a+b)^2 &= (a+b)(a+b)\\<br>
+        &= a^2 + ab + ba + b^2  \\<br>
+        &= a^2 + 2ab + b^2 <br>
+        \end{aligned}&#36;&#36;</code> 
+
+        $$\color{blue}{\begin{aligned}
+        (a+b)^2 &= (a+b)(a+b)           \\
+        &= a^2 + ab + ba + b^2  \\
+        &= a^2 + 2ab + b^2  
+        \end{aligned}}$$
+      
+  			<p><b>2.7.3 Número de fórmula a la derecha</b></p>
+	  		<code>&#36;&#36; y = \frac{x+1}{z^2-3} \tag{$3.5$} &#36;&#36;</code>
+        $$y = \frac{x+1}{z^2-3} \tag{$3.5$}$$
+        
+        <p>Para ver más ejemplos de uso de $\TeX$ puede consultarse el siguiente enlace: <a href="https://es.wikipedia.org/wiki/Ayuda:Uso_de_TeX" target="_blank">https://es.wikipedia.org/wiki/Ayuda:Uso_de_TeX</a>, sólo se debe probar la compatibilidad de algunas expresiones, pues no todas las expresiones de este enlace son soportadas por MathJax. Una lista de las funciones soportadas por MathJax se encuentra en la siguiente dirección <a href="http://docs.mathjax.org/en/latest/tex.html">http://docs.mathjax.org/en/latest/tex.html</a>.</p>
+    	</div>
+
+      <div class="page" num=""></div>
+
+      <div class="page" num=""></div>
+
+      <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+        <div class="chap_text">Capítulo III</div>
+        <h1 class="chap_name" id="capitulo_3">Expresiones químicas con MathJax</h1>
+      </div>
+
+      <div class="page" num=""></div>
+
+      <!--   -->
+      <div class="page">
+        <p>En la herramienta MathJax, se ha incorporado una extensión (mhchem.js), que facilita la escritura de expresiones químicas. A continuación, presentamos algunas de estas expresiones (para mayor información, véase <a href="https://mhchem.github.io/MathJax-mhchem/">https://mhchem.github.io/MathJax-mhchem/</a>).</p>
+
+        <h2 id="formulas_quimicas">Fórmulas químicas</h2>
+
+        <code>&#36;&#36;\ce{H2O} \qquad \ce{Sb2O3} \qquad \ce{H+} \qquad \ce{CrO4^2-}&#36;&#36;</code>
+        $$\ce{H2O} \qquad \ce{Sb2O3} \qquad \qquad \ce{H+} \qquad \ce{CrO4^2-}$$
+      
+        <h2 id="ecuaciones_quimicas">Ecuaciones químicas (ce)</h2>
+        
+        <code>&#36;&#36; \ce{CO2 + C -> 2 CO} &#36;&#36;</code>
+        $$\ce{CO2 + C -> 2 CO}$$
+      
+        <code>&#36;&#36;\ce{CH4 + 2O2 -> CO2 + 2H2O} &#36;&#36;</code>
+        $$\ce{CH4 + 2O2 -> CO2 + 2H2O}$$
+
+        <code>&#36;&#36;C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}&#36;&#36;</code>
+        $$C_p[\ce{H2O(l)}] = \pu{75.3 J // mol K}$$
+
+        <p>La expresión <b>\pu</b> se usa como "unidad física" (<b>p</b>hysical <b>u</b>nit).</p>
+      </div>
+      
+      <!--   -->
+      <div class="page">
+        <h2 id="numeros_estequiometricos">Números estequiométricos</h2>
+
+        <code>&#36;&#36; \ce{2H2O} \qquad \ce{1/2 H2O} \qquad \ce{(1/2) H2O} &#36;&#36;</code>
+        $$ \ce{2H2O} \qquad \ce{1/2 H2O} \qquad \ce{(1/2) H2O} $$
+
+        <h2 id="isotopos">Isótopos</h2>
+
+        <code>&#36;&#36;$\ce{^227_90Th+} \qquad \ce{^0_-1n-} &#36;&#36;</code>
+        $$\ce{^227_90Th+} \qquad  \qquad \ce{^0_-1n-} $$
+
+        <h2 id="reacciones">Reacciones</h2>
+
+        <code>&#36;&#36; \ce{A -> B} \qqad \ce{A &lt;- B} &#36;&#36;</code>
+        $$\ce{A -> B}$$
+
+        <code>&#36;&#36; A \longleftarrow B \\ A \rightleftharpoons B &#36;&#36;</code>
+        $$ A \longleftarrow B \\ A \rightleftharpoons B$$
+
+        <code>&#36;&#36; \ce{A ->[H2O] B} \qquad \ce{C ->[{arriba}][{abajo}] D} \qquad C \xrightarrow[abajo]{arriba} D &#36;&#36;</code>
+        $$\ce{A ->[H2O] B} \qquad \ce{C ->[{arriba}][{abajo}] D} \qquad C \xrightarrow[abajo]{arriba} D$$
+      </div>
+
+      <!--   -->
+      <div class="page">
+        <code>&#36;&#36; \ce{A <--> B} \qquad \ce{A <=> B} \qquad \ce{A <<=> B} \qquad \ce{A <=>> B}&#36;&#36;</code> 
+        $$\ce{A <--> B} \qquad \ce{A <=> B} \qquad \ce{A <<=> B} \qquad \ce{A <=>> B}$$
+
+        <h2 id="enlaces">Enlaces</h2>
+
+        <code>&#36;&#36;\ce{C6H5-CHO} \qquad \ce{A-B=C#D}&#36;&#36;</code>
+        $$\ce{C6H5-CHO} \qquad \ce{A-B=C#D}$$
+
+        <code>&#36;&#36;\ce{A\bond{1}B\bond{2}C\bond{3}D} \qquad \ce{A\bond{~}B\bond{~-}C}&#36;&#36;</code>
+        $$\ce{A\bond{1}B\bond{2}C\bond{3}D} \qquad \ce{A\bond{~}B\bond{~-}C}$$
+
+        <code>&#36;&#36;\ce{A\bond{...}B\bond{....}C}&#36;&#36;</code>
+        $$\ce{A\bond{...}B\bond{....}C} $$
+
+        <h2 id="precipitado">Precipitado</h2>
+
+        <code>&#36;&#36;\ce{SO4^2- + Ba^2+ -> BaSO4 v}&#36;&#36;</code>
+        $$\ce{SO4^2- + Ba^2+ -> BaSO4 v}$$
+
+        <code>&#36;&#36;\ce{A v B (v) -> B ^ B (^)}&#36;&#36;</code>
+        $$\ce{A v B (v) -> B ^ B (^)}$$
+      </div>
+
+      <!--   -->
+      <div class="page">
+        <p>Un ejemplo complejo</p>
+
+        <code>&#36;&#36;\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  &#36;\underset{\text{hidróxido anfótero}}{\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  &#36;\underset{\text{Hydroxozikat}}{\ce{[Zn(OH)4]^2-}}&#36;}&#36;&#36;</code>
+        $$\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  $\underset{\text{hidróxido anfótero}}{\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  $\underset{\text{Hydroxozikat}}{\ce{[Zn(OH)4]^2-}}$}$$
+
+        <h2 id="unidades">Unidades</h2>
+
+        <code>&#36;&#36;\pu{123 kJ mol-1} \qquad \pu{123 kJ*mol-1} \qquad \pu{1.2E3 kJ}  &#36;&#36;</code>
+        $$\pu{123 kJ mol-1} \qquad \pu{123 kJ*mol-1} \qquad \pu{1.2E3 kJ}$$
+
+        <code>&#36;&#36;\pu{1,2e3 kJ} \qquad \pu{123 kJ/mol} \qquad \pu{123 kJ//mol}&#36;&#36;</code>
+        $$\pu{1,2e3 kJ} \qquad \pu{123 kJ/mol} \qquad \pu{123 kJ//mol}$$
+      </div>
+
+      <!--  -->
+      <div class="page" num="" style="background-image: radial-gradient(white, #ecf0f1, #e3e5e7); display:flex; align-items:center; justify-content:center;">
+          <a style="width:50%" target="_blank" href="http://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
+        </div>
+      </div>
+
+    <!-- [cierra] pages_container -->
+    </div>
+  <!-- [cierra] book_container -->
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <title>Libro digital interactivo</title>
+
+  <!-- configuración del libro -->
+  <script>
+  window.book_config = {
+    // parámetro que indica si los capítulos, secciones y figura se auto numeran
+    // para que los capítulos se auto numeren deben utilizar la etiqueta <h1>
+    // para que las secciones se auto numeren deben utilizar la etiqueta <h2>
+    auto_numerate_sections_and_figures: true, 
+  }
+  </script>
+
+  <!-- núcleo del libro interactivo -->
+  <link rel="stylesheet" href="../../css/style.css" type="text/css">
+  <script type="text/javascript" src="../../js/book.js" charset="utf-8"></script>
+  
+  <!-- personalización del usuario -->
+  <link rel="stylesheet" href="extra/fonts.css" type="text/css">
+  <link rel="stylesheet" href="extra/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="book_loader_container"><div id="book_loader"></div></div>
+
+  <div id="book_container">
+    <div id="btn_back_page"></div>
+    <div id="btn_next_page"></div>
+    <button id="go_to_table_of_content"></button>
+
+    <div id="table_of_content"></div>
+
+    <div id="pages_container">
+      <!--  -->
+      <div class="page" style="background-color:transparent;">
+      </div>
+
+      <!--  -->
+      <div class="page" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
+        <div class="cover_title">Título</div>
+
+        <div class="cover_subtitle">Libro interactivo</div>
+      </div>
+
+      <!--  -->
+      <div class="page" style="display:flex; align-items:center; justify-content:center;">
+        <a style="width:50%" target="_blank" href="http://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
+      </div>
+
+      <!--  -->
+      <!-- init-page-num="true" es un parámetro que indica que a partir de esta página comienza la numeración -->
+      <!-- inicialmente los números de las páginas se numeran con numerales romanos -->
+      <!-- num="" es un parámetro que indica que esta página no lleva numeración visible -->
+      <!--  -->
+      <div class="page" style="text-align:center; font-size:120%;" init-page-num="true" num="">
+        <p>Nombre de la obra y autores</p>
+
+      </div>
+
+      <!--  -->
+      <div class="page" num="">
+        <p>
+          Título de la obra:
+          <br> 
+          TÍTULO
+        </p>
+        <br>
+
+        <p>
+          Autores:
+          <br> 
+          AUTORES
+        </p>
+        <br><br>
+
+        <p>
+          Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
+          <br> 
+          Recursos interactivos: <a href="http://descartes.matem.unam.mx/" target="_blank">DescartesJS</a>
+          <br> 
+          Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a>
+        </p>
+        <br>
+
+        <p>
+          DATOS DE LA EDICIÓN
+        </p>
+        <br><br>
+
+        <p>
+          <p>LICENCIA</p>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img src="images/general/by-nc-sa.svg" style="height:1.75em; margin-right:0.75em;"></a>
+          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons Attribution License 4.0</a>.
+        </p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2>Tabla de contenido</h2>
+
+        <!-- con esto se agrega una entrada en la tabla de contenido,
+        href="#prefacio" indica una referencia a una elemento html con 
+        el parámetro id="prefacio", automáticamente se busca está referencia
+        y se agrega el título correspondiente y la página donde se encuentra -->
+          
+        <div class="toc_link" href="#prefacio"></div>
+
+        <div class="toc_link" href="#capitulo_1"></div>
+
+        <div class="toc_link" href="#notas_generales_pie_de_pagina"></div>
+        <div class="toc_link" href="#interactivos"></div>
+        <div class="toc_link" href="#videos"></div>
+        <div class="toc_link" href="#imagenes"></div>
+        <div class="toc_link" href="#codigo"></div>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
+      <!--  -->
+      <div class="page" num-type-arabic="true">
+        <h1 id="prefacio">Prefacio</h1>
+
+        <p>Este es un pequeño ejemplo que presenta la funcionalidad básica que el libro interactivo ofrece. El libro puede personalizarse al gusto del autor, así como agregar otros componentes para potenciar la presentación. Es aconsejable no modificar directamente los archivos dentro del directorio <code>book</code> ya estos son los encargados del funcionamiento del libro.</p>
+        
+        <p>Un zip con el código fuente de este ejemplo puede ser descargado desde <a href="https://github.com/jlongi/libro_interactivo/releases/download/ejemplos/libro_interactivo_simple.zip">aquí</a>. El código correspondiente al núcleo del libro, se encuentra alojado en el siguiente repositorio de Github: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">https://github.com/jlongi/libro_interactivo</a>, cualquier corrección, sugerencia o cambio favor de reportarlo en el repositorio para su consideración.</p>
+
+        <p>Para más información sobre el funcionamiento de este libro interactivo, lo mejor es revisar el contenido del archivo <code>index.html</code> el cual contiene comentarios sobre diversas partes del libro. Como el funcionamiento de la tabla de contenido.</p>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- Un nuevo capitulo -->
+      <!--  -->
+      <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+        <div class="chap_text">Capítulo I</div>
+        <h1 class="chap_name" id="capitulo_1">Elementos gráficos e interactivos</h1>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="notas_generales_pie_de_pagina">Notas generales y al pie de página</h2>
+
+        <p>Para agregar una nota general dentro del texto se utiliza el siguiente código html:</p>
+<xmp><div class="note">
+  Esta es una nota
+</div>
+</xmp>
+
+        <p>Lo que muestra el siguiente texto:</p>
+
+        <div class="note">
+          Esta es una nota
+        </div>
+
+        <p>Para agregar un nota al pie de página es necesario utilizar lo siguiente:</p>
+<xmp><p>La herramienta para hacer los recursos interactivos 
+se llama DescartesJS<span class="footnote">
+<a href="https://descartes.matem.unam.mx" 
+target="_blank">https://descartes.matem.unam.mx</a>
+</span>.</p>
+</xmp>
+
+        <p>Lo que muestra el siguiente párrafo:</p>
+
+        <p>La herramienta para hacer los recursos interactivos se llama DescartesJS<span class="footnote"><a href="http://descartes.matem.unam.mx" target="_blank">http://descartes.matem.unam.mx</a></span>.</p>
+
+        <p>Lo que se encuentra entre las etiquetas: <xmp style="display:inline"><span class="footnote"></xmp> y <xmp style="display:inline;"></span></xmp> es el contenido de la nota al pie de página.</p>
+
+        <p>Las notas al pie de página se auto numeran.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="interactivos">Interactivos</h2>
+
+        <p>Para agregar un interactivo se hace de la siguiente manera:</p>
+<xmp><div class="interactive" width="819" height="588" 
+src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <p>Los valores de los parámetros <code>width</code> y <code>height</code> deben coincidir con el ancho y alto de la escena, para que se muestre con las proporciones correctas. El valor del parámetro <code>src</code> es la dirección del interactivo, puede ser absoluta o relativa a la ubicación del archivo <code>index.html</code></p>
+
+        <div class="interactive" width="819" height="588" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Al presionar el botón <img style="width:1em;" src="../../css/img/ampliar.svg"> (que se muestra en la esquina superior derecha del interactivo) el interactivo se abre en una nueva ventana con las dimensiones especificadas por los valores de los parámetros <code>width</code> y <code>height</code>.</p>
+
+        <p>Si se quiere que el interactivo se muestre en una nueva ventana con las dimensiones de la ventana que muestra el libro, se utiliza el parámetro <code>window-size="true"</code>.</p>
+
+<xmp><div class="interactive" width="819" height="588" 
+window-size="true" 
+src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <div class="interactive" width="819" height="588" window-size="true" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Por omisión los interactivos se muestran con un ancho igual al 100% del ancho de la página, si se desea que ocupen una área más pequeña, con el parámetro <code>scale</code> se puede reducir el tamaño a un porcentaje del ancho de la página. Por ejemplo, el siguiente interactivo se muestra con un ancho del 50% del tamaño de la página:</p>
+
+<xmp><div class="interactive" width="819" height="588" 
+scale="50%" src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
+
+        <div class="interactive" width="819" height="588" scale="50%" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>En general se puede agregar cualquier tipo de recurso interactivo que funcione con HTML. Por ejemplo, aquí se agrega el editor de GeoGebra.</p>
+<xmp><div class="interactive" width="819" height="588" 
+src="https://www.geogebra.org/geometry"></div>
+</xmp>
+        <div class="interactive" width="819" height="588" src="https://www.geogebra.org/geometry"></div>
+
+        <p>Solo hay que considerar que los recursos interactivos deben poder ajustar su tamaño para que se muestren correctamente en el área reducida del libro.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="videos">Vídeos</h2>
+
+        <p>Para agregar un video local, se utiliza lo siguiente:</p>
+
+<xmp><video width="100%" controls="" 
+poster="videos/poster/ejemplo.png">
+<source src="videos/ejemplo.mp4" type="video/mp4">
+</video>
+</xmp>
+
+        <video width="100%" controls="" poster="videos/poster/ejemplo.png">
+          <source src="videos/ejemplo.mp4" type="video/mp4">
+        </video>
+
+        <p>El valor del parámetro <code>width</code> permite controlar el ancho del video como un porcentaje del ancho de la página. Es aconsejable agregar una imagen que muestre el primer cuadro del video y colocar la dirección en el parámetro <code>poster</code>, para que se muestre mientras el navegador precarga el vídeo.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>También es posible agregar videos desde YouTube, pero en este caso, se utiliza el mismo mecanismo para agregar un interactivo. Ejemplo:</p>
+
+<xmp><div class="interactive" width="560" height="315" 
+src="https://www.youtube.com/embed/podf-jQjxaM"></div>
+</xmp>
+
+        <div class="interactive" width="560" height="315" src="https://www.youtube.com/embed/podf-jQjxaM"></div>
+
+        <p>Para agregar un video desde YouTube, es necesaria la dirección del video que incluye <code>embed</code> en el código. Como regla general las direcciones de YouTube tienen la siguiente forma <code>https://www.youtube.com/<b>watch?v=</b>podf-jQjxaM</code>, solamente hay que sustituir <code>watch?v=</code> por <code>embed/</code> en la dirección.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="imagenes">Imágenes</h2>
+
+        <p>Si se quiere agregar una imagen que tenga el comportamiento de que que al darle clic se muestre en una nueva ventana, se utiliza lo siguiente:</p>
+
+<xmp><img class="image_expand" onclick="openImage(this)" 
+src="https://proyectodescartes.org/descartescms/images/
+logodescartes.gif" width="100%"></xmp>
+
+        <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="100%">
+
+        <p>Con el valor del parámetro <code>width</code> se define el ancho de la imagen como un porcentaje del ancho de la página.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Si se quiere agregar una imagen como una figura, es decir con texto descriptivo debajo, hay que utilizar lo siguiente:</p>
+
+<xmp><figure>
+<img class="image_expand" onclick="openImage(this)" 
+src="https://proyectodescartes.org/descartescms/images/
+logodescartes.gif" width="70%">
+<figcaption>Banner del proyecto descartes.</figcaption>
+</figure></xmp>
+
+        <figure>
+          <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
+          <figcaption>Banner del proyecto descartes.</figcaption>
+        </figure>
+
+        <p>El código <code>class="image_expand" onclick="openImage(this)"</code> es lo que permite que la imagen se muestre en una nueva ventana, entonces, para tener una imagen que no se muestre en una ventana nueva al dar clic sobre ella, solo hay que omitir el código <code>class="image_expand" onclick="openImage(this)"</code>, por ejemplo:</p>
+
+<xmp><img src="https://proyectodescartes.org/descartescms/
+images/logodescartes.gif" width="40%"></xmp>
+
+        <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="40%">
+      </div>
+
+      <!-- -->
+      <div class="page">
+        <p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente hacia algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
+
+<xmp><img class="image_link" 
+onclick="openInteractive('https://proyectodescartes.org/
+Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/
+index.html', '790', '530')" 
+src="https://proyectodescartes.org/Telesecundaria/
+imagenes_descripcion_materiales/3m_b01_t01_s01.png" 
+width="75%"></xmp>
+
+        <img class="image_link" onclick="openInteractive('https://proyectodescartes.org/Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/index.html', '790', '570')" src="https://proyectodescartes.org/Telesecundaria/imagenes_descripcion_materiales/3m_b01_t01_s01.png" width="75%">
+
+        <p>El código <code>openInteractive('url', 'ancho', 'alto)</code>, es el que se encarga de abrir el vínculo en una nueva ventana emergente, de tal manera que <code>url</code> corresponde a la dirección del recurso a mostrar, <code>ancho</code> y <code>alto</code> determinan el tamaño de la ventana emergente.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="codigo">Código</h2>
+
+        <p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
+
+<xmp><code>x=100</code></xmp>
+        <p>Código en línea <code>x=100</code>.</p>
+
+        <p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
+
+<xmp><pre>
+x=4
+y=10
+  r=x+y
+</pre></xmp>
+
+      <pre>
+x=4
+y=10
+  r=x+y
+</pre>
+
+        <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
+      </div>
+
+      <!--  -->
+      <div class="page" num="" style="background-image: radial-gradient(white, #ecf0f1, #e3e5e7); display:flex; align-items:center; justify-content:center;">
+          <a style="width:50%" target="_blank" href="http://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
+        </div>
+      </div>
+
+    <!-- [cierra] pages_container -->
+    </div>
+  <!-- [cierra] book_container -->
+  </div>
+
+</body>
+</html>

@@ -6,6 +6,11 @@
 const LANDSCAPE = 0;
 const PORTRAIT  = 1;
 
+window.book_config = window.book_config || {
+  remember_last_page: false,
+  auto_numerate_sections_and_figures: false
+};
+
 document.addEventListener("DOMContentLoaded", function(evt) {
   /** prevent the iframes to show */
   let iframes = document.querySelectorAll("iframe");
@@ -25,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
   // add interactive
   addInteractive(page_width);
 
-  // 
+  // add image links
   let img_links = document.querySelectorAll(".image_link");
   let image_width;
   let div_img_links;
@@ -74,7 +79,100 @@ document.addEventListener("DOMContentLoaded", function(evt) {
     }
     footnote_container.appendChild(el);
   }
+
+  if (book_config.auto_numerate_sections_and_figures) {
+    numerateSectionsAndFigures();
+  }
+
+  // 
+  addTableOfContentEntries();
 });
+
+/**
+ * 
+ */
+function addTableOfContentEntries() {
+  let init_page_num = document.querySelector("[init-page-num=true]");
+  let toc_links = document.querySelectorAll(".toc_link");
+  let auto_toc_links = [];
+  let no_auto_toc_links = [];
+  for (let i=0, l=toc_links.length; i<l; i++) {
+    if (toc_links[i].getAttribute("href")) {
+      auto_toc_links.push(toc_links[i]);
+    }
+    else {
+      no_auto_toc_links.push(toc_links[i]);
+    }
+  }
+
+  let temp_a;
+  // adjust style of manual toc links
+  if (no_auto_toc_links.length > 0) {
+    no_auto_toc_links.forEach(toc_link => {
+      temp_a = toc_link.querySelector("a");
+
+      if (!temp_a.innerHTML.match(/^<span/)) {
+        temp_a.innerHTML = "<span>" + temp_a.innerHTML.replace(/<span class="toc_number">/, `</span><span class="toc_number">`)
+      }
+    });
+  }
+
+
+  if (auto_toc_links.length > 0) {
+    let pages = Array.from(pages_container.querySelectorAll(".page"));
+
+    if (init_page_num) {
+      init_page_num = pages.indexOf(init_page_num)-1;
+    }
+    else {
+      init_page_num = 0;
+    }
+
+    let elem;
+    let elem_text;
+    let page_elem;
+    let page_num;
+    let prefix;
+
+    for (let i=0, l=auto_toc_links.length; i<l; i++) {
+      elem = document.querySelector( auto_toc_links[i].getAttribute("href") );
+      elem_text = elem.textContent.trim().replace(/\.$/, "");
+      page_elem = getPageContainer(elem);
+
+      if (page_elem) {
+        page_num = pages.indexOf(page_elem);
+
+        if (page_num != -1) {
+          page_num -= init_page_num;
+          auto_toc_links[i].setAttribute("onclick", `goToPage(${page_num})`);
+
+          prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
+
+          if (prefix) {
+            auto_toc_links[i].setAttribute("style", "font-weight:bold;");
+            auto_toc_links[i].innerHTML = `<a><span>${prefix}. ${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
+          }
+          else {
+            if (elem.hasAttribute("prefix")) {
+              auto_toc_links[i].setAttribute("style", "font-weight:bold;");
+            }
+            auto_toc_links[i].innerHTML = `<a><span style="padding-left:1em;">${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 
+ */
+function getPageContainer(elem) {
+  while (elem && elem.className !== "page") {
+    elem = elem.parentNode;
+  }
+  return elem;
+}
 
 /**
  * 
@@ -130,14 +228,72 @@ function addInteractive(page_width) {
 /**
  * 
  */
+function numerateSectionsAndFigures(pages) {
+  let chapter_counter = 0;
+  let section_counter = 0;
+  let subsection_counter = 0;
+  let figure_counter = 0;
+  let tag_name;
+
+  let elements = document.querySelectorAll(".chap_name,h2,h3,figcaption");
+
+  elements.forEach((ele) => {
+    if (ele.classList.contains("chap_name")) {
+      chapter_counter++;
+      section_counter = 0;
+      figure_counter = 0;
+      if (!ele.hasAttribute("prefix")) {
+        ele.setAttribute("prefix", chapter_counter);
+      }
+    }
+    else if (chapter_counter > 0) {
+      if (!ele.hasAttribute("not_number")) {
+        tag_name = ele.tagName.toLocaleLowerCase();
+
+        // section
+        if (tag_name == "h2") {
+          section_counter++;
+          subsection_counter = 0;
+          ele.innerHTML = `${chapter_counter}.${section_counter} ${ele.innerHTML}`;
+        }
+        // subsection
+        else if (tag_name == "h3") {
+          subsection_counter++;
+          ele.innerHTML = `${chapter_counter}.${section_counter}.${subsection_counter} ${ele.innerHTML}`;
+        }
+        // figure
+        else if (tag_name == "figcaption") {
+          figure_counter++;
+          ele.innerHTML = `<b>Figura ${chapter_counter}.${figure_counter}:</b> ${ele.innerHTML}`;
+        }
+      }
+    }
+  });
+}
+
+/**
+ * 
+ */
 window.addEventListener("load", function(evt) {
   let current_page = 0;
+
+  // set the value of the current page to the last page seen
+  if (book_config.remember_last_page === true) {
+    try {
+      current_page = parseInt( window.localStorage.getItem('last_page') || 0 );
+    }
+    catch(e) {
+      console.warn(e);
+    }
+  }
 
   let book_container = document.getElementById("book_container");
 
   let body_style = getComputedStyle(document.body);
 
   let page_viewer = book_container.appendChild( document.createElement("div") );
+  page_viewer.className = "page_viewer";
+
   let pages_container = document.getElementById("pages_container");
   page_viewer.appendChild(pages_container);
 
@@ -150,10 +306,6 @@ window.addEventListener("load", function(evt) {
   let next = document.getElementById("btn_next_page");
 
   let toc_btn = document.getElementById("go_to_table_of_content");
-
-  page_viewer.setAttribute("style", `position:absolute; width:${pages_container_width}px; height:${pages_container_height}px; transform-origin: 0 0 0; overflow:hidden;`);
-
-  pages_container.setAttribute("style", `position:absolute; width:${pages*100}%; height:${pages_container_height}px; display:flex; transition: all 0.3s; -webkit-transition: all 0.3s;`); 
 
   let orientation = LANDSCAPE;
   let nav_btn_size = 2.65;
@@ -309,6 +461,17 @@ window.addEventListener("load", function(evt) {
       stop_videos[i].pause();
       stop_videos[i].currentTime = 0;
     }
+
+    // show the last page seen
+    try {
+      window.localStorage.setItem("last_page", current_page);
+    }
+    catch(e) {
+      console.warn(e);
+    }
+
+    // set the focus in the window
+    setTimeout(function() { window.focus(); }, 100);
 
     // move the pages
     pages_container.style.left = -(pages_container_width/2 * current_page) + "px";
