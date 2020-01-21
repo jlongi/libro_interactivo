@@ -121,6 +121,9 @@
         <div class="toc_link" href="#videos"></div>
         <div class="toc_link" href="#imagenes"></div>
         <div class="toc_link" href="#codigo"></div>
+        <div class="toc_link" href="#referencia_a_bibliografia"></div>
+
+        <div class="toc_link" href="#bibliografia"></div>
       </div>
 
       <!--  -->
@@ -357,6 +360,97 @@ y=10
 </pre>
 
         <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="referencia_a_bibliografia">Referencias a Bibliografía</h2>
+
+        <p>Para agregar bibliografía en el capítulo correspondiente hay que agregar algo como lo siguiente:</p>
+<xmp><bibitem id="RER119" 
+  authors="Juan Guillermo Rivera Berrío, Joel Espinosa 
+Longi y Alejandro Radillo Díaz" 
+  title="Descartes JS - Nivel - I"
+  editorial="Fondo Editorial Pascual Bravo"
+  edition="2ª edición"
+  year="2019">
+</bibitem>
+
+<bibitem id="RER219" 
+  authors="Juan Guillermo Rivera Berrío, Joel Espinosa 
+Longi y Alejandro Radillo Díaz" 
+  title="Descartes JS - Nivel - II"
+  editorial="Fondo Editorial Pascual Bravo"
+  edition="2ª edición"
+  year="2019">
+</bibitem></xmp>
+
+        <p>Con lo que se genera la bibliografía que puede verse al final de este libro.</p>
+
+        <p>El parámetro <code>id</code> es el que permite identificar el elemento de la bibliografía, además de que será el texto que aparezca cuando se realice una referencia a ese elemento bibliográfico.</p>
+
+        <p>Ninguno de los parámetros <code>authors</code>, <code>title</code>, <code>editorial</code>, <code>edition</code> y <code>year</code> son obligatorios, es decir, pueden aparecer o no en la definición del elemento bibliográfico.</p>
+      </div>
+
+      <!--  -->
+      <div class="page">        
+        <p>Para agregar una referencia a un elemento de la bibliografía se utiliza los siguiente:</p>
+
+<xmp><bibref ref_id="IDENTIFICADOR_DE_BIBLIOGRAFÍA"></bibref></xmp>
+
+        <p>Por ejemplo el siguiente código:</p>
+
+<xmp>Para aprender más sobre Descartes se pueden consultar 
+los libros: Descartes JS - Nivel - II 
+(<bibref ref_id="RER119"></bibref>) y Descartes JS - 
+Nivel - II (<bibref ref_id="RER219"></bibref>).</xmp>
+
+        <p>Muestra el siguiente texto:</p>
+        
+        <p>Para aprender más sobre Descartes se pueden consultar los libros: Descartes JS - Nivel - II (<bibref ref_id="RER119"></bibref>) y Descartes JS - Nivel - II (<bibref ref_id="RER219"></bibref>).</p>
+
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <!-- Un nuevo capitulo -->
+      <!--  -->
+      <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+        <h1 class="chap_name" id="bibliografia">Bibliografía de muestra</h1>
+      </div>
+
+      <!--  -->
+      <!-- Una página en blanco y sin numeración visible -->
+      <!--  -->
+      <div class="page" num=""></div>
+
+      <!--  -->
+      <div class="page">
+        <bibitem id="RER119" 
+                 authors="Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz" 
+                 title="Descartes JS - Nivel - I"
+                 editorial="Fondo Editorial Pascual Bravo"
+                 edition="2ª edición"
+                 year="2019">
+        </bibitem>
+
+        <bibitem id="RER219" 
+                 authors="Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz" 
+                 title="Descartes JS - Nivel - II"
+                 editorial="Fondo Editorial Pascual Bravo"
+                 edition="2ª edición"
+                 year="2019">
+        </bibitem>
+
       </div>
 
       <!--  -->

@@ -240,6 +240,22 @@ figcaption {
   margin-bottom: 2em;
 }
 
+bibref {
+  display: inline;
+  position: relative;
+  color: #0089cd;
+  border-bottom: 1px dashed #0089cd;
+}
+bibitem {
+  display: block;
+  position: relative;
+  padding-bottom: 1em;
+}
+.bibitem_title {
+  font-style: italic;
+  font-weight: bold;
+}
+
 /* Style for screen  */
 @media screen {
   body {

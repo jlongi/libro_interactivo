@@ -86,6 +86,9 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 
   // 
   addTableOfContentEntries();
+
+  //
+  addBibliography();
 });
 
 /**
@@ -162,6 +165,53 @@ function addTableOfContentEntries() {
       }
     }
   }
+}
+
+/** 
+ * 
+ */
+function addBibliography() {
+  let bibitems = document.querySelectorAll("bibitem");
+  let tmp;
+  let tmp_attr;
+  let attr_list = ["authors", "title", "editorial", "edition", "year"];
+
+  bibitems.forEach(item => {
+    let margin_left = "5em";
+
+    item.setAttribute("style", `margin-left:${margin_left};`)
+
+    // id
+    tmp_attr = item.getAttribute("id");
+    if (tmp_attr) {
+      tmp = document.createElement("span")
+      tmp.innerHTML = "[" + tmp_attr + "] ";
+      tmp.setAttribute("style", `position:absolute; left:-${margin_left};`)
+      tmp.classList = "bibitem_id";
+      item.appendChild(tmp);
+    }
+
+    for (let i=0; i<attr_list.length; i++) {
+      tmp_attr = item.getAttribute(attr_list[i]);
+      if (tmp_attr) {
+        tmp = document.createElement("span")
+        tmp.innerHTML = tmp_attr + ". ";
+        tmp.classList = "bibitem_" + attr_list[i];
+        item.appendChild(tmp);
+      }
+    }
+  });
+
+  // add bib references
+  let bibrefs = document.querySelectorAll("bibref");
+  let tmp_id;
+  bibrefs.forEach(ref => {
+    tmp_id = document.getElementById(ref.getAttribute("ref_id"));
+    if (tmp_id) {
+      ref.innerHTML = "[" + tmp_id.getAttribute("id") + "]";
+      ref.title = tmp_id.textContent.trim();
+    }
+  });
 }
 
 /**
