@@ -19,6 +19,16 @@ a {
   color: #1e272e;
 }
 
+.num_block {
+  border-left: 4px solid #16a085;
+}
+.num_block[prefix="Teorema"] {
+  border-left: 4px solid #2ecc71;
+}
+.num_block[prefix="Lema"] {
+  border-left: 4px solid #f39c12;
+}
+
 .image_expand {
   -webkit-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
   -moz-box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);

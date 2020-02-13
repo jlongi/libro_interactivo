@@ -283,15 +283,16 @@ function numerateSectionsAndFigures(pages) {
   let section_counter = 0;
   let subsection_counter = 0;
   let figure_counter = 0;
+  let num_block_counter = 0;
   let tag_name;
 
-  let elements = document.querySelectorAll(".chap_name,h2,h3,figcaption");
+  let elements = document.querySelectorAll(".chap_name,h2,h3,figcaption,.num_block");
 
   elements.forEach((ele) => {
     if (ele.classList.contains("chap_name")) {
       chapter_counter++;
-      section_counter = 0;
-      figure_counter = 0;
+      section_counter = figure_counter = num_block_counter = 0;
+
       if (!ele.hasAttribute("prefix")) {
         ele.setAttribute("prefix", chapter_counter);
       }
@@ -314,9 +315,28 @@ function numerateSectionsAndFigures(pages) {
         // figure
         else if (tag_name == "figcaption") {
           figure_counter++;
-          ele.innerHTML = `<b>Figura ${chapter_counter}.${figure_counter}:</b> ${ele.innerHTML}`;
+          // set the ref_text in the figcaption tag and in the figure tag
+          ele.ref_text = `<b>Figura ${chapter_counter}.${figure_counter}</b>`;
+          ele.parentNode.ref_text = ele.ref_text; 
+          ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
+        }
+        // num_block
+        else if ((tag_name == "div") && (ele.className == "num_block")) {
+          num_block_counter++;
+          ele.ref_text = `<b><i>${ele.getAttribute("prefix") || ""} ${chapter_counter}.${num_block_counter}</i></b>`;
+          ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
         }
       }
+    }
+  });
+
+  // add the figures references
+  let refs = document.querySelectorAll("ref");
+  let ref_elem;
+  refs.forEach((ref) => {
+    ref_elem = document.getElementById(ref.getAttribute("ref_id") || "");
+    if (ref_elem) {
+      ref.innerHTML = ref_elem.ref_text;
     }
   });
 }

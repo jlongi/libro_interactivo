@@ -120,6 +120,7 @@
         <div class="toc_link" href="#interactivos"></div>
         <div class="toc_link" href="#videos"></div>
         <div class="toc_link" href="#imagenes"></div>
+        <div class="toc_link" href="#teoremas"></div>
         <div class="toc_link" href="#codigo"></div>
         <div class="toc_link" href="#referencia_a_bibliografia"></div>
 
@@ -288,28 +289,11 @@ src="https://www.youtube.com/embed/podf-jQjxaM"></div>
 
 <xmp><img class="image_expand" onclick="openImage(this)" 
 src="https://proyectodescartes.org/descartescms/images/
-logodescartes.gif" width="100%"></xmp>
+logodescartes.gif" width="80%"></xmp>
 
-        <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="100%">
+        <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="80%">
 
         <p>Con el valor del parámetro <code>width</code> se define el ancho de la imagen como un porcentaje del ancho de la página.</p>
-      </div>
-
-      <!--  -->
-      <div class="page">
-        <p>Si se quiere agregar una imagen como una figura, es decir con texto descriptivo debajo, hay que utilizar lo siguiente:</p>
-
-<xmp><figure>
-<img class="image_expand" onclick="openImage(this)" 
-src="https://proyectodescartes.org/descartescms/images/
-logodescartes.gif" width="70%">
-<figcaption>Banner del proyecto descartes.</figcaption>
-</figure></xmp>
-
-        <figure>
-          <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
-          <figcaption>Banner del proyecto descartes.</figcaption>
-        </figure>
 
         <p>El código <code>class="image_expand" onclick="openImage(this)"</code> es lo que permite que la imagen se muestre en una nueva ventana, entonces, para tener una imagen que no se muestre en una ventana nueva al dar clic sobre ella, solo hay que omitir el código <code>class="image_expand" onclick="openImage(this)"</code>, por ejemplo:</p>
 
@@ -321,7 +305,7 @@ images/logodescartes.gif" width="40%"></xmp>
 
       <!-- -->
       <div class="page">
-        <p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente hacia algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
+        <p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
 
 <xmp><img class="image_link" 
 onclick="openInteractive('https://proyectodescartes.org/
@@ -334,6 +318,109 @@ width="75%"></xmp>
         <img class="image_link" onclick="openInteractive('https://proyectodescartes.org/Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/index.html', '790', '570')" src="https://proyectodescartes.org/Telesecundaria/imagenes_descripcion_materiales/3m_b01_t01_s01.png" width="75%">
 
         <p>El código <code>openInteractive('url', 'ancho', 'alto)</code>, es el que se encarga de abrir el vínculo en una nueva ventana emergente, de tal manera que <code>url</code> corresponde a la dirección del recurso a mostrar, <code>ancho</code> y <code>alto</code> determinan el tamaño de la ventana emergente.</p>
+      </div>
+
+      <!-- -->
+      <div class="page">
+        <p>Si se quiere agregar una imagen como una figura, es decir con texto descriptivo debajo, hay que utilizar lo siguiente:</p>
+
+<xmp><figure>
+<img class="image_expand" onclick="openImage(this)" 
+src="https://proyectodescartes.org/descartescms/images/
+logodescartes.gif" width="70%">
+<figcaption>Banner del proyecto descartes.</figcaption>
+</figure></xmp>
+        
+        <figure>
+          <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
+          <figcaption>Banner del proyecto descartes.</figcaption>
+        </figure>
+
+        <p>Para agregar una referencia a una figura, es necesario tener un identificador en la figura y utilizar lo siguiente:</p>
+<xmp><ref ref_id="IDENTIFICADOR_DE_LA_FIGURA"></ref></xmp>
+
+        <p>Por ejemplo el siguiente código:</p>
+
+<xmp><p>Observa la figura <ref ref_id="mi_figura">
+</ref>.</p>
+<figure id=mi_figura>
+<img src="https://proyectodescartes.org/descartescms/
+images/logodescartes.gif" width="70%">
+<figcaption>El título de la figura.</figcaption>
+</figure></xmp>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Muestra lo siguiente:</p>
+
+        <p>Observa la <ref ref_id="mi_figura"></ref>.</p>
+
+        <figure id=mi_figura>
+          <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
+          <figcaption>El título de la figura.</figcaption>
+        </figure>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="teoremas">Definiciones, teoremas y lemas</h2>
+
+        <p>Para agregar una definición, teorema o lema, hay que utilizar el siguiente código:</p>
+
+<xmp><div class="num_block" 
+prefix="PREFIJO_PARA_LA_AUTO_NUMERACIÓN"></div>
+</xmp>
+
+        <p>Por ejemplo para agregar una definición se escribiría lo siguiente:</p>
+
+<xmp><div class="num_block" prefix="Definición">Este es el 
+texto de una definición.</div></xmp>
+
+        <p>Lo que muestra este texto:</p>
+
+        <div class="num_block" prefix="Definición">
+          Este es el texto de una definición.
+        </div>
+
+        <p>Por ejemplo para agregar un teorema se escribiría lo siguiente:</p>
+
+<xmp><div class="num_block" prefix="Teorema">Este es el 
+texto de un teorema.</div></xmp>
+
+        <p>Lo que muestra este texto:</p>
+
+        <div class="num_block" prefix="Teorema">
+          Este es el texto de un teorema.
+        </div>
+
+        <p>Por ejemplo para agregar un lema se escribiría lo siguiente:</p>
+
+<xmp><div class="num_block" prefix="Lema">Este es el 
+texto de un lema.</div></xmp>
+
+        <p>Lo que muestra este texto:</p>
+
+        <div class="num_block" prefix="Lema">
+          Este es el texto de un lema.
+        </div>
+      </div>
+
+      <!--  -->
+      <div class="page">
+        <p>Para agregar una referencia a una definición, teorema o lema, se utiliza el mismo mecanismo para referenciar figuras, por lo que es necesario contar con un identificador en elemento que se quiere referenciar.</p>
+
+<xmp><ref ref_id="ID_DE_LA_DEFINICIÓN_TEOREMA_O_LEMA"></ref></xmp>
+
+        <p>Por ejemplo el siguiente código:</p>
+<xmp><div class="num_block" prefix="Lema" id="lema_supremo">
+El lema supremo dice ...</div>
+<p>Como podemos observar en el <ref ref_id="lema_supremo">
+</ref> todo es increíble.</p></xmp>
+
+        <p>Muestra el siguiente texto:</p>
+        <div class="num_block" prefix="Lema" id="lema_supremo">El lema supremo dice ...</div>
+        <p>Como podemos observar en el <ref ref_id="lema_supremo"></ref> todo es increíble.</p>
       </div>
 
       <!--  -->

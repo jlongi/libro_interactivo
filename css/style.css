@@ -163,6 +163,9 @@ h1 {
   padding-right: 1em;
   font-size: 90%;
 }
+.num_block {
+  padding-left: 1em;
+}
 
 .image_expand {
   display: block;
