@@ -446,6 +446,11 @@ window.addEventListener("load", function(evt) {
     }
   }
 
+  /** Hide the child nodes of each page to help the rendering in chrome */
+  for (let i=0; i<pages.length; i++) {
+    pages[i].setAttribute("show", "true");
+  }
+
   /** add the back and next actions to the buttons */
   let inc;
   back.addEventListener("click", function(evt) {
@@ -465,17 +470,20 @@ window.addEventListener("load", function(evt) {
       new_page--;
     }
 
-    // get the iframes in the current page
+    // get the iframes in the current pages
     let last_iframes = [];
     for (let i=current_page-2; i<current_page+4; i++) {
       if ((i >= 0) && (i < pages.length)) {
+        // hide the elements of the current pages
+        pages[i].setAttribute("show", "true");
+
         if (!pages[i].iframes) {
           pages[i].iframes = Array.from(pages[i].querySelectorAll("iframe"));
         }
         last_iframes = last_iframes.concat(pages[i].iframes);
       }
     }
-    // get the videos in the current page
+    // get the videos in the current pages
     let last_videos = [];
     for (let i=current_page; i<current_page+2; i++) {
       if ((i >= 0) && (i < pages.length)) {
@@ -493,6 +501,9 @@ window.addEventListener("load", function(evt) {
     let next_iframes = [];
     for (let i=current_page-2; i<current_page+4; i++) {
       if ((i >= 0) && (i < pages.length)) {
+        // show the elements in the current pages
+        pages[i].removeAttribute("show");
+
         if (!pages[i].iframes) {
           pages[i].iframes = Array.from(pages[i].querySelectorAll("iframe"));
         }
