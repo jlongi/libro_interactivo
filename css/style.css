@@ -45,10 +45,7 @@ body {
   height: var(--pages_container_height);
   padding: var(--page-top-margin) var(--page-right-margin) var(--page-bottom-margin) var(--page-left-margin);
 }
-/* Style needed to help the rendering in chrome */
-.page[show="true"] * {
-  display: none;
-}
+
 .page_viewer {
   transform-origin: 0 0 0;
 }
@@ -312,7 +309,12 @@ bibitem {
     overflow: hidden;
     height: var(--pages_container_height);
   }
-  
+
+  /* Style needed to help the rendering in chrome */
+  .page[show="true"] * {
+    display: none;
+  }
+
   #pages_container {
     position: absolute;
     display: flex;
@@ -345,7 +347,7 @@ bibitem {
   .page {
     page-break-after: always !important;
   }
-  
+
   .page_viewer {
     position: relative;
     transform: none !important;
