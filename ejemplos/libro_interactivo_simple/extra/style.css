@@ -4,19 +4,19 @@ body {
 }
 
 .page h1 {
-  color: #0089cd;
+  color: var(--h1-color);
 }
 .page h2 {
-  color: #000099;
+  color: var(--h2-color);
   font-size: 140%;
 }
 a {
-  color: #3867d6;
+  color: var(--link-text-color);
 }
 
 .note {
-  border-left: 4px solid #3867d6;
-  color: #1e272e;
+  border-left: 4px solid var(--note-color);
+  color: var(--note-text-color);
 }
 
 .num_block {
@@ -37,12 +37,12 @@ a {
 
 .interactive {
   text-align: center;
-  border: 1px solid #2ecc71;
+  border: 1px solid var(--interactive-border-color);
   border-radius: 2px;
-  background: #ffffff;
+  background: var(--interactive-color);
 }
 .image_link {
-  border: 2px solid #2ecc71;
+  border: 2px solid var(--image-border-color);
 }
 
 li {
