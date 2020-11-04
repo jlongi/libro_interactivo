@@ -34,10 +34,7 @@ body {
   --page-separation-color: rgba(0, 0, 0, 0.1);
   --bibliography-color: #0089cd;
 
-  --toc-image: url("img/table_of_content.svg");
   --toc-button-border: rgba(0, 0, 0, 0.4);
-  --maximize-image: url("img/ampliar.svg");
-  --config-image: url("img/config.svg");
   --switch-background-color: #ffffff;
 }
 
@@ -59,10 +56,7 @@ body.dark {
   --page-separation-color: rgba(255, 255, 255, 0.2);
   --bibliography-color: #48dbfb;
 
-  --toc-image: url("img/table_of_content_dark.svg");
   --toc-button-border: rgba(255, 255, 255, 0.4);
-  --maximize-image: url("img/ampliar_dark.svg");
-  --config-image: url("img/config_dark.svg");
   --switch-background-color: #2d3436;
 }
 
@@ -269,7 +263,6 @@ video {
   border-radius: 0;
   background-color: var(--maximize-color);
   background-size: cover;
-  background-image: var(--maximize-image);
   cursor: pointer;
 }
 
@@ -359,6 +352,28 @@ bibitem {
   box-shadow: -2px 4px 3px rgba(0,0,0,0.05);
 }
 
+/* change theme images */
+/* this is necessary for the ipad */
+body #btn_config {
+  background-image: url("img/config.svg");
+}
+body.dark #btn_config {
+  background-image: url("img/config_dark.svg");
+}
+body #go_to_table_of_content {
+  background-image: url("img/table_of_content.svg");
+}
+body.dark #go_to_table_of_content {
+  background-image: url("img/table_of_content_dark.svg");
+}
+body .btn_ampliar {
+  background-image: url("img/ampliar.svg");
+}
+body.dark .btn_ampliar {
+  background-image: url("img/ampliar_dark.svg");
+}
+
+
 /* Style for screen  */
 @media screen {
   body {
@@ -383,7 +398,6 @@ bibitem {
     background-size: 90%;
     background-position: center;
     padding: 0;
-    background-image: var(--toc-image);
   }
 
   #btn_config {
@@ -402,7 +416,6 @@ bibitem {
     background-size: 80%;
     background-position: center;
     padding: 0;
-    background-image: var(--config-image);
   }
   
   #table_of_content {
