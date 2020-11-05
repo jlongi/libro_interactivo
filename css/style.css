@@ -33,6 +33,7 @@ body {
   --image-border-color: #2ecc71;
   --page-separation-color: rgba(0, 0, 0, 0.1);
   --bibliography-color: #0089cd;
+  --figcaption-text: #34495e;
 
   --toc-button-border: rgba(0, 0, 0, 0.4);
   --switch-background-color: #ffffff;
@@ -55,6 +56,7 @@ body.dark {
   --image-border-color: #ecf0f1;
   --page-separation-color: rgba(255, 255, 255, 0.2);
   --bibliography-color: #48dbfb;
+  --figcaption-text: #bcbcbc;
 
   --toc-button-border: rgba(255, 255, 255, 0.4);
   --switch-background-color: #2d3436;

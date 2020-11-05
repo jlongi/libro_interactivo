@@ -13,15 +13,6 @@ window.book_config = window.book_config || {
 };
 
 document.addEventListener("DOMContentLoaded", function(evt) {
-
-  // use dark style
-  // dark_style = document.head.appendChild(document.createElement("link"));
-  // dark_style.setAttribute("id", "dark_style");
-  // dark_style.setAttribute("type", "text/css");
-  // dark_style.setAttribute("rel", "stylesheet");
-  // dark_style.setAttribute("href", "extra/style_dark.css");
-
-
   /** prevent the iframes to show */
   let iframes = document.querySelectorAll("iframe");
   for (let i=0, l=iframes.length; i<l; i++) {
@@ -191,17 +182,20 @@ function addTableOfContentEntries() {
   let tmp;
   for (entry of toc_links) {
     link_clone = entry.cloneNode(true);
-    tmp = link_clone.getAttribute("onclick");
-    link_clone.setAttribute("onclick", tmp.replace(/\)/g, ",true)"));
 
-    tmp = tmp.match(/(\d)+/g)[0];
-    link_clone.setAttribute("page_num", tmp);
+    tmp = link_clone.getAttribute("onclick");
+    if (tmp) {
+      link_clone.setAttribute("onclick", tmp.replace(/\)/g, ",true)"));
+
+      tmp = tmp.match(/(\d)+/g)[0];
+      link_clone.setAttribute("page_num", tmp);
+    }
 
     toc.appendChild(link_clone);
   }
   toc.addEventListener("click", (evt) => {
     toc.style.display = "none";
-  })
+  });
 }
 
 /** 
