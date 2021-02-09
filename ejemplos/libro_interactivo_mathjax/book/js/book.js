@@ -384,7 +384,7 @@ function numerateSectionsAndFigures() {
           }
         }
         // num_block
-        else if ((tag_name == "div") && (ele.className == "num_block")) {
+        else if ((tag_name == "div") && (ele.classList.contains("num_block"))) {
           num_block_counter = num_block_prefix_counter[ele.getAttribute("prefix")] || 0;
           num_block_counter++;
           num_block_prefix_counter[ele.getAttribute("prefix")] = num_block_counter;
@@ -410,7 +410,7 @@ function numerateSectionsAndFigures() {
  *****************************************************
  */
 function getPageContainer(elem) {
-  while (elem && elem.className !== "page") {
+  while (elem && !elem.classList.contains("page")) {
     elem = elem.parentNode;
   }
   return elem;
