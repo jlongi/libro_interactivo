@@ -20,9 +20,11 @@ window.book_config = window.book_config || {
  *****************************************************
  */
 document.addEventListener("DOMContentLoaded", function(evt) {
-  /** prevent the iframes to show */
+  // prevent the iframes to show
   let iframes = document.querySelectorAll("iframe");
   for (let i=0, l=iframes.length; i<l; i++) {
+    // observer.observe(iframes[i]);
+
     if (!iframes[i].hasAttribute("data-src")) {
       iframes[i].setAttribute("data-src", iframes[i].src);
     }
@@ -34,10 +36,11 @@ document.addEventListener("DOMContentLoaded", function(evt) {
   let pages_container_width = parseInt(body_style.getPropertyValue("--pages_container_width"));
   let page_left_margin = parseInt(body_style.getPropertyValue("--page-left-margin"));
   let page_right_margin = parseInt(body_style.getPropertyValue("--page-right-margin"));
-  let page_width = pages_container_width/2 - page_left_margin - page_right_margin;
+  let interactive_margin = parseInt(body_style.getPropertyValue("--interactive-margin"));
+  let text_width = pages_container_width/2 - page_left_margin - page_right_margin;
 
   // add interactive
-  addInteractive(page_width);
+  addInteractive(text_width, interactive_margin);
 
   // add image links
   addImageLinks();
@@ -60,52 +63,55 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 /**
  *****************************************************
  */
-function addInteractive(page_width) {
-  let interactive = document.querySelectorAll(".interactive");
+function addInteractive(text_width, interactive_margin) {
+  let interactives = document.querySelectorAll(".interactive");
   let w;
   let h;
+  let i_w;
+  let i_h;
   let scale;
   let src;
+  let window_size;
+
   let new_iframe;
   let new_expand;
-  let window_size;
-  let margin = 30;
-  let btn;
-  for (let i=0, l=interactive.length; i<l; i++) {
-    w = parseInt(interactive[i].getAttribute("width") || 0);
-    h = parseInt(interactive[i].getAttribute("height") || 0);
-    scale = parseInt( interactive[i].getAttribute("scale") || 100 ) / 100;
-    src = interactive[i].getAttribute("src") || "";
-    window_size = interactive[i].getAttribute("window-size") || false;
 
-    interactive[i].setAttribute("style", `width:${w * ((page_width-margin)*scale)/w + margin}px; height:${h * ((page_width-margin)*scale)/w + margin}px;`);
-    
+  let margin = parseInt(interactive_margin);
+  let btn;
+
+  interactives.forEach((inte) => {
+    w = parseInt(inte.getAttribute("width") || 0);
+    h = parseInt(inte.getAttribute("height") || 0);
+    scale = parseInt( inte.getAttribute("scale") || 100 ) / 100;
+    src = inte.getAttribute("src") || "";
+    window_size = inte.getAttribute("window-size") || false;
+
+    i_w = Math.ceil(w * ((text_width-margin)*scale)/w);
+    i_h = Math.ceil(h * ((text_width-margin)*scale)/w);
+    inte.setAttribute("style", `width:${i_w + margin}px; height:${i_h + margin}px;`);
+
     if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
-      interactive[i].style.overflow = "hidden";
+      inte.style.overflow = "hidden";
     }
-    
+
     new_iframe = document.createElement("iframe");
-    new_iframe.setAttribute("width", w * ((page_width-margin)*scale)/w);
-    new_iframe.setAttribute("height", h * ((page_width-margin)*scale)/w);
+    new_iframe.setAttribute("width", i_w);
+    new_iframe.setAttribute("height", i_h);
     new_iframe.setAttribute("data-src", src);
     new_iframe.setAttribute("src", "about:blank");
 
-    new_expand = document.createElement("div");
-    new_expand.setAttribute("style", "position:relative; top:-15px; z-index:1000;");
-
     btn = document.createElement("button");
-    btn.className = "btn_ampliar";
-    new_expand.appendChild(btn);
+    btn.className = "btn_expand";
 
     if (window_size) {
       w = window.innerWidth;
       h = window.innerHeight;
     }
-    new_expand.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
+    btn.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
 
-    interactive[i].appendChild(new_expand);
-    interactive[i].appendChild(new_iframe);
-  }
+    inte.appendChild(btn);
+    inte.appendChild(new_iframe);
+  });
 }
 
 /**
@@ -114,53 +120,150 @@ function addInteractive(page_width) {
 function addImageLinks() {
   let img_links = document.querySelectorAll(".image_link");
   let image_width;
+  let tmp_div;
   let div_img_links;
-  let btn_link;
-  for (let i=0, l=img_links.length; i<l; i++) {
-    image_width = img_links[i].getAttribute("width") || "100%";
-    img_links[i].setAttribute("width", "100%");
+  let btn;
+
+  img_links.forEach((img) => {
+    image_width = img.getAttribute("width") || "100%";
+    img.setAttribute("width", "100%");
 
     div_img_links = document.createElement("div");
-    img_links[i].parentNode.replaceChild(div_img_links, img_links[i]);
+    img.parentNode.replaceChild(div_img_links, img);
 
-    let tmp_div = document.createElement("div");
+    tmp_div = document.createElement("div");
     tmp_div.setAttribute("style", `margin:0 auto; position:relative; width:${image_width};`);
     div_img_links.appendChild(tmp_div);
 
-    tmp_div.appendChild(img_links[i]);
+    tmp_div.appendChild(img);
 
-    btn_link = document.createElement("button");
-    btn_link.className = "btn_link";
-    tmp_div.appendChild(btn_link);
-  }
+    btn = document.createElement("button");
+    btn.className = "btn_link";
+    tmp_div.appendChild(btn);
+  });
 }
 
 /**
  *****************************************************
  */
 function addFootnotes() {
-  let el;
   let footnote_list = document.querySelectorAll(".footnote");
   let footnote_parent_page;
   let footnote_container;
   let footnote_number;
 
-  for (let i=0, l=footnote_list.length; i<l; i++) {
-    el = footnote_list[i];
-    footnote_parent_page = getPageContainer(el);
+  footnote_list.forEach((footnote, index) => {
+    footnote_parent_page = getPageContainer(footnote);
 
-    footnote_number = document.createElement("sup");
-    footnote_number.textContent = i+1;
-    el.parentNode.replaceChild(footnote_number, el);
-    el.setAttribute("number", i+1);
+    footnote_number = document.createElement("span");
+    footnote_number.textContent = index+1;
+    footnote.parentNode.replaceChild(footnote_number, footnote);
+    footnote.setAttribute("number", footnote_number.textContent);
 
     footnote_container = footnote_parent_page.querySelector(".footnote_container");
     if (!footnote_container) {
       footnote_container = footnote_parent_page.appendChild( document.createElement("div") );
       footnote_container.className = "footnote_container";
     }
-    footnote_container.appendChild(el);
-  }
+    footnote_container.appendChild(footnote);
+  });
+}
+
+/**
+ *****************************************************
+ */
+function numerateSectionsAndFigures() {
+  let chapter_counter = 0;
+  let section_counter = 0;
+  let subsection_counter = 0;
+  let subsubsection_counter = 0;
+  let figcaption_prefix;
+  let figcaption_counter;
+  let figcaption_prefix_counter = {};
+  let num_block_counter;
+  let num_block_prefix_counter = {};
+  let tag_name;
+
+  let elements = document.querySelectorAll(".chap_name,h2,h3,h4,figcaption,.num_block");
+
+  elements.forEach((ele) => {
+    if (ele.classList.contains("chap_name")) {
+      chapter_counter++;
+      section_counter = 0;
+      num_block_prefix_counter = {};
+      figcaption_prefix_counter = {};
+      ele.level = 0;
+
+      if (!ele.hasAttribute("prefix")) {
+        ele.setAttribute("prefix", chapter_counter);
+      }
+      ele.level = 0;
+    }
+    else if (chapter_counter > 0) {
+      if (!ele.hasAttribute("not_number")) {
+        tag_name = ele.tagName.toLocaleLowerCase();
+
+        // section
+        if (tag_name == "h2") {
+          section_counter++;
+          subsection_counter = 0;
+          ele.level = 1;
+          ele.innerHTML = `${chapter_counter}.${section_counter} ${ele.innerHTML}`;
+        }
+        // subsection
+        else if (tag_name == "h3") {
+          subsubsection_counter = 0;
+          ele.level = 2;
+          if (section_counter > 0) {
+            subsection_counter++;
+            ele.innerHTML = `${chapter_counter}.${section_counter}.${subsection_counter} ${ele.innerHTML}`;
+          }
+          else {
+            ele.innerHTML = `${ele.innerHTML}`;
+          }
+        }
+        // subsubsection
+        else if (tag_name == "h4") {
+          ele.level = 3;
+          if ((section_counter > 0) && (subsection_counter > 0)) {
+            subsubsection_counter++;
+            ele.innerHTML = `${chapter_counter}.${section_counter}.${subsection_counter}.${subsubsection_counter} ${ele.innerHTML}`;
+          }
+          else {
+            ele.innerHTML = `${ele.innerHTML}`;
+          }
+        }
+        // figure
+        else if (tag_name == "figcaption") {
+          figcaption_prefix = ele.getAttribute("prefix") || "Figura";
+          figcaption_counter = figcaption_prefix_counter[figcaption_prefix] || 0;
+          figcaption_counter++;
+          figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
+          ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${chapter_counter}.${figcaption_counter}</span>`;
+          ele.parentNode.ref_text = ele.ref_text;
+          ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
+        }
+        // num_block
+        else if ((tag_name == "div") && (ele.classList.contains("num_block"))) {
+          num_block_counter = num_block_prefix_counter[ele.getAttribute("prefix")] || 0;
+          num_block_counter++;
+          num_block_prefix_counter[ele.getAttribute("prefix")] = num_block_counter;
+          ele.ref_text = `<span class="num_block_prefix">${ele.getAttribute("prefix") || ""} ${chapter_counter}.${num_block_counter}</span>`;
+          ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
+        }
+      }
+    }
+  });
+
+  // add the figures references
+  let refs = document.querySelectorAll("ref");
+  let ref_elem;
+  refs.forEach((ref) => {
+    ref_elem = document.getElementById(ref.getAttribute("ref_id") || "");
+    if (ref_elem) {
+      ref.innerHTML = ref_elem.ref_text;
+    }
+  });
 }
 
 /**
@@ -171,14 +274,15 @@ function addTableOfContentEntries() {
   let toc_links = document.querySelectorAll(".toc_link");
   let auto_toc_links = [];
   let no_auto_toc_links = [];
-  for (let i=0, l=toc_links.length; i<l; i++) {
-    if (toc_links[i].getAttribute("href")) {
-      auto_toc_links.push(toc_links[i]);
+
+  toc_links.forEach((toc_link) => {
+    if (toc_link.getAttribute("href")) {
+      auto_toc_links.push(toc_link);
     }
     else {
-      no_auto_toc_links.push(toc_links[i]);
+      no_auto_toc_links.push(toc_link);
     }
-  }
+  });
 
   let temp_a;
   // adjust style of manual toc links
@@ -204,6 +308,7 @@ function addTableOfContentEntries() {
 
     let elem;
     let elem_text;
+    let elem_level;
     let page_elem;
     let page_num;
     let prefix;
@@ -214,9 +319,10 @@ function addTableOfContentEntries() {
       if (!elem) {
         continue;
       }
-      
+
       elem_text = elem.textContent.trim().replace(/\.$/, "");
       page_elem = getPageContainer(elem);
+      elem_level = parseInt( elem.level || 0);
 
       if (page_elem) {
         page_num = pages.indexOf(page_elem);
@@ -227,16 +333,8 @@ function addTableOfContentEntries() {
 
           prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
 
-          if (prefix) {
-            auto_toc_links[i].setAttribute("style", "font-weight:bold;");
-            auto_toc_links[i].innerHTML = `<a><span>${prefix}. ${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
-          }
-          else {
-            if (elem.hasAttribute("prefix")) {
-              auto_toc_links[i].setAttribute("style", "font-weight:bold;");
-            }
-            auto_toc_links[i].innerHTML = `<a><span style="padding-left:1em;">${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
-          }
+          auto_toc_links[i].setAttribute("level", elem_level);
+          auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""}${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
         }
       }
     }
@@ -254,23 +352,21 @@ function addTableOfContentEntries() {
     let tmp;
     for (entry of toc_links) {
       link_clone = entry.cloneNode(true);
-  
+
       tmp = link_clone.getAttribute("onclick");
       if (tmp) {
         link_clone.setAttribute("onclick", tmp.replace(/\)/g, ",true)"));
-  
+
         tmp = tmp.match(/(\d)+/g)[0];
         link_clone.setAttribute("page_num", tmp);
       }
-  
+
       toc.appendChild(link_clone);
     }
     toc.addEventListener("click", (evt) => {
       toc.style.display = "none";
     });
   }
-
-
 }
 
 /**
@@ -281,6 +377,7 @@ function addBibliography() {
   let tmp;
   let tmp_attr;
   let ref;
+  let label;
   let attr_list = ["authors", "title", "editorial", "edition", "year"];
 
   bibitems.forEach((item, index) => {
@@ -289,19 +386,26 @@ function addBibliography() {
     ref = (window.book_config.bibitem_red_id) ? tmp_attr : index+1;
     item.setAttribute("refid", ref);
 
+    label = item.getAttribute("label");
+
     tmp = document.createElement("span")
-    tmp.innerHTML = "[" + ref + "] ";
+    tmp.innerHTML = `[${(label) ? label : ref}]`;
     tmp.classList = "bibitem_id";
-    item.appendChild(tmp);
 
+    if (item.textContent.trim() != "") {
+      item.insertBefore(tmp, item.firstChild);
+    }
+    else {
+      item.appendChild(tmp);
 
-    for (let i=0; i<attr_list.length; i++) {
-      tmp_attr = item.getAttribute(attr_list[i]);
-      if (tmp_attr) {
-        tmp = document.createElement("span")
-        tmp.innerHTML = tmp_attr + ". ";
-        tmp.classList = "bibitem_" + attr_list[i];
-        item.appendChild(tmp);
+      for (let i=0; i<attr_list.length; i++) {
+        tmp_attr = item.getAttribute(attr_list[i]);
+        if (tmp_attr) {
+          tmp = document.createElement("span")
+          tmp.innerHTML = tmp_attr + ". ";
+          tmp.classList = "bibitem_" + attr_list[i];
+          item.appendChild(tmp);
+        }
       }
     }
   });
@@ -311,97 +415,16 @@ function addBibliography() {
   let tmp_id;
   bibrefs.forEach(ref => {
     tmp_id = document.getElementById(ref.getAttribute("ref_id"));
+    
     if (tmp_id) {
       ref.innerHTML = "[" + tmp_id.getAttribute("refid") + "]";
       let txt = tmp_id.innerHTML;
-      
+
       ref.addEventListener("click", function(evt) {
         let popup_bib_info = document.querySelector(".popup_bib_info");
         popup_bib_info.style.display = "block";
         popup_bib_info.firstChild.innerHTML = txt;
       });
-
-      // ref.title = tmp_id.textContent.trim();
-    }
-  });
-}
-
-/**
- *****************************************************
- */
-function numerateSectionsAndFigures() {
-  let chapter_counter = 0;
-  let section_counter = 0;
-  let subsection_counter = 0;
-  let figure_counter = 0;
-  let table_counter = 0;
-  let num_block_counter;
-  let num_block_prefix_counter = {};
-  let tag_name;
-
-  let elements = document.querySelectorAll(".chap_name,h2,h3,figcaption,.num_block");
-
-  elements.forEach((ele) => {
-    if (ele.classList.contains("chap_name")) {
-      chapter_counter++;
-      section_counter = figure_counter = table_counter = 0;
-      num_block_prefix_counter = {};
-
-      if (!ele.hasAttribute("prefix")) {
-        ele.setAttribute("prefix", chapter_counter);
-      }
-    }
-    else if (chapter_counter > 0) {
-      if (!ele.hasAttribute("not_number")) {
-        tag_name = ele.tagName.toLocaleLowerCase();
-
-        // section
-        if (tag_name == "h2") {
-          section_counter++;
-          subsection_counter = 0;
-          ele.innerHTML = `${chapter_counter}.${section_counter} ${ele.innerHTML}`;
-        }
-        // subsection
-        else if (tag_name == "h3") {
-          subsection_counter++;
-          ele.innerHTML = `${chapter_counter}.${section_counter}.${subsection_counter} ${ele.innerHTML}`;
-        }
-        // figure
-        else if (tag_name == "figcaption") {
-          if (ele.parentNode.classList.contains("figtable")) {
-            table_counter++;
-            // set the ref_text in the figcaption tag and in the figure tag
-            ele.ref_text = `<b>Tabla ${chapter_counter}.${table_counter}</b>`;
-            ele.parentNode.ref_text = ele.ref_text; 
-            ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
-          }
-          else {
-            figure_counter++;
-            // set the ref_text in the figcaption tag and in the figure tag
-            ele.ref_text = `<b>Figura ${chapter_counter}.${figure_counter}</b>`;
-            ele.parentNode.ref_text = ele.ref_text; 
-            ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
-          }
-        }
-        // num_block
-        else if ((tag_name == "div") && (ele.classList.contains("num_block"))) {
-          num_block_counter = num_block_prefix_counter[ele.getAttribute("prefix")] || 0;
-          num_block_counter++;
-          num_block_prefix_counter[ele.getAttribute("prefix")] = num_block_counter;
-          ele.ref_text = `<b><i>${ele.getAttribute("prefix") || ""} ${chapter_counter}.${num_block_counter}</i></b>`;
-          ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
-        }
-      }
-    }
-  });
-
-  // add the figures references
-  let refs = document.querySelectorAll("ref");
-  let ref_elem;
-  refs.forEach((ref) => {
-    ref_elem = document.getElementById(ref.getAttribute("ref_id") || "");
-    if (ref_elem) {
-      ref.innerHTML = ref_elem.ref_text;
     }
   });
 }
@@ -415,8 +438,6 @@ function getPageContainer(elem) {
   }
   return elem;
 }
-
-
 
 /**
  *****************************************************
@@ -455,7 +476,6 @@ window.addEventListener("load", function(evt) {
   let toc_btn = document.getElementById("go_to_table_of_content");
 
   let orientation = LANDSCAPE;
-  let nav_btn_size = 2.2;
 
   let popup_bib_info = book_container.appendChild(document.createElement("div"));
   popup_bib_info.className = "popup_bib_info";
@@ -465,25 +485,23 @@ window.addEventListener("load", function(evt) {
   popup_bib_info_close.addEventListener("click", () => {
     popup_bib_info.style.display = "none";
   });
-  
+
   /**
-   * 
+   *
    */
   window.addEventListener("resize", resize);
   function resize(evt) {
     let w = window.innerWidth;
     let h = window.innerHeight;
     let tmp_w;
-    
+
     if (w > h) {
       tmp_w = pages_container_width;
       orientation = LANDSCAPE;
-      back.style.width = next.style.width = `${nav_btn_size}vw`;
     }
     else {
       tmp_w = pages_container_width/2;
       orientation = PORTRAIT;
-      back.style.width = next.style.width = `${nav_btn_size}vh`;
     }
 
     page_viewer.style.width = `${tmp_w}px`;
@@ -577,16 +595,20 @@ window.addEventListener("load", function(evt) {
   /** add the back and next actions to the buttons */
   let inc;
   back.addEventListener("click", function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
     inc = (orientation === LANDSCAPE) ? 2 : 1;
     goToPage(Math.max(current_page-inc, 0));
   });
   next.addEventListener("click", function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
     inc = (orientation === LANDSCAPE) ? 2 : 1;
     goToPage(Math.min(current_page+inc, pages.length-1));
   });
 
   /**
-   * 
+   *
    */
   function goToPage(new_page) {
     if ( (orientation === PORTRAIT) && (new_page === 0) ) {
@@ -710,11 +732,11 @@ window.addEventListener("load", function(evt) {
     toc_btn.addEventListener("click", function(evt) {
       let pn = parseInt(pages[current_page].getAttribute("page_num"));
       let toc_selected = document.querySelector(".toc_selected");
-  
+
       if (toc_selected) {
         toc_selected.classList.remove("toc_selected");
       }
-  
+
       if (pn) {
         for (let i=toc_links.length-1; i>=0; i--) {
           if (pn >= parseInt(toc_links[i].getAttribute("page_num"))) {
@@ -722,12 +744,12 @@ window.addEventListener("load", function(evt) {
             break;
           }
         }
-  
+
         if (last_toc_link) {
           last_toc_link.classList.add("toc_selected");
         }
       }
-  
+
       toc.style.display = "block";
     });
   }
@@ -752,7 +774,7 @@ window.addEventListener("load", function(evt) {
       window.goToPage(toc_index_page);
     });
   }
-  
+
 
   /** */
   let x = null;
