@@ -1,6 +1,10 @@
 # Libro interactivo
 Núcleo de código en CSS y JavaScript, para la creación de libros interactivos.
 
+# Plantilla inicial
+
+<a href="https://github.com/jlongi/libro_interactivo/releases/download/ejemplos/libro_interactivo_plantilla.zip" target="_blank">Aquí</a> puede descargarse una plantilla para iniciar el desarrollo de un libro interactivo.
+
 # Ejemplos
 * Aquí puede verse un <a href="https://jlongi.github.io/libro_interactivo/ejemplos/libro_interactivo_simple/" target="_blank">ejemplo básico de uso</a> y puede descargarse un zip desde <a href="https://github.com/jlongi/libro_interactivo/releases/download/ejemplos/libro_interactivo_simple.zip" target="_blank">aquí</a>.
 
