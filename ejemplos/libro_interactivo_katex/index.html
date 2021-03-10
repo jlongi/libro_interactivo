@@ -375,7 +375,7 @@ width="75%"></xmp>
 <xmp><figure>
 <img class="image_expand" onclick="openImage(this)" 
 src="https://proyectodescartes.org/descartescms/images/
-logodescartes.gif" width="70%">
+logodescartes.gif" width="50%">
 <figcaption>Banner del proyecto descartes.</figcaption>
 </figure></xmp>
         
@@ -405,33 +405,33 @@ images/logodescartes.gif" width="50%">
         <p>Observa la <ref ref_id="mi_figura"></ref>.</p>
 
         <figure id=mi_figura>
-          <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="70%">
+          <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="50%">
           <figcaption>El título de la figura.</figcaption>
         </figure>
 
-        <p>Para agregar una referencia a una tabla, es necesario tener un identificador en la figura que contiene la tabla y agregar la clase <code>figtable</code> a la figura. Por ejemplo el siguiente código:</p>
+        <p>Para agregar una referencia a figura cuyo contenido es diferente a una imagen por ejemplo una tabla (un interactivo o un video), es necesario tener un identificador en la figura que contiene la tabla y agregar el atributo <code>prefix="Tabla"</code> (o el nombre que queremos que aparezca en la etiqueta) al elemento <code>&lt;figcaption&gt;</code>. Por ejemplo:</p>
 
 <xmp><p>Observa la <ref ref_id="mi_tabla">
 </ref>.</p>
-<figure id="mi_tabla" class="figtable">
+<figure id="mi_tabla">
 <table>
   <tr><td>Título 1</td><td>Título 2</td></tr>
   <tr><td>Valor 1</td><td>Valor2</td></tr>
 </table>
-<figcaption>El título de la tabla.</figcaption>
-</figure></xmp>
+<figcaption prefix="Tabla">El título de la tabla.
+</figcaption></figure></xmp>
 
         <p>Muestra lo siguiente:</p>
 
         <p>Observa la <ref ref_id="mi_tabla">
         </ref>.</p>
-        <figure id="mi_tabla" class="figtable">
+        <figure id="mi_tabla">
         <table>
           <tr><td>Título 1</td><td>Título 2</td></tr>
           <tr><td>Valor 1</td><td>Valor2</td></tr>
         </table>
-        <figcaption>El título de la tabla.</figcaption>
-        </figure>
+        <figcaption prefix="Tabla">El título de la tabla.</figcaption>
+      </figure>
 
       </div>
 
@@ -494,6 +494,8 @@ El lema supremo dice ...</div>
         <p>Muestra el siguiente texto:</p>
         <div class="num_block" prefix="Lema" id="lema_supremo">El lema supremo dice ...</div>
         <p>Como podemos observar en el <ref ref_id="lema_supremo"></ref> todo es increíble.</p>
+
+        <p>El parámetro <code>prefix</code> en referencias bibliográficas y en bloques autonumerados, corresponde siempre a la etiqueta que se muestra de forma automática y además permite tener contadores para identificar y contar elementos de un mismo tipo, por ejemplo: figuras, tablas, videos, interactivos, lemas, teoremas, etc.</p>
       </div>
 
       <!--  -->
@@ -526,48 +528,42 @@ y=10
       <div class="page">
         <h2 id="referencia_a_bibliografia">Referencia bibliográfica</h2>
 
-        <p>Para agregar bibliografía en el capítulo correspondiente hay que agregar algo como lo siguiente:</p>
-<xmp><bibitem id="RER119" 
-  authors="Juan Guillermo Rivera Berrío, Joel Espinosa 
-Longi y Alejandro Radillo Díaz" 
-  title="Descartes JS - Nivel - I"
-  editorial="Fondo Editorial Pascual Bravo"
-  edition="2ª edición"
-  year="2019">
+        <p>Para agregar bibliografía, por lo general en un capítulo al final del libro, se deben agregar entradas bibliográficas de la siguiente manera:</p>
+<xmp><bibitem id="RER119">
+  Juan Guillermo Rivera Berrío, Joel Espinosa Longi y 
+  Alejandro Radillo Díaz. <b>Descartes JS - Nivel - I
+  </b>. Fondo Editorial Pascual Bravo. 2ª edición. 
+  2019.
 </bibitem>
 
-<bibitem id="RER219" 
-  authors="Juan Guillermo Rivera Berrío, Joel Espinosa 
-Longi y Alejandro Radillo Díaz" 
-  title="Descartes JS - Nivel - II"
-  editorial="Fondo Editorial Pascual Bravo"
-  edition="2ª edición"
-  year="2019">
+<bibitem id="RER219">
+  Juan Guillermo Rivera Berrío, Joel Espinosa Longi y 
+  Alejandro Radillo Díaz. <b>Descartes JS - Nivel - II
+  </b>. Fondo Editorial Pascual Bravo. 2ª edición. 
+  2019.
 </bibitem></xmp>
 
-        <p>Con lo que se genera la bibliografía que puede verse al final de este libro.</p>
+        <p><code>&lt;bibitem&gt;</code> es el elemento que permite identificar una entrada bibliográfica. El parámetro <code>id</code> es el que permite identificar el elemento de la bibliografía y se utiliza para realizar referencias dentro del texto del documento.</p>
+              
+        <p>Para agregar una referencia a un elemento de la bibliografía se utiliza <code>&lt;bibref&gt;</code> con el atributo <code>&lt;ref_id&gt;</code> igual al valor del identificador del elemento a referenciar (<code>id</code>):</p>
 
-        <p>El parámetro <code>id</code> es el que permite identificar el elemento de la bibliografía, además de que será el texto que aparezca cuando se realice una referencia a ese elemento bibliográfico.</p>
-
-        <p>Ninguno de los parámetros <code>authors</code>, <code>title</code>, <code>editorial</code>, <code>edition</code> y <code>year</code> son obligatorios, es decir, pueden aparecer o no en la definición del elemento bibliográfico.</p>
+<xmp><bibref ref_id="IDENTIFICADOR_DE_BIBLIOGRAFÍA"></bibref></xmp>
       </div>
 
       <!--  -->
-      <div class="page">        
-        <p>Para agregar una referencia a un elemento de la bibliografía se utiliza los siguiente:</p>
-
-<xmp><bibref ref_id="IDENTIFICADOR_DE_BIBLIOGRAFÍA"></bibref></xmp>
-
+      <div class="page">
         <p>Por ejemplo el siguiente código:</p>
 
 <xmp>Para aprender más sobre Descartes se pueden consultar 
-los libros: Descartes JS - Nivel - II 
+los libros: Descartes JS - Nivel - I
 (<bibref ref_id="RER119"></bibref>) y Descartes JS - 
 Nivel - II (<bibref ref_id="RER219"></bibref>).</xmp>
 
         <p>Muestra el siguiente texto:</p>
         
-        <p>Para aprender más sobre Descartes se pueden consultar los libros: Descartes JS - Nivel - II (<bibref ref_id="RER119"></bibref>) y Descartes JS - Nivel - II (<bibref ref_id="RER219"></bibref>).</p>
+        <p>Para aprender más sobre Descartes se pueden consultar los libros: Descartes JS - Nivel - I (<bibref ref_id="RER119"></bibref>) y Descartes JS - Nivel - II (<bibref ref_id="RER219"></bibref>).</p>
+
+        <p>Es posible dar clic en las referencias a la bibliografía y observar en la parte superior del libro la información correspondiente.</p>
       </div>
 
       <div class="page" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
@@ -873,20 +869,12 @@ Nivel - II (<bibref ref_id="RER219"></bibref>).</xmp>
 
       <!--  -->
       <div class="page">
-        <bibitem id="RER119" 
-                 authors="Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz" 
-                 title="Descartes JS - Nivel - I"
-                 editorial="Fondo Editorial Pascual Bravo"
-                 edition="2ª edición"
-                 year="2019">
+        <bibitem id="RER119">
+          Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz. <b>Descartes JS - Nivel - I</b>. Fondo Editorial Pascual Bravo. 2ª edición. 2019.
         </bibitem>
 
-        <bibitem id="RER219" 
-                 authors="Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz" 
-                 title="Descartes JS - Nivel - II"
-                 editorial="Fondo Editorial Pascual Bravo"
-                 edition="2ª edición"
-                 year="2019">
+        <bibitem id="RER219">
+          Juan Guillermo Rivera Berrío, Joel Espinosa Longi y Alejandro Radillo Díaz. <b>Descartes JS - Nivel - II</b>. Fondo Editorial Pascual Bravo. 2ª edición. 2019.
         </bibitem>
       </div>
 
