@@ -55,7 +55,7 @@ code, code_math {
 code, pre, code_math {
   font-family: 'UbuntuMono', monospace;
   font-size: 107%;
-  color: #778890;
+  color: #27ae60;
 }
 xmp {
   font-family: 'UbuntuMono', monospace;
@@ -117,4 +117,8 @@ table {
 }
 table td {
   border: 1px solid var(--text-color);
+}
+
+body.dark .invertcolor {
+  filter: invert(1) hue-rotate(180deg);
 }

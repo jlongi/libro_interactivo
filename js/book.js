@@ -74,7 +74,6 @@ function addInteractive(text_width, interactive_margin) {
   let window_size;
 
   let new_iframe;
-  let new_expand;
 
   let margin = parseInt(interactive_margin);
   let btn;
@@ -95,10 +94,16 @@ function addInteractive(text_width, interactive_margin) {
     }
 
     new_iframe = document.createElement("iframe");
+    // new_iframe.addEventListener("load", (evt) => {
+    //   console.log("hola", this, evt);
+    // });
     new_iframe.setAttribute("width", i_w);
     new_iframe.setAttribute("height", i_h);
     new_iframe.setAttribute("data-src", src);
     new_iframe.setAttribute("src", "about:blank");
+    if (inte.hasAttribute("poster")) {
+      new_iframe.setAttribute("style", `background-image: url("${inte.getAttribute("poster")}")`);
+    }
 
     btn = document.createElement("button");
     btn.className = "btn_expand";
@@ -155,7 +160,8 @@ function addFootnotes() {
   footnote_list.forEach((footnote, index) => {
     footnote_parent_page = getPageContainer(footnote);
 
-    footnote_number = document.createElement("span");
+    footnote_number = document.createElement("sup");
+    footnote_number.className = "footnote_ref";
     footnote_number.textContent = index+1;
     footnote.parentNode.replaceChild(footnote_number, footnote);
     footnote.setAttribute("number", footnote_number.textContent);
@@ -200,9 +206,9 @@ function numerateSectionsAndFigures() {
       ele.level = 0;
     }
     else if (chapter_counter > 0) {
-      if (!ele.hasAttribute("not_number")) {
-        tag_name = ele.tagName.toLocaleLowerCase();
+      tag_name = ele.tagName.toLocaleLowerCase();
 
+      if (!ele.hasAttribute("not_number")) {
         // section
         if (tag_name == "h2") {
           section_counter++;
@@ -250,6 +256,23 @@ function numerateSectionsAndFigures() {
           num_block_prefix_counter[ele.getAttribute("prefix")] = num_block_counter;
           ele.ref_text = `<span class="num_block_prefix">${ele.getAttribute("prefix") || ""} ${chapter_counter}.${num_block_counter}</span>`;
           ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
+        }
+      }
+      else {
+        // section
+        if (tag_name == "h2") {
+          ele.level = 1;
+          ele.innerHTML = `${ele.innerHTML}`;
+        }
+        // subsection
+        else if (tag_name == "h3") {
+          ele.level = 2;
+          ele.innerHTML = `${ele.innerHTML}`;
+        }
+        // subsubsection
+        else if (tag_name == "h4") {
+          ele.level = 3;
+          ele.innerHTML = `${ele.innerHTML}`;
         }
       }
     }
@@ -334,7 +357,7 @@ function addTableOfContentEntries() {
           prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
 
           auto_toc_links[i].setAttribute("level", elem_level);
-          auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""}${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
+          auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""} ${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
         }
       }
     }
@@ -541,13 +564,31 @@ window.addEventListener("load", function(evt) {
     let dark_light_mode = document.getElementById("dark_light_mode");
     if (dark_light_mode) {
       let div = dark_light_mode.appendChild(document.createElement("div"));
-      let label = div.appendChild(document.createElement("span"));
-      label.innerHTML = "Modo claro/oscuro";
+
+      let light = div.appendChild(document.createElement("button"));
+
       let sw = div.appendChild(document.createElement("input"));
+
+      let dark = div.appendChild(document.createElement("button"));
+
+      light.setAttribute("id", "btn_light");
+      light.addEventListener("click", (evt) => {
+        document.body.classList.remove("dark");
+        sw.checked = false;
+        show_hide_config_options();
+      });
+      
       sw.setAttribute("class", "switch");
       sw.setAttribute("type", "checkbox");
       sw.addEventListener("change", (evt) => {
         document.body.classList.toggle("dark");
+        show_hide_config_options();
+      });
+
+      dark.setAttribute("id", "btn_dark");
+      dark.addEventListener("click", (evt) => {
+        document.body.classList.add("dark");
+        sw.checked = true;
         show_hide_config_options();
       });
     }

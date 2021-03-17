@@ -3,12 +3,19 @@
  * @licencia Atribución-CompartirIgual 4.0 Internacional  - https://creativecommons.org/licenses/by-sa/4.0/deed.es
  */
 
- #book_loader_container {
+html {
+  height: -webkit-fill-available;
+}
+
+#book_loader_container {
   position: fixed;
   left: 0;
-  right: 0;
+  width: 100%;
   top: 0;
-  bottom: 0;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  max-height: 100vh;
+  max-height: -webkit-fill-available;
   z-index: 2;
   background-color: rgb(237, 241, 241);
 
