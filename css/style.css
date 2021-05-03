@@ -29,6 +29,8 @@ body {
   --toc-number-color: #192a56;
   --h1-color: #0089cd;
   --h2-color: #000099;
+  --h3-color: #000099;
+  --h4-color: #000099;
   --link-text-color: #3867d6;
   --note-color: #3867d6;
   --note-text-color: #1e272e;
@@ -53,6 +55,8 @@ body.dark {
   --toc-number-color: #bbbbbb;
   --h1-color: #358cd6;
   --h2-color: #4fb8fe;
+  --h3-color: #4fb8fe;
+  --h4-color: #4fb8fe;
   --link-text-color: #c39178;
   --note-color: #3867d6;
   --note-text-color: #d4d4d4;
@@ -144,6 +148,15 @@ body {
 #pages_container {
   transition: all 0.35s;
   -webkit-transition: all 0.3s;
+}
+
+pageref {
+  text-decoration: underline;
+  color: var(--link-text-color);
+  cursor: pointer;
+}
+pageref, ref {
+  display: inline-block;
 }
 
 .toc_link[level="0"] {
@@ -285,10 +298,12 @@ h2 {
 }
 h3 {
   margin: 1em 0;
+  color: var(--h3-color);
   font-size: 125%;
   font-weight: bold;
 }
 h4 {
+  color: var(--h4-color);
   margin: 1.33en 0;
   font-size: 110%;
 }

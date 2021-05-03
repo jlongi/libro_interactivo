@@ -58,6 +58,9 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 
   // add bibliography references
   addBibliography();
+
+  // add page references
+  addPageReferences();
 });
 
 /**
@@ -449,6 +452,51 @@ function addBibliography() {
         popup_bib_info.firstChild.innerHTML = txt;
       });
     }
+  });
+}
+
+/**
+ *****************************************************
+ */
+function addPageReferences() {
+  let prefs = document.querySelectorAll("pageref");
+  let init_page_num;
+  let pages;
+  let refpage;
+  let page_num;
+  let prefix;
+
+  if (prefs.length > 0) {
+    pages = Array.from(pages_container.querySelectorAll(".page"));
+
+    init_page_num = document.querySelector("[init-page-num=true]");
+    if (init_page_num) {
+      init_page_num = pages.indexOf(init_page_num)-1;
+    }
+    else {
+      init_page_num = 0;
+    }
+  }
+
+  prefs.forEach((ref) => {
+    refpage = document.querySelector(`#${ref.getAttribute("ref_id")}`);
+    
+    if (refpage) {
+      refpage = getPageContainer(refpage);
+      page_num = pages.indexOf(refpage);
+
+      if (page_num != -1) {
+        page_num -= init_page_num;
+        ref.setAttribute("onclick", `goToPage(${page_num})`);
+
+        prefix = ref.getAttribute("prefix");
+        prefix = (prefix) ? prefix + " " : "";
+
+        if (!ref.innerText.trim()) {
+          ref.innerText = `${prefix} ${page_num}`;
+        }
+      }
+    }    
   });
 }
 

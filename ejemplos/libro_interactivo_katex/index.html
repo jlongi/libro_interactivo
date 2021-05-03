@@ -31,6 +31,8 @@
   <!-- inclusión de la biblioteca KaTex -->
   <link rel="stylesheet" type="text/css" href="extra/katex/katex.min.css"/>
   <script src="extra/katex/katex.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="extra/katex/copy-tex.min.css"/>
+  <script src="extra/katex/copy-tex.min.js"></script>
   <script src="extra/katex/auto-render.min.js" ></script>
 
   <!-- Opcional en caso de requerir formulas químicas -->
@@ -144,8 +146,9 @@
         <div class="toc_link" href="#videos"></div>
         <div class="toc_link" href="#imagenes"></div>
         <div class="toc_link" href="#teoremas"></div>
-        <div class="toc_link" href="#codigo"></div>
+        <div class="toc_link" href="#referencia_a_paginas"></div>
         <div class="toc_link" href="#referencia_a_bibliografia"></div>
+        <div class="toc_link" href="#codigo"></div>
 
         <div class="toc_link" href="#capitulo_2"></div>
         <div class="toc_link" href="#expresiones_simples"></div>
@@ -498,31 +501,31 @@ El lema supremo dice ...</div>
         <p>El parámetro <code>prefix</code> en referencias bibliográficas y en bloques autonumerados, corresponde siempre a la etiqueta que se muestra de forma automática y además permite tener contadores para identificar y contar elementos de un mismo tipo, por ejemplo: figuras, tablas, videos, interactivos, lemas, teoremas, etc.</p>
       </div>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="codigo">Código</h2>
+      <!--  -->
+      <div class="page">
+        <h2 id="referencia_a_paginas">Referencia a páginas</h2>
+  
+        <p>Para incluir un vínculo o referencia a una página dentro del libro, podemos utilizar el elemento <code>&lt;pageref&gt;</code> y su atributo <code>ref_id</code> para especificar el identificador de algún elemento dentro de la página que queremos referenciar.</p>
+        
+        <p>Por ejemplo para incluir una referencia al Prefacio, podemos realizar lo siguiente:</p>
+        
+<xmp><pageref ref_id="prefacio"></pageref></xmp>
 
-        <p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
-
-<xmp><code>x=100</code></xmp>
-        <p>Código en línea <code>x=100</code>.</p>
-
-        <p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
-
-<xmp><pre>
-x=4
-y=10
-  r=x+y
-</pre></xmp>
-
-      <pre>
-x=4
-y=10
-  r=x+y
-</pre>
-
-        <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
-      </div>
+        <p>Lo que muestra lo siguiente: <pageref ref_id="prefacio"></pageref>.</p>
+        
+        <p>Si queremos agregar un texto adicional al número de página, se puede asignar un valor al parámetro <code>prefix</code> del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
+  
+<xmp><pageref ref_id="prefacio" prefix="página"></pageref></xmp>
+        
+        <p>Con lo que obtenemos lo siguiente: <pageref ref_id="prefacio" prefix="página"></pageref>.</p>
+        
+        <p>Por último si queremos que el número de página no aparezca en la referencia y en lugar de eso se desea mostrar un texto específico, solamente hay que colocar el texto que deseamos mostrar como contenido del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
+  
+<xmp><pageref ref_id="prefacio">como se puede ver en 
+Prefacio</pageref></xmp>
+  
+        <p>Que muestra el siguiente texto: <pageref ref_id="prefacio">como se puede ver en Prefacio</pageref>.</p>
+      </div>
 
       <!--  -->
       <div class="page">
@@ -565,6 +568,34 @@ Nivel - II (<bibref ref_id="RER219"></bibref>).</xmp>
 
         <p>Es posible dar clic en las referencias a la bibliografía y observar en la parte superior del libro la información correspondiente.</p>
       </div>
+
+      <!--  -->
+      <div class="page">
+        <h2 id="codigo">Código</h2>
+
+      <p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
+
+<xmp><code>x=100</code></xmp>
+      <p>Código en línea <code>x=100</code>.</p>
+
+      <p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
+
+<xmp><pre>
+x=4
+y=10
+r=x+y
+</pre></xmp>
+
+    <pre>
+x=4
+y=10
+r=x+y
+</pre>
+
+       <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
+     </div>
+
+     <div class="page" num=""></div>
 
       <div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
         <div class="chap_text">Capítulo II</div>
