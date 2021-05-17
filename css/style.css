@@ -110,7 +110,6 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
-  transform: translate3d(0,0,0);
 }
 
 body {
@@ -376,7 +375,7 @@ video {
   text-align: left;
   width: 30px;
   height: 30px;
-  z-index:1000;
+  z-index: 10;
   right: 2px;
   top: 1px;
   outline: none;
@@ -387,6 +386,7 @@ video {
   background-size: 75%;
   background-position: center;
   cursor: pointer;
+  transform: translate3d(0,0,0);
 }
 
 .interactive {
@@ -395,6 +395,7 @@ video {
   padding: calc(var(--interactive-margin) / 2) 0;
   -webkit-overflow-scrolling: touch;
   overflow-y: scroll;
+  transform: translate3d(0,0,0);
 }
 
 figure {
