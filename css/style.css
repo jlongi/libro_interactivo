@@ -250,7 +250,7 @@ pageref, ref {
   position: absolute;
   display: inline;
   font-size: 70%;
-  top: -3px;
+  margin-top: -3px;
   right: 530px;
 }
 
