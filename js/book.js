@@ -789,7 +789,8 @@ window.addEventListener("load", function(evt) {
     }
 
     // set the focus in the window
-    setTimeout(function() { window.focus(); }, 100);
+    // *** posiblemente causa el problema con la desaparición de los campos de texto al asociar el foco hacia la ventana
+    // setTimeout(function() { window.focus(); }, 100);
 
     // move the pages
     pages_container.style.left = -(pages_container_width/2 * current_page) + "px";
