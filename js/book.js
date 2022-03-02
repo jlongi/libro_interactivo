@@ -5,20 +5,41 @@
 
 const LANDSCAPE = 0;
 const PORTRAIT  = 1;
-let dark_style;
+let book_status = {
+  page : 0,
+  dark : false,
+  printing : false,
+};
+var show_hide_config_options;
 
 /**
  *****************************************************
- */
+*/
 window.book_config = window.book_config || {
   remember_last_page: false,
   auto_numerate_sections_and_figures: false,
-  bibitem_red_id: false,
+  bibitem_ref_id: false,
 };
 
 /**
  *****************************************************
- */
+*/
+window.addEventListener("beforeprint", function(event) {
+  // console.log("iniciando la impresion");
+  book_status.printing = true;
+});
+
+/**
+ *****************************************************
+*/
+window.addEventListener("afterprint", function(event) {
+  // console.log("terminando la impresion");
+  book_status.printing = false;
+});
+
+/**
+ *****************************************************
+*/
 document.addEventListener("DOMContentLoaded", function(evt) {
   // prevent the iframes to show
   let iframes = document.querySelectorAll("iframe");
@@ -53,19 +74,22 @@ document.addEventListener("DOMContentLoaded", function(evt) {
     numerateSectionsAndFigures();
   }
 
-  // add table of contents
-  addTableOfContentEntries();
+  // add page references
+  addPageReferences();
 
   // add bibliography references
   addBibliography();
 
-  // add page references
-  addPageReferences();
+  // add table of contents
+  addTableOfContentEntries();
+
+  // add an anchor tag to images that have onclick="openInteractive(...)"
+  imagesForPDF()
 });
 
 /**
  *****************************************************
- */
+*/
 function addInteractive(text_width, interactive_margin) {
   let interactives = document.querySelectorAll(".interactive");
   let w;
@@ -80,6 +104,7 @@ function addInteractive(text_width, interactive_margin) {
 
   let margin = parseInt(interactive_margin);
   let btn;
+  let pdf_anchor;
 
   interactives.forEach((inte) => {
     w = parseInt(inte.getAttribute("width") || 0);
@@ -88,9 +113,11 @@ function addInteractive(text_width, interactive_margin) {
     src = inte.getAttribute("src") || "";
     window_size = inte.getAttribute("window-size") || false;
 
-    i_w = Math.ceil(w * ((text_width-margin)*scale)/w);
-    i_h = Math.ceil(h * ((text_width-margin)*scale)/w);
-    inte.setAttribute("style", `width:${i_w + margin}px; height:${i_h + margin}px;`);
+    i_w = Math.ceil((text_width-margin)*scale);
+    i_h = Math.ceil(i_w*(h/w));
+
+    inte.style.width  = `${i_w + margin}px`;
+    inte.style.height = `${i_h + margin}px`;
 
     if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
       inte.style.overflow = "hidden";
@@ -117,14 +144,19 @@ function addInteractive(text_width, interactive_margin) {
     }
     btn.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
 
+    pdf_anchor = document.createElement("a");
+    pdf_anchor.setAttribute("class", "PDF_anchor");
+    pdf_anchor.setAttribute("href", src);
+
     inte.appendChild(btn);
     inte.appendChild(new_iframe);
+    inte.appendChild(pdf_anchor);
   });
 }
 
 /**
  *****************************************************
- */
+*/
 function addImageLinks() {
   let img_links = document.querySelectorAll(".image_link");
   let image_width;
@@ -153,7 +185,7 @@ function addImageLinks() {
 
 /**
  *****************************************************
- */
+*/
 function addFootnotes() {
   let footnote_list = document.querySelectorAll(".footnote");
   let footnote_parent_page;
@@ -180,7 +212,7 @@ function addFootnotes() {
 
 /**
  *****************************************************
- */
+*/
 function numerateSectionsAndFigures() {
   let chapter_counter = 0;
   let section_counter = 0;
@@ -279,6 +311,21 @@ function numerateSectionsAndFigures() {
         }
       }
     }
+    // if the book do not use the chap_name class
+    else {
+      tag_name = ele.tagName.toLocaleLowerCase();
+
+      // figure
+      if (tag_name == "figcaption") {
+        figcaption_prefix = ele.getAttribute("prefix") || "Figura";
+        figcaption_counter = figcaption_prefix_counter[figcaption_prefix] || 0;
+        figcaption_counter++;
+        figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
+        ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${figcaption_counter}</span>`;
+        ele.parentNode.ref_text = ele.ref_text;
+        ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
+      }
+    }
   });
 
   // add the figures references
@@ -294,7 +341,7 @@ function numerateSectionsAndFigures() {
 
 /**
  *****************************************************
- */
+*/
 function addTableOfContentEntries() {
   let init_page_num = document.querySelector("[init-page-num=true]");
   let toc_links = document.querySelectorAll(".toc_link");
@@ -316,7 +363,7 @@ function addTableOfContentEntries() {
     no_auto_toc_links.forEach(toc_link => {
       temp_a = toc_link.querySelector("a");
 
-      if (!temp_a.innerHTML.match(/^<span/)) {
+      if ((temp_a) && (!temp_a.innerHTML.match(/^<span/))) {
         temp_a.innerHTML = "<span>" + temp_a.innerHTML.replace(/<span class="toc_number">/, `</span><span class="toc_number">`)
       }
     });
@@ -338,6 +385,7 @@ function addTableOfContentEntries() {
     let page_elem;
     let page_num;
     let prefix;
+    let pdf_anchor;
 
     for (let i=0, l=auto_toc_links.length; i<l; i++) {
       elem = document.querySelector( auto_toc_links[i].getAttribute("href") );
@@ -347,8 +395,9 @@ function addTableOfContentEntries() {
       }
 
       elem_text = elem.textContent.trim().replace(/\.$/, "");
+
       page_elem = getPageContainer(elem);
-      elem_level = parseInt( elem.level || 0);
+      elem_level = parseInt( elem.level || 0 );
 
       if (page_elem) {
         page_num = pages.indexOf(page_elem);
@@ -357,10 +406,18 @@ function addTableOfContentEntries() {
           page_num -= init_page_num;
           auto_toc_links[i].setAttribute("onclick", `goToPage(${page_num})`);
 
-          prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
+          // mantain the content of toc_link element
+          if (auto_toc_links[i].innerHTML.trim() == "") {
+            prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
 
-          auto_toc_links[i].setAttribute("level", elem_level);
-          auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""} ${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
+            auto_toc_links[i].setAttribute("level", elem_level);
+            auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""} ${elem_text}</span><span class="toc_number">${page_num}</span></a>`;
+          }
+
+          pdf_anchor = document.createElement("a");
+          pdf_anchor.setAttribute("class", "PDF_anchor");
+          pdf_anchor.setAttribute("href", auto_toc_links[i].getAttribute("href"));
+          auto_toc_links[i].appendChild(pdf_anchor);
         }
       }
     }
@@ -379,7 +436,8 @@ function addTableOfContentEntries() {
     for (entry of toc_links) {
       link_clone = entry.cloneNode(true);
 
-      tmp = link_clone.getAttribute("onclick");
+      tmp = getChildOnClickStr(link_clone);
+
       if (tmp) {
         link_clone.setAttribute("onclick", tmp.replace(/\)/g, ",true)"));
 
@@ -397,7 +455,7 @@ function addTableOfContentEntries() {
 
 /**
  *****************************************************
- */
+*/
 function addBibliography() {
   let bibitems = document.querySelectorAll("bibitem");
   let tmp;
@@ -409,10 +467,11 @@ function addBibliography() {
   bibitems.forEach((item, index) => {
     // id
     tmp_attr = item.getAttribute("id");
-    ref = (window.book_config.bibitem_red_id) ? tmp_attr : index+1;
-    item.setAttribute("refid", ref);
+    ref = (window.book_config.bibitem_ref_id) ? tmp_attr : index+1;
 
     label = item.getAttribute("label");
+
+    item.setAttribute("refid", (label) ? label : ref);
 
     tmp = document.createElement("span")
     tmp.innerHTML = `[${(label) ? label : ref}]`;
@@ -457,7 +516,7 @@ function addBibliography() {
 
 /**
  *****************************************************
- */
+*/
 function addPageReferences() {
   let prefs = document.querySelectorAll("pageref");
   let init_page_num;
@@ -465,6 +524,9 @@ function addPageReferences() {
   let refpage;
   let page_num;
   let prefix;
+  let postfix;
+  let digits;
+  let page_num_str;
 
   if (prefs.length > 0) {
     pages = Array.from(pages_container.querySelectorAll(".page"));
@@ -487,13 +549,26 @@ function addPageReferences() {
 
       if (page_num != -1) {
         page_num -= init_page_num;
+        page_num_str = page_num;
         ref.setAttribute("onclick", `goToPage(${page_num})`);
 
         prefix = ref.getAttribute("prefix");
         prefix = (prefix) ? prefix + " " : "";
 
-        if (!ref.innerText.trim()) {
-          ref.innerText = `${prefix} ${page_num}`;
+        postfix = ref.getAttribute("postfix");
+        postfix = (postfix) ? " " + postfix : "";
+
+        digits = ref.getAttribute("digits");
+        if (digits) {
+          digits = parseInt(digits);
+          // the number of digits is a number, then complete with zeros at the start
+          if (!isNaN(digits)) {
+            page_num_str = (page_num.toString()).padStart(digits, "0");
+          }
+        }
+
+        if (!ref.innerHTML.trim()) {
+          ref.innerHTML = `<span class="pageref_prefix">${prefix}</span><span class="pageref_number">${page_num_str}</span><span class="pageref_postfix">${postfix}</span>`;
         }
       }
     }    
@@ -502,7 +577,47 @@ function addPageReferences() {
 
 /**
  *****************************************************
- */
+*/
+function imagesForPDF() {
+  let images = document.querySelectorAll("img[onclick]");
+  let onclick;
+  let parent;
+  let span;
+  let pdf_anchor;
+  let newURL;
+
+  images.forEach((img) => {
+    onclick = img.getAttribute("onclick");
+    parent = img.parentNode;
+
+    span = document.createElement("div");
+    span.setAttribute("style", "position:relative; margin:0; padding:0; outline:none; border:none; width:100%;");
+    parent.replaceChild(span, img);
+    span.appendChild(img);
+
+    pdf_anchor = document.createElement("a");
+    pdf_anchor.setAttribute("class", "PDF_anchor");
+
+    // openInteractive
+    newURL = onclick.match(/openInteractive..(.+?).,/);
+    if ( (newURL) && (newURL[1])) {
+      pdf_anchor.setAttribute("href", newURL[1]);
+    }
+    else {
+      // openImage
+      newURL = onclick.match(/openImage\(this\)/);
+      if (newURL) {
+        pdf_anchor.setAttribute("href", img.getAttribute("src"));
+      }
+    }
+
+    span.appendChild(pdf_anchor);
+  });
+}
+
+/**
+ *****************************************************
+*/
 function getPageContainer(elem) {
   while (elem && !elem.classList.contains("page")) {
     elem = elem.parentNode;
@@ -510,9 +625,47 @@ function getPageContainer(elem) {
   return elem;
 }
 
+// find the onclick string for page number of custom toc_links
+function getChildOnClickStr(elem) {
+  let onclick = elem.getAttribute("onclick");
+
+  if (onclick) {
+    return onclick;
+  }
+
+  for (let i = 0; i < elem.children.length; i++) {
+    onclick = elem.children[i].getAttribute("onclick");
+    if (onclick) {
+      return onclick;
+    }
+  }
+
+  return null;
+}
+
+/** */
+function setURLParams() {
+  let loc = window.location.pathname;
+  let params = "";
+  
+  if (book_status.page >= 1) {
+    params = `?page=${book_status.page}`;
+  }
+
+  let ini = (params == "") ? "?" : "&";
+
+  if (book_status.dark) {
+    params += ini + "theme=dark";
+  }
+
+  if (!book_status.printing) {
+    history.replaceState({}, "doc", loc + params);
+  }
+}
+
 /**
  *****************************************************
- */
+*/
 window.addEventListener("load", function(evt) {
   let current_page = 0;
 
@@ -557,60 +710,37 @@ window.addEventListener("load", function(evt) {
     popup_bib_info.style.display = "none";
   });
 
-  /**
-   *
-   */
-  window.addEventListener("resize", resize);
-  function resize(evt) {
-    let w = window.innerWidth;
-    let h = window.innerHeight;
-    let tmp_w;
 
-    if (w > h) {
-      tmp_w = pages_container_width;
-      orientation = LANDSCAPE;
-    }
-    else {
-      tmp_w = pages_container_width/2;
-      orientation = PORTRAIT;
-    }
-
-    page_viewer.style.width = `${tmp_w}px`;
-
-    let scaleToFitX = w/tmp_w;
-    let scaleToFitY = h/pages_container_height;
-
-    if (scaleToFitX < scaleToFitY) {
-      page_viewer.style.left = "0px";
-      page_viewer.style.top = "50%";
-      page_viewer.style.transform = `scale(${scaleToFitX}) translate(0, -50%)`;
-    }
-    else {
-      page_viewer.style.left = "50%";
-      page_viewer.style.top = "0px";
-      page_viewer.style.transform = `scale(${scaleToFitY}) translate(-50%, 0)`;
-    }
-
-    goToPage(current_page);
-  }
-  resize();
 
 
   /** */
   let btn_config = document.getElementById("btn_config");
   let config_options = document.getElementById("config_options");
   let show_config = false;
-  function show_hide_config_options() {
+  show_hide_config_options = function() {
     show_config = !show_config;
     config_options.style.display = (show_config) ? "block" : "none";
   }
+
   if (btn_config) {
     btn_config.addEventListener("click", (evt) => {
       show_hide_config_options();
     });
 
+    // close tools when button pressed
+    config_options.addEventListener("click", (evt) => {
+      if (evt.target.tagName.toLowerCase() == "button") {
+        show_hide_config_options();
+      }
+    });
+
     let dark_light_mode = document.getElementById("dark_light_mode");
     if (dark_light_mode) {
+      // get the theme from the URL
+      let tmp_theme = new URLSearchParams(window.location.search).get("theme");
+      //
+
+
       let div = dark_light_mode.appendChild(document.createElement("div"));
 
       let light = div.appendChild(document.createElement("button"));
@@ -619,17 +749,35 @@ window.addEventListener("load", function(evt) {
 
       let dark = div.appendChild(document.createElement("button"));
 
+      // init the theme
+      if (tmp_theme == "dark") {
+        sw.checked = true;
+        document.body.classList.add("dark");
+      } else {
+        sw.checked = false;
+        document.body.classList.remove("dark");
+      }
+      book_status.dark = sw.checked;
+      //
+
+
       light.setAttribute("id", "btn_light");
       light.addEventListener("click", (evt) => {
         document.body.classList.remove("dark");
         sw.checked = false;
-        show_hide_config_options();
+
+        book_status.dark = sw.checked;
+        setURLParams();
       });
       
       sw.setAttribute("class", "switch");
       sw.setAttribute("type", "checkbox");
       sw.addEventListener("change", (evt) => {
         document.body.classList.toggle("dark");
+
+        book_status.dark = sw.checked;
+        setURLParams();
+        
         show_hide_config_options();
       });
 
@@ -637,7 +785,9 @@ window.addEventListener("load", function(evt) {
       dark.addEventListener("click", (evt) => {
         document.body.classList.add("dark");
         sw.checked = true;
-        show_hide_config_options();
+
+        book_status.dark = "dark";
+        setURLParams();
       });
     }
   }
@@ -676,6 +826,13 @@ window.addEventListener("load", function(evt) {
     }
   }
 
+  // get the current page from the URL
+  let tmp_current_page = new URLSearchParams(window.location.search).get("page");
+  if (tmp_current_page != null) {
+    current_page = parseInt( tmp_current_page) + init_page_num-1;
+  }
+  //
+
   /** Hide the child nodes of each page to help the rendering in chrome */
   for (let i=0; i<pages.length; i++) {
     pages[i].setAttribute("show", "true");
@@ -697,9 +854,16 @@ window.addEventListener("load", function(evt) {
   });
 
   /**
-   *
-   */
+ *
+ */
   function goToPage(new_page) {
+    new_page = Math.max(0, Math.min(pages.length-1, new_page));
+
+    // set the value of the page in the book status
+    book_status.page = new_page-init_page_num+1;
+    setURLParams();
+
+
     if ( (orientation === PORTRAIT) && (new_page === 0) ) {
       new_page = 1;
     }
@@ -730,6 +894,17 @@ window.addEventListener("load", function(evt) {
         last_videos = last_videos.concat(pages[i].videos);
       }
     }
+    // get the audios in the current pages
+    let last_audios = [];
+    for (let i=current_page; i<current_page+2; i++) {
+      if ((i >= 0) && (i < pages.length)) {
+        if (!pages[i].audios) {
+          pages[i].audios = Array.from(pages[i].querySelectorAll("audio"));
+        }
+        last_audios = last_audios.concat(pages[i].audios);
+      }
+    }
+
 
     // change the current page
     current_page = new_page;
@@ -757,6 +932,17 @@ window.addEventListener("load", function(evt) {
         next_videos = next_videos.concat(pages[i].videos);
       }
     }
+    // get the audios in the next page (the new current page)
+    let next_audios = [];
+    for (let i=current_page; i<current_page+2; i++) {
+      if ((i >= 0) && (i < pages.length)) {
+        if (!pages[i].audios) {
+          pages[i].audios = Array.from(pages[i].querySelectorAll("audio"));
+        }
+        next_audios = next_audios.concat(pages[i].audios);
+      }
+    }
+
 
     // get all the iframes to deactivate
     let deactivate_iframes = last_iframes.filter((el) => {
@@ -780,6 +966,16 @@ window.addEventListener("load", function(evt) {
       stop_videos[i].currentTime = 0;
     }
 
+    // get all the audios to stop
+    let stop_audios = last_audios.filter((el) => {
+      return !(next_audios.includes(el));
+    });
+    for (let i=0, l=stop_audios.length; i<l; i++) {
+      stop_audios[i].pause();
+      stop_audios[i].currentTime = 0;
+    }
+    
+
     // show the last page seen
     try {
       window.localStorage.setItem("last_page", current_page);
@@ -795,7 +991,7 @@ window.addEventListener("load", function(evt) {
     // move the pages
     pages_container.style.left = -(pages_container_width/2 * current_page) + "px";
   }
-  goToPage(current_page);
+  //goToPage(current_page);
 
   /** */
   window.goToPage = function(num) {
@@ -918,6 +1114,44 @@ window.addEventListener("load", function(evt) {
     }
   });
 
+
+  /**
+ *
+ */
+  window.addEventListener("resize", resize);
+  function resize(evt) {
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    let tmp_w;
+
+    if (w > h) {
+      tmp_w = pages_container_width;
+      orientation = LANDSCAPE;
+    }
+    else {
+      tmp_w = pages_container_width/2;
+      orientation = PORTRAIT;
+    }
+
+    page_viewer.style.width = `${tmp_w}px`;
+
+    let scaleToFitX = w/tmp_w;
+    let scaleToFitY = h/pages_container_height;
+
+    if (scaleToFitX < scaleToFitY) {
+      page_viewer.style.left = "0px";
+      page_viewer.style.top = "50%";
+      page_viewer.style.transform = `scale(${scaleToFitX}) translate(0, -50%)`;
+    }
+    else {
+      page_viewer.style.left = "50%";
+      page_viewer.style.top = "0px";
+      page_viewer.style.transform = `scale(${scaleToFitY}) translate(-50%, 0)`;
+    }
+
+    goToPage(current_page);
+  }
+  resize();
 
   /** */
   document.getElementById("book_loader_container").style.display = "none";

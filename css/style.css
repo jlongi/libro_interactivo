@@ -86,17 +86,17 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
 /** end of reset code */
 
@@ -158,6 +158,17 @@ pageref, ref {
   display: inline-block;
 }
 
+.toc_link {
+  display: block;
+  --dotted-color: var(--text-color);
+  --tmp-over-color: var(--toc-over-color);
+  position: relative;
+  font-size: 95%;
+  margin: 0;
+  padding: 0.25em 0;
+  cursor: pointer;
+}
+
 .toc_link[level="0"] {
   font-weight: bold;
 }
@@ -174,25 +185,33 @@ pageref, ref {
   padding-left: 4em;
 }
 
-.toc_link {
-  --dotted-color: var(--text-color);
-  --tmp-over-color: var(--toc-over-color);
-  position: relative;
-  font-size: 95%;
-  margin: 0;
-  padding: 0.25em 0;
-  cursor: pointer;
-}
-
 .toc_link::before {
   content: "";
   position: absolute;
+  /* right: 0;
+  left: 0; */
   left: 2em;
   right: 0;
   top: 18px;
   height: 3px;
   z-index: 0;
   border-bottom: 2px dotted var(--dotted-color);
+}
+
+.toc_link[level="0"]::before {
+  left: 0;
+}
+.toc_link[level="1"]::before {
+  left: 1em;
+}
+.toc_link[level="2"]::before {
+  left: 2em;
+}
+.toc_link[level="3"]::before {
+  left: 3em;
+}
+.toc_link[level="4"]::before {
+  left: 4em;
 }
 
 .toc_link:hover,
@@ -321,9 +340,15 @@ ol ol {
   margin-top: 0;
   margin-bottom: 0;
 }
+a, code {
+  overflow-wrap: break-word;
+}
 code {
   margin: 0;
   padding: 0;
+}
+tbody, tr, th, td {
+  border: inherit;
 }
 
 .note, .num_block {
@@ -390,6 +415,7 @@ video {
 }
 
 .interactive {
+  box-sizing: border-box;
   position: relative;
   margin: 0 auto;
   padding: calc(var(--interactive-margin) / 2) 0;
@@ -481,19 +507,29 @@ bibitem {
   padding: 10px 20px;
 }
 #config_options div {
+  padding-top: 10px;
   align-items: center;
-  display: flex;
 }
-#btn_dark, #btn_light {
+#config_options div:first-child {
+  padding-top: 0;
+}
+
+#config_options button {
   outline: none;
   border: none;
-  width: 35px;
-  height: 35px;
   cursor: pointer;
   background-color: transparent;
   background-repeat: no-repeat;
   background-size: 80%;
   background-position: center;
+}
+#config_options #dark_light_mode div{
+  display: flex;
+}
+
+#btn_dark, #btn_light {
+  width: 35px;
+  height: 35px;
 }
 
 .switch {
@@ -587,7 +623,19 @@ xmp {
   line-height: 1;
 }
 
+table, tr, td {
+  vertical-align: top;
+}
 
+.PDF_anchor {
+  background-color: transparent !important;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+ 
 /* Style for screen  */
 @media screen {
   body {
@@ -727,8 +775,12 @@ xmp {
   #pages_container .page:nth-child(odd) {
     border-right: 1px solid var(--page-separation-color);
   }
-}
 
+  .PDF_anchor {
+    display: none;
+  }
+}
+ 
 /* Style for print */
 @media print {
   @page {
@@ -771,4 +823,9 @@ xmp {
     background-color: transparent;
     left: 0px !important;
   }
+
+  .PDF_anchor {
+    display: inline-block;
+  }
 }
+ 
