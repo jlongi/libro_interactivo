@@ -282,7 +282,7 @@ function numerateSectionsAndFigures() {
           figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
           ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${chapter_counter}.${figcaption_counter}</span>`;
           ele.parentNode.ref_text = ele.ref_text;
-          ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
+          ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
         }
         // num_block
         else if ((tag_name == "div") && (ele.classList.contains("num_block"))) {
@@ -323,7 +323,7 @@ function numerateSectionsAndFigures() {
         figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
         ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${figcaption_counter}</span>`;
         ele.parentNode.ref_text = ele.ref_text;
-        ele.innerHTML = `${ele.ref_text}: ${ele.innerHTML}`;
+        ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
       }
     }
   });
