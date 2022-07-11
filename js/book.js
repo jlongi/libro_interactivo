@@ -481,8 +481,7 @@ function addBibliography(pages_container) {
     ref = (window.book_config.bibitem_ref_id) ? tmp_attr : index+1;
 
     label = item.getAttribute("label");
-
-    item.setAttribute("refid", (label) ? label : ref);
+    item.setAttribute("REFID", (label) ? label : ref);
 
     tmp = document.createElement("span")
     tmp.innerHTML = `[${(label) ? label : ref}]`;
@@ -513,17 +512,17 @@ function addBibliography(pages_container) {
   let popup_bib_info;
 
   bibrefs.forEach(ref => {
-    tmp_id = document.getElementById(ref.getAttribute("ref_id"));
+    tmp_id = pages_container.querySelector(escapeIdForQuerySelector(ref.getAttribute("ref_id") || ""));
 
     if (tmp_id) {
       if (ref.innerHTML.trim() == "") {
-        ref.innerHTML = "[" + tmp_id.getAttribute("refid") + "]";
+        ref.innerHTML = "[" + tmp_id.getAttribute("REFID") + "]";
       }
 
       txt = tmp_id.innerHTML;
 
       ref.addEventListener("click", function(evt) {
-        popup_bib_info = pages_container.querySelector(".popup_bib_info");
+        popup_bib_info = document.querySelector(".popup_bib_info");
         popup_bib_info.style.display = "block";
         popup_bib_info.firstChild.innerHTML = txt;
       });
