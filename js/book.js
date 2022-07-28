@@ -59,6 +59,9 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 
     if (!iframes[i].hasAttribute("data-src")) {
       iframes[i].setAttribute("data-src", iframes[i].src);
+      if (iframes[i].hasAttribute("poster")) {
+        iframes[i].style["background-image"] = `url("${iframes[i].getAttribute("poster")}")`;
+      }
     }
     iframes[i].setAttribute("src", "about:blank");
   }
@@ -508,7 +511,6 @@ function addBibliography(pages_container) {
   // add bib references
   let bibrefs = pages_container.querySelectorAll("bibref");
   let tmp_id;
-  let txt;
   let popup_bib_info;
 
   bibrefs.forEach(ref => {
@@ -519,7 +521,8 @@ function addBibliography(pages_container) {
         ref.innerHTML = "[" + tmp_id.getAttribute("REFID") + "]";
       }
 
-      txt = tmp_id.innerHTML;
+      // needs to be let to store the text for the click event
+      let txt = tmp_id.innerHTML;
 
       ref.addEventListener("click", function(evt) {
         popup_bib_info = document.querySelector(".popup_bib_info");
