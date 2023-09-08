@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <title>Libro digital interactivo</title>
+	<title>Libro digital interactivo</title>
 
-  <!-- configuración del libro -->
-  <script>
-  window.book_config = {
-    // parámetro que indica si los capítulos, secciones y figura se auto numeran
-    // para que los capítulos se auto numeren deben utilizar la etiqueta <h1>
-    // para que las secciones se auto numeren deben utilizar la etiqueta <h2>
-    auto_numerate_sections_and_figures: true, 
-  }
-  </script>
+	<!-- se precarga la imagen utilizada para el cargador del libro, en caso de que se utilice -->
+	<link rel="preload" as="image" href="images/general/icartesilibri_logo.svg">
+
+	<!-- configuración del libro -->
+	<script>
+	window.book_config = {
+		// parámetro que indica si los capítulos, secciones y figura se auto numeran
+		// para que los capítulos se auto numeren deben utilizar la etiqueta <h1>
+		// para que las secciones se auto numeren deben utilizar la etiqueta <h2>
+		auto_numerate_sections_and_figures: true,
+		// parámetro para que los interactivos se muestren a pantalla completa al presionar el botón de la esquina superior derecha
+		open_interactives_fullscreen: true,
+		// parámetro para usar el id de las referencias bibliográficas en lugar de la autonumeración
+		bibitem_ref_id: false,
+	}
+	</script>
 
   <!-- núcleo del libro interactivo -->
   <link rel="stylesheet" href="../../css/style.css" type="text/css">
@@ -38,6 +45,7 @@
   <!-- Opcional en caso de requerir formulas químicas -->
   <script src="extra/katex/mhchem.min.js"></script>
   
+
   <script>
   document.addEventListener("DOMContentLoaded", function() {
     renderMathInElement(document.body, {
@@ -48,7 +56,12 @@
 </head>
 
 <body>
-  <div id="book_loader_container"><div id="book_loader"></div></div>
+	<div id="book_loader_container">
+		<!-- se utiliza un elemento para que funcione como cargador del libro -->
+		<div id="book_loader"></div>
+		<!-- y se indica la imagen a utilizar para personalizar el libro -->
+		<img src="images/general/icartesilibri_logo.svg" width="20%" style="padding-left:1em;">
+	</div>
 
   <div id="book_container">
     <div id="btn_back_page"></div>
@@ -65,8 +78,7 @@
 
     <div id="pages_container">
       <!--  -->
-      <div class="page" style="background-color:transparent;">
-      </div>
+      <div class="page" style="background-color:transparent;"></div>
 
       <!--  -->
       <div class="page invertcolor" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
@@ -93,19 +105,15 @@
       <!--  -->
       <div class="page" num="">
         <p>
-          Título de la obra:
-          <br> 
+          Título de la obra:<br> 
           TÍTULO
         </p>
         <br>
-
         <p>
-          Autores:
-          <br> 
+          Autores:<br> 
           AUTORES
         </p>
         <br><br>
-
         <p>
           Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
           <br> 
@@ -113,20 +121,18 @@
           <br> 
           Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a>
           <br>
-          Fórmulas matemáticas: <a href="https://katex.org/" target="_blank">$\KaTeX$</a>
+          Fórmulas matemáticas: <a href="https://katex.org/" target="_blank">$\KaTeX$</a><br>
+					Núcleo del libro interactivo: septiembre 2023
         </p>
         <br>
-
         <p>
           DATOS DE LA EDICIÓN
         </p>
-        <br><br>
 
-        <p>
-          <p>LICENCIA</p>
-          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img src="images/general/by-nc-sa.svg" style="height:1.75em; margin-right:0.75em;"></a>
-          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons Attribution License 4.0</a>.
-        </p>
+				<div style="font-size:12px; position:absolute; bottom:var(--page-bottom-margin); left:var(--page-left-margin); right:var(--page-right-margin);">
+					<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img loading="lazy" src="images/general/by-nc-sa.svg" style="height:35px; margin: 0px 10px 10px 0; float:left;"></a>
+					Esta obra está bajo una licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons 4.0 internacional: Reconocimiento-No Comercial-Compartir Igual</a>.
+				</div>
       </div>
 
       <!--  -->
@@ -176,61 +182,54 @@
         <div class="toc_link" href="#bibliografia"></div>
       </div>
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
+			<!--  -->
+			<!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
+			<!--  -->
+			<div class="page" num-type-arabic="true">
+				<h1 id="prefacio">Prefacio</h1>
 
-      <div class="page" num=""></div>
+				<p>Esta es una breve muestra que ilustra las capacidades básicas del núcleo de presentación de libros interactivos. Los libros se pueden adaptar según las preferencias del autor y también incorporar elementos adicionales para potenciar su presentación. Este ejemplo presenta el uso de la biblioteca <a href="https://katex.org/" target="_blank">$\KaTeX$</a> para el uso de fórmulas matemáticas y <a href="https://github.com/KaTeX/KaTeX/blob/main/contrib/mhchem/README.md" target="_blank">mhchem.js</a> para el desplegado de fórmulas químicas. Se recomienda evitar cambios en los archivos ubicados dentro del directorio <code>book</code>, ya que dichos archivos son los responsables del correcto funcionamiento del libro y cuando se realizan actualizaciones estos archivos son reemplazados.</p>
 
-      <!--  -->
-      <!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
-      <!--  -->
-      <div class="page" num-type-arabic="true">
-        <h1 id="prefacio">Prefacio</h1>
+				<p>Un archivo zip con el código fuente de este ejemplo está disponible para su descarga desde <a href="https://github.com/jlongi/libro_interactivo/releases/latest/download/libro_interactivo_katex.zip">aquí</a>. El código del núcleo del libro se encuentra alojado en el siguiente repositorio de GitHub: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">https://github.com/jlongi/libro_interactivo</a>, cualquier corrección, sugerencia o cambio favor de reportarlo en el repositorio para su evaluación y posible incorporación.</p>
 
-        <p>Este es un pequeño ejemplo que presenta la funcionalidad básica que el libro interactivo ofrece. El libro puede personalizarse al gusto del autor, así como agregar otros componentes para potenciar la presentación. Este libro presenta el uso de la biblioteca <a href="https://katex.org/" target="_blank">$\KaTeX$</a> para el uso de fórmulas matemáticas y <a href="https://mhchem.github.io/MathJax-mhchem/" target="_blank">mhchem.js</a> para el desplegado de fórmulas químicas. Es aconsejable no modificar directamente los archivos dentro del directorio <code>book</code> ya estos son los encargados del funcionamiento del libro.</p>
+				<p>Para obtener más información acerca del funcionamiento de este libro interactivo, es recomendable consultar el contenido del archivo <code>index.html</code>, donde se proporcionan algunos comentarios y explicaciones sobre diferentes aspectos del libro, por ejemplo cómo funciona la tabla de contenidos.</p>
+			</div>
 
-        <p>Un zip con el código fuente de este ejemplo puede ser descargado desde <a href="https://github.com/jlongi/libro_interactivo/releases/latest/download/libro_interactivo_katex.zip">aquí</a>. El código correspondiente al núcleo del libro, se encuentra alojado en el siguiente repositorio de Github: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">https://github.com/jlongi/libro_interactivo</a>, cualquier corrección, sugerencia o cambio favor de reportarlo en el repositorio para su consideración.</p>
+			<!--  -->
+			<!-- Una página en blanco y sin numeración visible -->
+			<!--  -->
+			<div class="page" num=""></div>
 
-        <p>Para más información sobre el funcionamiento de este libro interactivo, lo mejor es revisar el contenido del archivo <code>index.html</code> el cual contiene comentarios sobre diversas partes del libro. Como el funcionamiento de la tabla de contenido.</p>
-      </div>
+			<!--  -->
+			<!-- Un nuevo capitulo -->
+			<!--  -->
+			<div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+				<div class="chap_text">Capítulo I</div>
+				<h1 class="chap_name" id="capitulo_1">Elementos gráficos e interactivos</h1>
+			</div>
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
+			<!--  -->
+			<!-- Una página en blanco y sin numeración visible -->
+			<!--  -->
+			<div class="page" num=""></div>
 
-      <!--  -->
-      <!-- Un nuevo capitulo -->
-      <!--  -->
-      <div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
-        <div class="chap_text">Capítulo I</div>
-        <h1 class="chap_name" id="capitulo_1">Elementos gráficos e interactivos</h1>
-      </div>
+			<!--  -->
+			<div class="page">
+				<h2 id="notas_generales_pie_de_pagina">Notas generales y al pie de página</h2>
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
-
-      <!--  -->
-      <div class="page">
-        <h2 id="notas_generales_pie_de_pagina">Notas generales y al pie de página</h2>
-
-        <p>Para agregar una nota general dentro del texto se utiliza el siguiente código html:</p>
+				<p>Para incluir una nota general en el texto se utiliza el siguiente código HTML:</p>
 <xmp><div class="note">
   Esta es una nota
 </div>
 </xmp>
 
-        <p>Lo que muestra el siguiente texto:</p>
+				<p>Lo que muestra el siguiente texto:</p>
 
-        <div class="note">
-          Esta es una nota
-        </div>
+				<div class="note">
+					Esta es una nota
+				</div>
 
-        <p>Para agregar un nota al pie de página es necesario utilizar lo siguiente:</p>
+				<p>Para agregar un nota al pie de página es necesario utilizar lo siguiente:</p>
 <xmp><p>La herramienta para hacer los recursos interactivos 
 se llama DescartesJS<span class="footnote">
 <a href="https://descartes.matem.unam.mx" 
@@ -238,300 +237,379 @@ target="_blank">https://descartes.matem.unam.mx</a>
 </span>.</p>
 </xmp>
 
-        <p>Lo que muestra el siguiente párrafo:</p>
+				<p>Lo que muestra el siguiente párrafo:</p>
 
-        <p>La herramienta para hacer los recursos interactivos se llama DescartesJS<span class="footnote"><a href="https://descartes.matem.unam.mx" target="_blank">https://descartes.matem.unam.mx</a></span>.</p>
+				<p>La herramienta para hacer los recursos interactivos se llama DescartesJS<span class="footnote"><a href="https://descartes.matem.unam.mx" target="_blank">https://descartes.matem.unam.mx</a></span>.</p>
 
-        <p>Lo que se encuentra entre las etiquetas: <xmp style="display:inline"><span class="footnote"></xmp> y <xmp style="display:inline;"></span></xmp> es el contenido de la nota al pie de página.</p>
+				<p>Lo que se encuentra entre las etiquetas: <xmp style="display:inline"><span class="footnote"></xmp> y <xmp style="display:inline;"></span></xmp> es el contenido de la nota al pie de página.</p>
 
-        <p>Las notas al pie de página se auto numeran.</p>
-      </div>
+				<p>Las notas al pie de página se numeran automáticamente.</p>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="interactivos">Interactivos</h2>
+			<!--  -->
+			<div class="page">
+				<h2 id="interactivos">Interactivos</h2>
 
-        <p>Para agregar un interactivo se hace de la siguiente manera:</p>
+				<p>Para agregar un interactivo se hace de la siguiente manera:</p>
 <xmp><div class="interactive" width="819" height="588" 
 src="https://proyectodescartes.org/canals/
 materiales_didacticos/LO-JC-08-JS/index.html"></div>
 </xmp>
 
-        <p>Los valores de los parámetros <code>width</code> y <code>height</code> deben coincidir con el ancho y alto de la escena, para que se muestre con las proporciones correctas. El valor del parámetro <code>src</code> es la dirección del interactivo, puede ser absoluta o relativa a la ubicación del archivo <code>index.html</code></p>
+				<p>Los valores de los parámetros <code>width</code> y <code>height</code> deben coincidir con el ancho y alto de la escena o tener la misma proporción, para que la escena interactiva se muestre con las proporciones correctas. El valor del parámetro <code>src</code> corresponde a la dirección del interactivo, puede ser absoluta o relativa a la ubicación del archivo <code>index.html</code></p>
 
-        <div class="interactive" width="819" height="588" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
-      </div>
+				<div class="interactive" width="819" height="588" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <p>Al presionar el botón <img style="width:1em;" src="../../css/img/ampliar.svg"> (que se muestra en la esquina superior derecha del interactivo) el interactivo se abre en una nueva ventana con las dimensiones especificadas por los valores de los parámetros <code>width</code> y <code>height</code>.</p>
+			<!--  -->
+			<div class="page">
+				<p>Por omisión los interactivos se muestran con un ancho igual al 100% del ancho de la página. Si se desea que ocupen una área diferente, con el parámetro <code>scale</code> se puede cambiar el tamaño a un porcentaje del ancho de la página. Por ejemplo, el siguiente interactivo se muestra con un ancho del 75% del tamaño de la página:</p>
 
-        <p>Si se quiere que el interactivo se muestre en una nueva ventana con las dimensiones de la ventana que muestra el libro, se utiliza el parámetro <code>window-size="true"</code>.</p>
+<xmp><div class="interactive" width="819" height="588" 
+scale="75%" src="https://proyectodescartes.org/canals/
+materiales_didacticos/LO-JC-08-JS/index.html"></div>
+</xmp>
 
+				<div class="interactive" width="819" height="588" scale="75%" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
+
+				<div class="note">
+					<p>Hay que mencionar que es posible utilizar porcentajes mayors al 100%, pero al hacerlo los interactivos se salen de los margenes de la página, por lo que no es aconsejable.</p>
+				</div>
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<p>El botón <img loading="lazy" style="width:1em;" src="../../css/img/ampliar.svg"> (que se agrega en la esquina superior derecha de cada interactivo) tiene la funcionalidad de mostrar el interactivo en una nueva ventana o a pantalla completa. Esto depende del valor de la variable <code>open_interactives_fullscreen</code> que es parte de la configuración del libro (<code>window.book_config = { }</code>). Esta configuración se suele especificar después del elemento <code>&lt;title&gt;</code> y antes de cargar los archivos JavaScript del libro.</p>
+
+				<p>Si la variable no aparece en la configuración (o no se tiene el script con la configuración):</p>
+<xmp><script>
+window.book_config = { }
+</script></xmp>
+
+				<p>O si aparece, pero tiene el valor de <code>false</code> (falso):</p>
+<xmp><script>
+window.book_config = { 
+  open_interactives_fullscreen: false,
+}
+</script></xmp>
+
+				<p>Entonces al presionar el botón, el interactivo se abre en una nueva ventana con las dimensiones especificadas por los valores de los parámetros <code>width</code> y <code>height</code>. Si se quiere que el interactivo se muestre en una nueva ventana con las dimensiones de la ventana que muestra el libro, se utiliza el parámetro <code>window-size="true"</code>.</p>
 <xmp><div class="interactive" width="819" height="588" 
 window-size="true" 
 src="https://proyectodescartes.org/canals/
 materiales_didacticos/LO-JC-08-JS/index.html"></div>
 </xmp>
+</div>
 
-        <div class="interactive" width="819" height="588" window-size="true" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
-      </div>
+			<!--  -->
+			<div class="page">
+				<p>Para que el interactivo se muestre a pantalla completa, es necesario asignar el valor de <code>true</code> (verdadero) al valor de la variable <code>open_interactives_fullscreen</code>, por ejemplo:</p>
+<xmp><script>
+window.book_config = { 
+  open_interactives_fullscreen: true,
+}
+</script></xmp>
 
-      <!--  -->
-      <div class="page">
-        <p>Por omisión los interactivos se muestran con un ancho igual al 100% del ancho de la página, si se desea que ocupen una área más pequeña, con el parámetro <code>scale</code> se puede reducir el tamaño a un porcentaje del ancho de la página. Por ejemplo, el siguiente interactivo se muestra con un ancho del 50% del tamaño de la página:</p>
+				<p>Este es el comportamiento en el presente ejemplo, por lo que al presionar el botón, el interactivo se muestra a pantalla completa.</p>
 
-<xmp><div class="interactive" width="819" height="588" 
-scale="50%" src="https://proyectodescartes.org/canals/
-materiales_didacticos/LO-JC-08-JS/index.html"></div>
-</xmp>
+				<div class="interactive" width="819" height="588" scale="75%" window-size="true" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
 
-        <div class="interactive" width="819" height="588" scale="50%" src="https://proyectodescartes.org/canals/materiales_didacticos/LO-JC-08-JS/index.html"></div>
-      </div>
+				<div class="note">
+					<p>Hay que mencionar que esto funciona solamente en los navegadores que implementan <a href="https://developer.mozilla.org/es/docs/Web/API/Fullscreen_API" target="_blank">la funcionalidad de pantalla completa de los navegadores</a>. Por fortuna la mayoría de los navegadores modernos ya incorporan esta funcionalidad.</p>
+				</div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <p>En general se puede agregar cualquier tipo de recurso interactivo que funcione con HTML. Por ejemplo, aquí se agrega el editor de GeoGebra.</p>
+			<!--  -->
+			<div class="page">
+				<p>En general se puede agregar cualquier tipo de recurso interactivo que funcione con HTML. Por ejemplo, aquí se agrega el editor de GeoGebra.</p>
 <xmp><div class="interactive" width="819" height="588" 
 src="https://www.geogebra.org/geometry"></div>
 </xmp>
-        <div class="interactive" width="819" height="588" src="https://www.geogebra.org/geometry"></div>
+				<div class="interactive" width="819" height="588" src="https://www.geogebra.org/geometry"></div>
 
-        <p>Solo hay que considerar que los recursos interactivos deben poder ajustar su tamaño para que se muestren correctamente en el área reducida del libro.</p>
-      </div>
+				<div class="note">
+					<p>Solo hay que considerar que los recursos interactivos deben poder ajustar su tamaño para que se muestren correctamente dentro de las páginas del libro (o a pantalla completa).</p>
+				</div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="videos">Vídeos</h2>
+			<!--  -->
+			<div class="page">
+				<h2 id="videos">Vídeos</h2>
 
-        <p>Para agregar un video local, se utiliza lo siguiente:</p>
+				<p>Para agregar un video local, se utiliza el siguiente código HTML:</p>
 
-<xmp><video width="100%" controls="" 
+<xmp><video preload="none" width="100%" controls="" 
 poster="videos/poster/ejemplo.png">
 <source src="videos/ejemplo.mp4" type="video/mp4">
 </video>
 </xmp>
 
-        <video width="100%" controls="" poster="videos/poster/ejemplo.png">
-          <source src="videos/ejemplo.mp4" type="video/mp4">
-        </video>
+				<video preload="none" width="100%" controls="" poster="videos/poster/ejemplo.png">
+					<source src="videos/ejemplo.mp4" type="video/mp4">
+				</video>
 
-        <p>El valor del parámetro <code>width</code> permite controlar el ancho del video como un porcentaje del ancho de la página. Es aconsejable agregar una imagen que muestre el primer cuadro del video y colocar la dirección en el parámetro <code>poster</code>, para que se muestre mientras el navegador precarga el vídeo.</p>
-      </div>
+				<p>El valor del parámetro <code>width</code> permite controlar el ancho del video como un porcentaje del ancho de la página. Es aconsejable agregar una imagen que muestre el primer cuadro del video y colocar la dirección en el parámetro <code>poster</code>, para que se muestre mientras el navegador carga el vídeo.</p>
 
-      <!--  -->
-      <div class="page">
-        <p>También es posible agregar videos desde YouTube, pero en este caso, se utiliza el mismo mecanismo para agregar un interactivo. Ejemplo:</p>
+				<p>Se recomienda que el valor del parámetro <code>preload</code> sea <code>"none"</code> para evitar que los videos se precarguen, ayudando así a que solo se carguen los elementos visibles para el lector.</p>
+
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<p>También es posible agregar videos desde YouTube, pero en este caso, se utiliza el mismo mecanismo para agregar un interactivo. Ejemplo:</p>
 
 <xmp><div class="interactive" width="560" height="315" 
 src="https://www.youtube.com/embed/podf-jQjxaM"></div>
 </xmp>
 
-        <div class="interactive" width="560" height="315" src="https://www.youtube.com/embed/podf-jQjxaM"></div>
+				<div class="interactive" width="560" height="315" src="https://www.youtube.com/embed/podf-jQjxaM"></div>
 
-        <p>Para agregar un video desde YouTube, es necesaria la dirección del video que incluye <code>embed</code> en el código. Como regla general las direcciones de YouTube tienen la siguiente forma <code>https://www.youtube.com/<b>watch?v=</b>podf-jQjxaM</code>, solamente hay que sustituir <code>watch?v=</code> por <code>embed/</code> en la dirección.</p>
-      </div>
+				<p>Para agregar un video desde YouTube, es necesaria la dirección del video que incluye <code>embed</code> en el código. Como regla general las direcciones de YouTube tienen la siguiente forma <code>https://www.youtube.com/<b>watch?v=</b>podf-jQjxaM</code>, solamente hay que sustituir <code>watch?v=</code> por <code>embed/</code> en la dirección.</p>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="imagenes">Imágenes</h2>
+				<div class="note">
+					<p>Hay que considerar que los creadores de contenido pueden bloquear el uso de sus video en sitios externos a youtube, por lo que no todos los vídeos pueden incluirse dentro del libro interactivo.</p>
+				</div>
+			</div>
 
-        <p>Si se quiere agregar una imagen que tenga el comportamiento de que que al darle clic se muestre en una nueva ventana, se utiliza lo siguiente:</p>
+			<!--  -->
+			<div class="page">
+				<h2 id="imagenes">Imágenes</h2>
 
-<xmp><img class="image_expand" onclick="openImage(this)" 
-src="https://proyectodescartes.org/descartescms/images/
-logodescartes.gif" width="80%"></xmp>
+				<p>Para añadir una imagen con la función de mostrarse en una ventana nueva al dar clic sobre ella, se utiliza el siguiente código:<p>
+<xmp><img loading="lazy" class="image_expand" 
+onclick="openImage(this)" src="https://proyectodescartes
+.org/descartescms/images/logodescartes.gif" width="80%"></xmp>
 
-        <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="80%">
+				<img loading="lazy" class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="80%">
 
-        <p>Con el valor del parámetro <code>width</code> se define el ancho de la imagen como un porcentaje del ancho de la página.</p>
+				<p>Con el valor del parámetro <code>width</code> se define el ancho de la imagen como un porcentaje del ancho de la página.</p>
 
-        <p>El código <code>class="image_expand" onclick="openImage(this)"</code> es lo que permite que la imagen se muestre en una nueva ventana, entonces, para tener una imagen que no se muestre en una ventana nueva al dar clic sobre ella, solo hay que omitir el código <code>class="image_expand" onclick="openImage(this)"</code>, por ejemplo:</p>
+				<p>El código <code>class="image_expand" onclick="openImage(this)"</code> es lo que permite que la imagen se muestre en una nueva ventana, entonces, para tener una imagen que no se muestre en una ventana nueva al dar clic sobre ella, solo hay que omitir el código <code>class="image_expand" onclick="openImage(this)"</code>, por ejemplo:</p>
 
-<xmp><img src="https://proyectodescartes.org/descartescms/
-images/logodescartes.gif" width="40%"></xmp>
+<xmp><img loading="lazy" src="https://proyectodescartes.org/
+descartescms/images/logodescartes.gif" width="40%"></xmp>
 
-        <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="40%">
-      </div>
+				<img loading="lazy" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="40%">
+			</div>
 
-      <!-- -->
-      <div class="page">
-        <p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
+			<!-- -->
+			<div class="page">
+				<p>Hay que mencionar que el parámetro <code>loading="lazy"</code> es un nuevo atributo que los navegadores modernos han incorporado en las imágenes (y otros elementos), con la finalidad de controlar si la descarga de las imágenes se realiza de forma perezosa, es decir, que se descarguen hasta que la imagen se encuentre en el área visible del navegador.</p>
+				
+				<p>Si no se utiliza, todos los elementos de tipo <code>&lt;img&gt;</code> dentro del documento intentan descargar su contenido, lo que puede hacer que la presentación de libro tarde mucho tiempo, dependiendo del número de imágenes que contenga. Por esto se recomienda que se incluya el atributo para mejorar la velocidad en la que se presenta el libro interactivo.</p>
 
-<xmp><img class="image_link" 
+				<div class="note">
+					<p>Algunos navegadores no soportan el parámetro <code>loading="lazy"</code> por lo que realizan la descarga inmediata de las imágenes. Aún así, incluir el parámetro no causa ningún problema en el libro y permite que los usuarios que utilicen navegadores modernos, aprovechen las ventajas que ofrece, la cual se vuelve evidente en libros con muchas páginas y muchas imágenes.</p>
+				</div>
+
+				<p>Otra cosa a mencionar es que el valor del parámetro <code>open_interactives_fullscreen</code> (mencionado en la sección de <pageref ref_id="interactivos">interactivos</pageref>) también modifica el comportamiento al pulsar sobre las imágenes, ya que al estar activado (valor <code>true</code>), al igual que los interactivos, las imágenes se muestran a pantalla completa en lugar de abrir una nueva ventana.</p>
+			</div>
+
+			<!-- -->
+			<div class="page">
+				<p>Si queremos una imagen que al hacer clic sobre ella, muestre en una ventana emergente algún vínculo, por ejemplo, un recurso interactivo, debemos utilizar:</p>
+
+<xmp><img loading="lazy" class="image_link" 
 onclick="openInteractive('https://proyectodescartes.org/
 Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/
 index.html', '790', '530')" 
 src="https://proyectodescartes.org/Telesecundaria/
 imagenes_descripcion_materiales/3m_b01_t01_s01.png" 
-width="75%"></xmp>
+width="80%"></xmp>
 
-        <img class="image_link" onclick="openInteractive('https://proyectodescartes.org/Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/index.html', '790', '570')" src="https://proyectodescartes.org/Telesecundaria/imagenes_descripcion_materiales/3m_b01_t01_s01.png" width="75%">
+				<img loading="lazy" class="image_link" onclick="openInteractive('https://proyectodescartes.org/Telesecundaria/materiales_didacticos/3m_b01_t01_s01-JS/index.html', '790', '570')" src="https://proyectodescartes.org/Telesecundaria/imagenes_descripcion_materiales/3m_b01_t01_s01.png" width="80%">
 
-        <p>El código <code>openInteractive('url', 'ancho', 'alto)</code>, es el que se encarga de abrir el vínculo en una nueva ventana emergente, de tal manera que <code>url</code> corresponde a la dirección del recurso a mostrar, <code>ancho</code> y <code>alto</code> determinan el tamaño de la ventana emergente.</p>
-      </div>
+				<p>El código <code>openInteractive('url', 'ancho', 'alto)</code>, es el que se encarga de abrir el vínculo en una nueva ventana emergente, de tal manera que <code>url</code> corresponde a la dirección (relativa o absoluta) del recurso a mostrar, <code>ancho</code> y <code>alto</code> determinan el tamaño de la ventana emergente. Y no hay que olvidar que <code>src</code> es la dirección de la imagen que se incluye en el libro.</p>
+			</div>
 
-      <!-- -->
-      <div class="page">
-        <p>Si se quiere agregar una imagen como una figura, es decir con texto descriptivo debajo, hay que utilizar lo siguiente:</p>
+			<!-- -->
+			<div class="page">
+				<p>Si se quiere incluir una imagen como una figura, es decir, con texto descriptivo debajo, se utiliza el siguiente código:</p>
 
 <xmp><figure>
-<img class="image_expand" onclick="openImage(this)" 
+<img loading="lazy" class="image_expand" onclick="
+openImage(this)" 
 src="https://proyectodescartes.org/descartescms/images/
 logodescartes.gif" width="50%">
 <figcaption>Banner del proyecto descartes.</figcaption>
 </figure></xmp>
-        
-        <figure>
-          <img class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="50%">
-          <figcaption>Banner del proyecto descartes.</figcaption>
-        </figure>
+				
+				<figure>
+					<img loading="lazy" class="image_expand" onclick="openImage(this)" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="50%">
+					<figcaption>Banner del proyecto descartes.</figcaption>
+				</figure>
 
-        <p>Para agregar una referencia a una figura, es necesario tener un identificador en la figura y utilizar lo siguiente:</p>
+				<p>Las figuras (<code>&lt;figure&gt;</code>) además de contener imágenes, pueden incluir interactivos, tablas o cualquier código HTML. Y el elemento <code>&lt;figcaption&gt;</code> corresponde a el texto descriptivo debajo de la figura; el cual se recomienda que sea el último elemento que se incluye dentro de una figura.</p>
+
+				<p>Si a las figuras les incluimos el atributo <code>id</code>, con un valor único para cada figura, por ejemplo:</p>
+<xmp><figure id="IDENTIFICADOR_DE_LA_FIGURA"></figure></xmp> 
+
+				<p>Podemos incluir una referencia a dicha figura, utilizando el siguiente código:</p>
 <xmp><ref ref_id="IDENTIFICADOR_DE_LA_FIGURA"></ref></xmp>
+</div>
 
-        <p>Por ejemplo el siguiente código:</p>
+<!--  -->
+<div class="page">
+				<p>Por ejemplo el siguiente bloque de código:</p>
 
-<xmp><p>Observa la <ref ref_id="mi_figura">
-</ref>.</p>
+<xmp><p>Observa la <ref ref_id="mi_figura"></ref>.</p>
+
 <figure id="mi_figura">
-<img src="https://proyectodescartes.org/descartescms/
-images/logodescartes.gif" width="50%">
+<img loading="lazy" src="https://proyectodescartes.org/
+descartescms/images/logodescartes.gif" width="50%">
 <figcaption>El título de la figura.</figcaption>
 </figure></xmp>
 
-        <p>Muestra lo siguiente:</p>
-      </div>
+				<p>Muestra lo siguiente:</p>
 
-      <!--  -->
-      <div class="page">
-        <p>Observa la <ref ref_id="mi_figura"></ref>.</p>
+				<p>Observa la <ref ref_id="mi_figura"></ref>.</p>
 
-        <figure id=mi_figura>
-          <img src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="50%">
-          <figcaption>El título de la figura.</figcaption>
-        </figure>
+				<figure id=mi_figura>
+					<img loading="lazy" src="https://proyectodescartes.org/descartescms/images/logodescartes.gif" width="50%">
+					<figcaption>Información descriptiva de la figura.</figcaption>
+				</figure>
 
-        <p>Para agregar una referencia a figura cuyo contenido es diferente a una imagen por ejemplo una tabla (un interactivo o un video), es necesario tener un identificador en la figura que contiene la tabla y agregar el atributo <code>prefix="Tabla"</code> (o el nombre que queremos que aparezca en la etiqueta) al elemento <code>&lt;figcaption&gt;</code>. Por ejemplo:</p>
+				<div class="note">
+					<p>Es importante mencionar que si la figura no contiene un elemento de tipo <code>&lt;figcaption&gt;</code> entonces hay un error al incluir la referencia y se muestra el texto <code>undefined</code>, esto debido a que solo se enumeran las figuras que contienen el texto descriptivo especificado por <code>&lt;figcaption&gt;</code>.</p>
+				</div>
 
-<xmp><p>Observa la <ref ref_id="mi_tabla">
-</ref>.</p>
+				<br>
+				<p>Para agregar una referencia a una figura cuyo contenido es diferente a una imagen, por ejemplo, una tabla, un interactivo o un video; es necesario tener un identificador en la figura y además agregar el atributo <code>prefix="Tabla"</code> (o el nombre que queremos que aparezca en la etiqueta, <code>"Interactivo"</code> o <code>"Video"</code>) al elemento <code>&lt;figcaption&gt;</code>. Por ejemplo:</p>
+			</div>
+
+			<!--  -->
+			<div class="page">
+<xmp><p>Observa la <ref ref_id="mi_tabla"></ref>.</p>
 <figure id="mi_tabla">
 <table>
   <tr><td>Título 1</td><td>Título 2</td></tr>
   <tr><td>Valor 1</td><td>Valor2</td></tr>
 </table>
-<figcaption prefix="Tabla">El título de la tabla.
+<figcaption prefix="Tabla">Información descriptiva de la tabla.
 </figcaption></figure></xmp>
 
-        <p>Muestra lo siguiente:</p>
+				<p>Muestra lo siguiente:</p>
 
-        <p>Observa la <ref ref_id="mi_tabla">
-        </ref>.</p>
-        <figure id="mi_tabla">
-        <table>
-          <tr><td>Título 1</td><td>Título 2</td></tr>
-          <tr><td>Valor 1</td><td>Valor2</td></tr>
-        </table>
-        <figcaption prefix="Tabla">El título de la tabla.</figcaption>
-      </figure>
+				<p>Observa la <ref ref_id="mi_tabla">
+				</ref>.</p>
+				<figure id="mi_tabla">
+					<table>
+						<tr><td>Título 1</td><td>Título 2</td></tr>
+						<tr><td>Valor 1</td><td>Valor2</td></tr>
+					</table>
+					<figcaption prefix="Tabla">Información descriptiva de la tabla.</figcaption>
+				</figure>
 
-      </div>
+				<br>
+				<h2 id="teoremas">Bloques autonumerados</h2>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="teoremas">Definiciones, teoremas y lemas</h2>
-
-        <p>Para agregar una definición, teorema o lema, hay que utilizar el siguiente código:</p>
-
+				<p>Para agregar bloques de texto autoenumerados, por ejemplo para presentar definiciones, teoremas, lemas, ejercicios, ejemplos o cualquier elemento que se quiera enumerar a lo largo de la presentación del libro, se utiliza el siguiente código:</p>
 <xmp><div class="num_block" 
 prefix="PREFIJO_PARA_LA_AUTO_NUMERACIÓN"></div>
 </xmp>
 
-        <p>Por ejemplo para agregar una definición se escribiría lo siguiente:</p>
+				<p><code>class="num_block"</code> es la encargada de la presentación del bloque de texto, y el atributo <code>prefix</code> proporciona el nombre que se utiliza para presentar el texto, y para crear un contador que llevara la cuenta de cuantos elementos se han creado utilizando el mismo prefijo.</p>
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<p>Por ejemplo para agregar una definición se escribiría lo siguiente:</p>
 
 <xmp><div class="num_block" prefix="Definición">Este es el 
 texto de una definición.</div></xmp>
 
-        <p>Lo que muestra este texto:</p>
+				<p>Lo que muestra este texto:</p>
 
-        <div class="num_block" prefix="Definición">
-          Este es el texto de una definición.
-        </div>
+				<div class="num_block" prefix="Definición">
+					Este es el texto de una definición.
+				</div>
 
-        <p>Por ejemplo para agregar un teorema se escribiría lo siguiente:</p>
+				<p>Para incluir una siguiente definición:</p>
+<xmp><div class="num_block" prefix="Definición">Este es el 
+texto de una nueva definición, que también se numera.
+</div></xmp>
+					
+				<p>Y se ve así:</p>
+
+				<div class="num_block" prefix="Definición">
+					Este es el texto de una nueva definición, que también se numera.
+				</div>
+
+				<p>El primer número de la numeración corresponde al número del capítulo en donde se encuentra el bloque de texto, mientras que el segundo número corresponde a la numeración asignada a los elementos que comparten el mismo prefijo <code>prefix</code>.</p>
+
+				<p>Por ejemplo para agregar un teorema se escribiría lo siguiente:</p>
 
 <xmp><div class="num_block" prefix="Teorema">Este es el 
 texto de un teorema.</div></xmp>
 
-        <p>Lo que muestra este texto:</p>
+				<p>Lo que muestra este texto:</p>
 
-        <div class="num_block" prefix="Teorema">
-          Este es el texto de un teorema.
-        </div>
+				<div class="num_block" prefix="Teorema">
+					Este es el texto de un teorema.
+				</div>
+			</div>
 
-        <p>Por ejemplo para agregar un lema se escribiría lo siguiente:</p>
+			<!--  -->
+			<div class="page">
+				<p>Para agregar un ejemplo podemos utilizar lo siguiente:</p>
 
-<xmp><div class="num_block" prefix="Lema">Este es el 
-texto de un lema.</div></xmp>
+<xmp><div class="num_block" prefix="Ejemplo">Este es el 
+texto de un ejemplo.</div></xmp>
 
-        <p>Lo que muestra este texto:</p>
+				<p>Lo que muestra este texto:</p>
 
-        <div class="num_block" prefix="Lema">
-          Este es el texto de un lema.
-        </div>
-      </div>
+				<div class="num_block" prefix="Ejemplo">
+					Este es el texto de un ejemplo.
+				</div>
 
-      <!--  -->
-      <div class="page">
-        <p>Para agregar una referencia a una definición, teorema o lema, se utiliza el mismo mecanismo para referenciar figuras, por lo que es necesario contar con un identificador en elemento que se quiere referenciar.</p>
+				<p>Como se puede observar las numeraciones de los elementos marcados con <code>class="num_block"</code> son independientes, ya que el prefijo determina el tipo de elemento que se quiere numerar y se crea un contador especifico para cada uno de ellos.</p>
+
+				<p>Para agregar una referencia a una definición, teorema o lema, se utiliza el mismo mecanismo para referenciar figuras, por lo que es necesario contar con un identificador en elemento que se quiere referenciar.</p>
 
 <xmp><ref ref_id="ID_DE_LA_DEFINICIÓN_TEOREMA_O_LEMA"></ref></xmp>
 
-        <p>Por ejemplo el siguiente código:</p>
+				<p>Por ejemplo el siguiente código:</p>
 <xmp><div class="num_block" prefix="Lema" id="lema_supremo">
 El lema supremo dice ...</div>
 <p>Como podemos observar en el <ref ref_id="lema_supremo">
 </ref> todo es increíble.</p></xmp>
 
-        <p>Muestra el siguiente texto:</p>
-        <div class="num_block" prefix="Lema" id="lema_supremo">El lema supremo dice ...</div>
-        <p>Como podemos observar en el <ref ref_id="lema_supremo"></ref> todo es increíble.</p>
+				<p>Muestra el siguiente texto:</p>
+				<div class="num_block" prefix="Lema" id="lema_supremo">El lema supremo dice ...</div>
+				<p>Como podemos observar en el <ref ref_id="lema_supremo"></ref> todo es increíble.</p>
+			</div>
 
-        <p>El parámetro <code>prefix</code> en referencias bibliográficas y en bloques autonumerados, corresponde siempre a la etiqueta que se muestra de forma automática y además permite tener contadores para identificar y contar elementos de un mismo tipo, por ejemplo: figuras, tablas, videos, interactivos, lemas, teoremas, etc.</p>
-      </div>
-
-      <!--  -->
-      <div class="page">
-        <h2 id="referencia_a_paginas">Referencia a páginas</h2>
-  
-        <p>Para incluir un vínculo o referencia a una página dentro del libro, podemos utilizar el elemento <code>&lt;pageref&gt;</code> y su atributo <code>ref_id</code> para especificar el identificador de algún elemento dentro de la página que queremos referenciar.</p>
-        
-        <p>Por ejemplo para incluir una referencia al Prefacio, podemos realizar lo siguiente:</p>
-        
+			<!-- -->
+			<div class="page">
+				<h2 id="referencia_a_paginas">Referencia a páginas</h2>
+	
+				<p>Para incluir un vínculo o referencia a una página dentro del mismo libro, podemos utilizar el elemento <code>&lt;pageref&gt;</code> y su atributo <code>ref_id</code> para especificar el identificador de algún elemento dentro de la página que queremos referenciar.</p>
+				
+				<p>Por ejemplo para incluir una referencia al Prefacio, podemos realizar lo siguiente:</p>
+				
 <xmp><pageref ref_id="prefacio"></pageref></xmp>
 
-        <p>Lo que muestra lo siguiente: <pageref ref_id="prefacio"></pageref>.</p>
-        
-        <p>Si queremos agregar un texto adicional al número de página, se puede asignar un valor al parámetro <code>prefix</code> del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
-  
+				<p>Lo que muestra lo siguiente: <pageref ref_id="prefacio"></pageref>.</p>
+				
+				<p>Si queremos agregar un texto adicional al número de página, se puede asignar un valor al parámetro <code>prefix</code> del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
+	
 <xmp><pageref ref_id="prefacio" prefix="página"></pageref></xmp>
-        
-        <p>Con lo que obtenemos lo siguiente: <pageref ref_id="prefacio" prefix="página"></pageref>.</p>
-        
-        <p>Por último si queremos que el número de página no aparezca en la referencia y en lugar de eso se desea mostrar un texto específico, solamente hay que colocar el texto que deseamos mostrar como contenido del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
-  
-<xmp><pageref ref_id="prefacio">como se puede ver en 
+				
+				<p>Con lo que obtenemos lo siguiente: <pageref ref_id="prefacio" prefix="página"></pageref>.</p>
+				
+				<p>Por último si queremos que el número de página no aparezca en la referencia y en lugar de eso se desea mostrar un texto específico, solamente hay que colocar el texto que deseamos mostrar como contenido del elemento <code>&lt;pageref&gt;</code>, por ejemplo:</p>
+	
+<xmp><pageref ref_id="prefacio">como se puede ver en el
 Prefacio</pageref></xmp>
-  
-        <p>Que muestra el siguiente texto: <pageref ref_id="prefacio">como se puede ver en Prefacio</pageref>.</p>
-      </div>
+	
+				<p>Que muestra el siguiente texto: <pageref ref_id="prefacio">como se puede ver en el Prefacio</pageref>.</p>
+   </div>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="referencia_a_bibliografia">Referencia bibliográfica</h2>
+			<!--  -->
+			<div class="page">
+				<h2 id="referencia_a_bibliografia">Referencia bibliográfica</h2>
 
-        <p>Para agregar bibliografía, por lo general en un capítulo al final del libro, se deben agregar entradas bibliográficas de la siguiente manera:</p>
+				<p>Para agregar bibliografía, por lo general en un capítulo al final del libro, se deben agregar entradas bibliográficas de la siguiente manera:</p>
 <xmp><bibitem id="RER119">
   Juan Guillermo Rivera Berrío, Joel Espinosa Longi y 
   Alejandro Radillo Díaz. <b>Descartes JS - Nivel - I
@@ -546,56 +624,63 @@ Prefacio</pageref></xmp>
   2019.
 </bibitem></xmp>
 
-        <p><code>&lt;bibitem&gt;</code> es el elemento que permite identificar una entrada bibliográfica. El parámetro <code>id</code> es el que permite identificar el elemento de la bibliografía y se utiliza para realizar referencias dentro del texto del documento.</p>
-              
-        <p>Para agregar una referencia a un elemento de la bibliografía se utiliza <code>&lt;bibref&gt;</code> con el atributo <code>&lt;ref_id&gt;</code> igual al valor del identificador del elemento a referenciar (<code>id</code>):</p>
+				<p><code>&lt;bibitem&gt;</code> es el elemento que permite identificar una entrada bibliográfica. El parámetro <code>id</code> es el que permite identificar el elemento de la bibliografía y se utiliza para realizar referencias dentro del texto del documento.</p>
+							
+				<p>Para agregar una referencia a un elemento de la bibliografía se utiliza <code>&lt;bibref&gt;</code> con el atributo <code>&lt;ref_id&gt;</code> igual al valor del identificador del elemento a referenciar (<code>id</code>):</p>
 
 <xmp><bibref ref_id="IDENTIFICADOR_DE_BIBLIOGRAFÍA"></bibref></xmp>
-      </div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <p>Por ejemplo el siguiente código:</p>
+			<!--  -->
+			<div class="page">
+				<p>Por ejemplo el siguiente código:</p>
 
 <xmp>Para aprender más sobre Descartes se pueden consultar 
 los libros: Descartes JS - Nivel - I
 (<bibref ref_id="RER119"></bibref>) y Descartes JS - 
 Nivel - II (<bibref ref_id="RER219"></bibref>).</xmp>
 
-        <p>Muestra el siguiente texto:</p>
-        
-        <p>Para aprender más sobre Descartes se pueden consultar los libros: Descartes JS - Nivel - I (<bibref ref_id="RER119"></bibref>) y Descartes JS - Nivel - II (<bibref ref_id="RER219"></bibref>).</p>
+				<p>Muestra el siguiente texto:</p>
+				
+				<p>Para aprender más sobre Descartes se pueden consultar los libros: Descartes JS - Nivel - I (<bibref ref_id="RER119"></bibref>) y Descartes JS - Nivel - II (<bibref ref_id="RER219"></bibref>).</p>
 
-        <p>Es posible dar clic en las referencias a la bibliografía y observar en la parte superior del libro la información correspondiente.</p>
-      </div>
+				<p>Al dar clic en las referencias a la bibliografía incluidas en el libro, se puede observar en la parte superior del libro la información correspondiente.</p>
 
-      <!--  -->
-      <div class="page">
-        <h2 id="codigo">Código</h2>
+				<p>También es posible utilizar la variable <code>bibitem_ref_id</code> en la configuración del libro, para especificar si se utilizan números para la presentación de las entradas bibliográficas (el valor por defecto <code>bibitem_ref_id: false</code>) o si se utiliza el valor del parámetro <code>id</code> de las entradas bibliográficas (<code>bibitem_ref_id: true</code>). Esto es útil para personalizar la presentación de la bibliografía.</p>
 
-      <p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
+				<div class="note">
+					<p>Hay que mencionar que para evitar comportamientos extraños, los valores asignados al parámetro <code>id</code> en cualquier elemento del libro, debe corresponder a un valor único, es decir, hay que evitar repetir identificadores.</p>
+
+					<p>De igual forma hay que utilizar identificadores diferentes a los utilizados por el núcleo del libro para evitar que se corrompa su funcionamiento, estos valores son: <code>book_loader_container</code>, <code>book_loader</code>, <code>book_container</code>, <code>pages_container</code>, <code>btn_back_page</code>, <code>btn_next_page</code>, <code>go_to_table_of_content</code>, <code>close_to_table_of_content</code>, <code>btn_config</code>, <code>config_options</code>, <code>dark_light_mode</code>, <code>btn_dark</code>, <code>btn_light</code>, <code>table_of_content</code> y <code>pages_container</code>.</p>
+				</div>
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<h2 id="codigo">Código</h2>
+
+			<p>Para mostrar código dentro de una línea de texto, se utiliza lo siguiente:</p>
 
 <xmp><code>x=100</code></xmp>
-      <p>Código en línea <code>x=100</code>.</p>
+			<p>Código en línea <code>x=100</code>.</p>
 
-      <p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
+			<p>Para mostrar código en un bloque, por ejemplo para describir un algoritmo, se utiliza:</p>
 
 <xmp><pre>
 x=4
 y=10
-r=x+y
+    r=x+y
 </pre></xmp>
 
-    <pre>
+<pre>
 x=4
 y=10
-r=x+y
+    r=x+y
 </pre>
 
-       <p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
-     </div>
-
-     <div class="page" num=""></div>
+				<br>
+				<p>Hay que considerar que la etiqueta <code>&lt;pre&gt;</code> respeta los espacios en blanco.</p>
+			</div>
 
       <div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
         <div class="chap_text">Capítulo II</div>
@@ -786,10 +871,6 @@ r=x+y
         <p>Para ver más ejemplos de uso de $\TeX$ puede consultarse el siguiente enlace: <a href="https://es.wikipedia.org/wiki/Ayuda:Uso_de_TeX" target="_blank">https://es.wikipedia.org/wiki/Ayuda:Uso_de_TeX</a>, sólo se debe probar la compatibilidad de algunas expresiones, pues no todas las expresiones de este enlace son soportadas por $\KaTeX$. Una lista de las funciones soportadas por $\KaTeX$ se encuentra en la siguiente dirección <a href="https://katex.org/docs/supported.html">https://katex.org/docs/supported.html</a>.</p>
 		
     	</div>
-
-      <div class="page" num=""></div>
-
-      <div class="page" num=""></div>
 
       <div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
         <div class="chap_text">Capítulo III</div>

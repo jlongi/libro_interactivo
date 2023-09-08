@@ -23,9 +23,9 @@ var show_hide_config_options;
  * Externa book configuration
  */
 window.book_config = window.book_config || {
-  auto_numerate_sections_and_figures: false,  // use the auto numerate of seccions and figures
+  auto_numerate_sections_and_figures: false,  // use the auto numerate of sections and figures
   bibitem_ref_id: false,  // use the bibitem id, instead of the number
-  open_interactives_fullscreen: false,  // use the fullscreen api
+  open_interactives_fullscreen: false,  // show interactive in full window
 };
 
 /**
@@ -43,19 +43,44 @@ window.addEventListener("afterprint", function(event) {
 });
 
 window.addEventListener("load", function(evt) {
-  document.getElementById("book_loader_container").style.display = "none";
 });
+
+window.tryfull = function(node) {
+  if(document.fullscreenElement) {
+    document.exitFullscreen();
+  } else if(document.webkitFullscreenElement) {
+    document.webkitExitFullscreen();
+  } else if(document.mozFullScreenElement ) {
+    document.mozExitFullscreen();
+  }
+  else {
+    if(node.requestFullscreen) {
+      node.requestFullscreen();
+    } else if(node.mozRequestFullScreen) {
+      node.mozRequestFullScreen();
+    } else if(node.webkitRequestFullscreen) {
+      node.webkitRequestFullscreen();
+    } else if(node.msRequestFullscreen) {
+      node.msRequestFullscreen();
+    }
+    else {
+      return false
+    }
+  }
+  return true;
+}
 
 /**
  * When the document is loaded, init the book construction
  */
 document.addEventListener("DOMContentLoaded", function(evt) {
+  document.getElementById("book_loader_container").style.display = "none";
+
   /**
    * prevent the iframes to show
    */
   let iframes = document.querySelectorAll("iframe");
   for (let i=0, l=iframes.length; i<l; i++) {
-    // observer.observe(iframes[i]);
 
     if (!iframes[i].hasAttribute("data-src")) {
       iframes[i].setAttribute("data-src", iframes[i].src);
@@ -132,6 +157,7 @@ function addInteractive(pages_container, text_width, interactive_margin) {
   let new_iframe;
   let btn;
   let pdf_anchor;
+  let image_poster;
 
   interactives.forEach((inte) => {
     let w = parseInt(inte.getAttribute("width") || 0);
@@ -152,19 +178,10 @@ function addInteractive(pages_container, text_width, interactive_margin) {
     }
 
     new_iframe = document.createElement("iframe");
-    // new_iframe.addEventListener("load", (evt) => {
-    //   console.log("hola", this, evt);
-    // });
-    // new_iframe.setAttribute("width", i_w);
-    // new_iframe.setAttribute("height", i_h);
     new_iframe.style.width  = "100%";
     new_iframe.style.height = "100%";
     new_iframe.setAttribute("data-src", src);
     new_iframe.setAttribute("src", "about:blank");
-    if (inte.hasAttribute("poster")) {
-      // new_iframe.setAttribute("style", `background-image: url("${inte.getAttribute("poster")}")`);
-      new_iframe.style["background-image"] = `url("${inte.getAttribute("poster")}")`;
-    }
 
     btn = document.createElement("button");
     if (window_size) {
@@ -173,38 +190,33 @@ function addInteractive(pages_container, text_width, interactive_margin) {
     }
 
     btn.className = "btn_expand";
-    // btn.onclick = new Function("", `openInteractive("${src}", ${w}, ${h+40});return 0;`);
     btn.addEventListener("click", function(evt) {
       if (book_config.open_interactives_fullscreen) {
-        if(document.fullscreenElement) {
-          document.exitFullscreen();
-        } else if(document.webkitFullscreenElement) {
-          document.webkitExitFullscreen();
-        } else if(document.mozFullScreenElement ) {
-          document.mozExitFullscreen();
+        if (!tryfull(inte)) {
+          openInteractive(src, w, h+40, inte);
         }
-        else {
-          if(inte.requestFullscreen) {
-            inte.requestFullscreen();
-          } else if(inte.mozRequestFullScreen) {
-            inte.mozRequestFullScreen();
-          } else if(inte.webkitRequestFullscreen) {
-            inte.webkitRequestFullscreen();
-          } else if(inte.msRequestFullscreen) {
-            inte.msRequestFullscreen();
-          }
-          else {
-            openInteractive(src, w, h+40);
-          }
-        }
-      } else {
-        openInteractive(src, w, h+40);
+      }
+      else {
+        openInteractive(src, w, h+40, inte);
       }
     });
 
     pdf_anchor = document.createElement("a");
     pdf_anchor.setAttribute("class", "PDF_anchor");
     pdf_anchor.setAttribute("href", src);
+    pdf_anchor.style["padding"] = "var(--interactive-margin)";
+
+    // lazy image poster
+    if (inte.hasAttribute("poster")) {
+      image_poster = document.createElement("img");
+      image_poster.setAttribute("loading", "lazy");
+      image_poster.setAttribute("style", "width:100%;height:100%;")
+      pdf_anchor.appendChild(image_poster);
+      image_poster.setAttribute("src", inte.getAttribute("poster"));
+    }
+    else {
+      pdf_anchor.style["background-image"] = "url('book/css/img/interactive.svg')";
+    }
 
     inte.appendChild(btn);
     inte.appendChild(new_iframe);
@@ -223,10 +235,6 @@ function addImageLinks(pages_container) {
   let btn;
 
   img_links.forEach((img) => {
-    // tmp_div = document.createElement("div");
-    // img.parentNode.replaceChild(tmp_div, img);
-    // tmp_div.appendChild(img);
-
     image_width = img.getAttribute("width") || "100%";
     img.setAttribute("width", "100%");
 
@@ -778,7 +786,6 @@ function setURLParams() {
  */
 function escapeIdForQuerySelector(id) {
   return `[id='${id}']`;
-  // return "#" + id.replace(/\\/g, "\\").replace(/\./g, "\\.").replace(/:/g, "\\:").replace(/\s/g, "\\ ");
 }
 
 /**
@@ -1111,17 +1118,19 @@ function init(body_style, pages_container, pages) {
       h = h || img.naturalHeight || screen.availHeight;
     }
     
-    window.open(src, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
+    if ((book_config.open_interactives_fullscreen) && (typeof(img) == "object")) {
+      if (!tryfull(img)) {
+        window.open(src, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
+      }
+    }
+    else {
+      window.open(src, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
+    }
   }
 
   /** */
-  window.openInteractive = function(href, width, height, target) {
-    if (target == "_browsertab") {
-      window.open(href, "_blank");  
-    }
-    else {
-      window.open(href, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-width)/2},top=${(screen.availHeight-height)/2},width=${width},height=${height}`);
-    }
+  window.openInteractive = function(href, width, height, node) {
+    window.open(href, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-width)/2},top=${(screen.availHeight-height)/2},width=${width},height=${height}`);
   }
 
   // if the page has table of content container then the button go_to_table_of_content shows the container

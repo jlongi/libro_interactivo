@@ -1,190 +1,197 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=yes,minimal-ui">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <title>Libro digital interactivo</title>
+	<title>Libro digital interactivo</title>
 
-  <!-- configuración del libro -->
-  <script>
-  window.book_config = {
-    auto_numerate_sections_and_figures: true, 
-  }
-  </script>
+	<!-- se precarga la imagen utilizada para el cargador del libro, en caso de que se utilice -->
+	<link rel="preload" as="image" href="images/general/icartesilibri_logo.svg">
 
-  <!-- núcleo del libro interactivo -->
-  <link rel="stylesheet" href="../../css/style.css" type="text/css">
-  <script type="text/javascript" src="../../js/book.js" charset="utf-8"></script>
-  
-  <!-- personalización del usuario -->
-  <link rel="stylesheet" href="extra/fonts.css" type="text/css">
-  <link rel="stylesheet" href="extra/style.css" type="text/css">
+	<!-- configuración del libro -->
+	<script>
+	window.book_config = {
+		// parámetro que indica si los capítulos, secciones y figura se auto numeran
+    // para que los capítulos se auto numeren deben utilizar la etiqueta <h1>
+    // para que las secciones se auto numeren deben utilizar la etiqueta <h2>
+		auto_numerate_sections_and_figures: true,
+		// parámetro para que los interactivos se muestren a pantalla completa al presionar el botón de la esquina superior derecha
+		open_interactives_fullscreen: true
+	}
+	</script>
+
+	<!-- núcleo del libro interactivo -->
+	<link rel="stylesheet" href="../../css/style.css" type="text/css">
+	<script type="text/javascript" src="../../js/book.js" charset="utf-8"></script>
+	
+	<!-- personalización del usuario -->
+	<link rel="stylesheet" href="extra/fonts.css" type="text/css">
+	<link rel="stylesheet" href="extra/style.css" type="text/css">
 </head>
 
 <body>
-  <div id="book_loader_container"><div id="book_loader"></div></div>
+	<div id="book_loader_container">
+		<!-- se utiliza un elemento para que funcione como cargador del libro -->
+		<div id="book_loader"></div>
+		<!-- y se indica la imagen a utilizar para personalizar el libro -->
+		<img src="images/general/icartesilibri_logo.svg" width="20%" style="padding-left:1em;">
+	</div>
+	
+	<div id="book_container">
+		<div id="btn_back_page"></div>
+		<div id="btn_next_page"></div>
+		<button id="go_to_table_of_content"></button>
+		
+		<button id="btn_config"></button>
+		<div id="config_options">
+			<div id="dark_light_mode"></div>
+		</div>
 
-  <div id="book_container">
-    <div id="btn_back_page"></div>
-    <div id="btn_next_page"></div>
-    <button id="go_to_table_of_content"></button>
-    
-    <button id="btn_config"></button>
-    <div id="config_options">
-      <div id="dark_light_mode"></div>
-    </div>
+		<!-- si este elemento no esta presente, el botón de la tabla de contenido lleva a la primera página con un elemento class="toc_link" -->
+		<div id="table_of_content"></div>
 
-    <!-- si este elemento no esta presente, el botón de la tabla de contenido lleva a la primera página con un elemento class="toc_link" -->
-    <div id="table_of_content"></div>
+		<div id="pages_container">
+			<!--  -->
+			<div class="page" style="background-color:transparent;"></div>
 
-    <div id="pages_container">
-      <!--  -->
-      <div class="page" style="background-color:transparent;">
-      </div>
+			<!--  -->
+			<div class="page invertcolor" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
+				<div class="cover_title">Título</div>
 
-      <!--  -->
-      <div class="page invertcolor" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
-        <div class="cover_title">Título</div>
+				<div class="cover_subtitle">Libro interactivo</div>
+			</div>
 
-        <div class="cover_subtitle">Libro interactivo</div>
-      </div>
+			<!--  -->
+			<div class="page" style="display:flex; align-items:center; justify-content:center;">
+				<a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img loading="lazy" src="images/general/logo_descartes.svg" width="100%"></a>
+			</div>
 
-      <!--  -->
-      <div class="page" style="display:flex; align-items:center; justify-content:center;">
-        <a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
-      </div>
+			<!--  -->
+			<!-- init-page-num="true" es un parámetro que indica que a partir de esta página comienza la numeración -->
+			<!-- inicialmente los números de las páginas se numeran con numerales romanos -->
+			<!-- num="" es un parámetro que indica que esta página no lleva numeración visible -->
+			<!--  -->
+			<div class="page" style="text-align:center; font-size:120%;" init-page-num="true" num="">
+				<p>Nombre de la obra y autores</p>
 
-      <!--  -->
-      <!-- init-page-num="true" es un parámetro que indica que a partir de esta página comienza la numeración -->
-      <!-- inicialmente los números de las páginas se numeran con numerales romanos -->
-      <!-- num="" es un parámetro que indica que esta página no lleva numeración visible -->
-      <!--  -->
-      <div class="page" style="text-align:center; font-size:120%;" init-page-num="true" num="">
-        <p>Nombre de la obra y autores</p>
+			</div>
 
-      </div>
+			<!--  -->
+			<div class="page" num="">
+				<p>
+					Título de la obra:<br> 
+					TÍTULO
+				</p>
+				<br>
+				<p>
+					Autores:<br> 
+					AUTORES
+				</p>
+				<br><br>
+				<p>
+					Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
+					<br> 
+					Recursos interactivos: <a href="https://descartes.matem.unam.mx/" target="_blank">DescartesJS</a>
+					<br> 
+					Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a><br>
+					Núcleo del libro interactivo: septiembre 2023
+				</p>
+				<br>
 
-      <!--  -->
-      <div class="page" num="">
-        <p>
-          Título de la obra:
-          <br> 
-          TÍTULO
-        </p>
-        <br>
+				<p>
+					DATOS DE LA EDICIÓN
+				</p>
 
-        <p>
-          Autores:
-          <br> 
-          AUTORES
-        </p>
-        <br><br>
+				<div style="font-size:12px; position:absolute; bottom:var(--page-bottom-margin); left:var(--page-left-margin); right:var(--page-right-margin);">
+					<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img loading="lazy" src="images/general/by-nc-sa.svg" style="height:35px; margin: 0px 10px 10px 0; float:left;"></a>
+					Esta obra está bajo una licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons 4.0 internacional: Reconocimiento-No Comercial-Compartir Igual</a>.
+				</div>
+			</div>
 
-        <p>
-          Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
-          <br> 
-          Recursos interactivos: <a href="https://descartes.matem.unam.mx/" target="_blank">DescartesJS</a>
-          <br> 
-          Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a>
-        </p>
-        <br>
+			<!--  -->
+			<div class="page">
+				<h2>Tabla de contenido</h2>
 
-        <p>
-          DATOS DE LA EDICIÓN
-        </p>
-        <br><br>
+				<!-- con esto se agrega una entrada en la tabla de contenido,
+				href="#prefacio" indica una referencia a una elemento html con 
+				el parámetro id="prefacio", automáticamente se busca está referencia
+				y se agrega el título correspondiente y la página donde se encuentra -->
+					
+				<div class="toc_link" href="#prefacio"></div>
 
-        <p>
-          <p>LICENCIA</p>
-          <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img src="images/general/by-nc-sa.svg" style="height:1.75em; margin-right:0.75em;"></a>
-          <p>El contendido de esta obra esta bajo una licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons (Atribución-NoComercial-CompartirIgual)</a>.</p>
-        </p>
-      </div>
+				<div class="toc_link" href="#capitulo_1"></div>
+				<div class="toc_link" href="#cap1_sec1"></div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-        <h2>Tabla de contenido</h2>
+			<!--  -->
+			<!-- Una página en blanco y sin numeración visible -->
+			<!--  -->
+			<div class="page" num=""></div>
 
-        <!-- con esto se agrega una entrada en la tabla de contenido,
-        href="#prefacio" indica una referencia a una elemento html con 
-        el parámetro id="prefacio", automáticamente se busca está referencia
-        y se agrega el título correspondiente y la página donde se encuentra -->
-          
-        <div class="toc_link" href="#prefacio"></div>
+			<!--  -->
+			<!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
+			<!--  -->
+			<div class="page" num-type-arabic="true">
+				<h1 id="prefacio">Prefacio</h1>
 
-        <div class="toc_link" href="#capitulo_1"></div>
-        <div class="toc_link" href="#cap1_sec1"></div>
-      </div>
+				<p>Este es un ejemplo sin contenido para comenzar la creación de un libro interactivo.</p>
+			</div>
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
+			<!--  -->
+			<!-- Una página en blanco y sin numeración visible -->
+			<!--  -->
+			<div class="page" num=""></div>
 
-      <!--  -->
-      <!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
-      <!--  -->
-      <div class="page" num-type-arabic="true">
-        <h1 id="prefacio">Prefacio</h1>
+			<!--  -->
+			<!-- Un nuevo capitulo -->
+			<!--  -->
+			<div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+				<div class="chap_text">Capítulo I</div>
+				<h1 class="chap_name" id="capitulo_1">Ejemplo de capítulo</h1>
+			</div>
 
-        <p>Este es un ejemplo sin contenido para comenzar la creación de un libro interactivo.</p>
-      </div>
+			<!--  -->
+			<!-- Una página en blanco y sin numeración visible -->
+			<!--  -->
+			<div class="page" num=""></div>
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
+			<!--  -->
+			<div class="page">
+				<h2 id="cap1_sec1">Ejemplo de sección</h2>
 
-      <!--  -->
-      <!-- Un nuevo capitulo -->
-      <!--  -->
-      <div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
-        <div class="chap_text">Capítulo I</div>
-        <h1 class="chap_name" id="capitulo_1">Ejemplo de capítulo</h1>
-      </div>
+				<p>Texto</p>
+			</div>
+			
+			<!--  -->
+			<div class="page">
 
-      <!--  -->
-      <!-- Una página en blanco y sin numeración visible -->
-      <!--  -->
-      <div class="page" num=""></div>
+			</div>
+			
+			<!--  -->
+			<div class="page">
 
-      <!--  -->
-      <div class="page">
-        <h2 id="cap1_sec1">Ejemplo de sección</h2>
+			</div>
 
-        <p>Texto</p>
-      </div>
-      
-      <!--  -->
-      <div class="page">
+			<!--  -->
+			<div class="page">
 
-      </div>
-      
-      <!--  -->
-      <div class="page">
+			</div>
 
-      </div>
+			<!--  -->
+			<div class="page invertcolor" num="" style="background-image: radial-gradient(white, #ecf0f1, #e3e5e7); display:flex; align-items:center; justify-content:center;">
+					<a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img loading="lazy" src="images/general/logo_descartes.svg" width="100%"></a>
+				</div>
+			</div>
 
-      <!--  -->
-      <div class="page">
-
-      </div>
-
-      <!--  -->
-      <div class="page invertcolor" num="" style="background-image: radial-gradient(white, #ecf0f1, #e3e5e7); display:flex; align-items:center; justify-content:center;">
-          <a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img src="images/general/logo_descartes.svg" width="100%"></a>
-        </div>
-      </div>
-
-    <!-- [cierra] pages_container -->
-    </div>
-  <!-- [cierra] book_container -->
-  </div>
+		<!-- [cierra] pages_container -->
+		</div>
+	<!-- [cierra] book_container -->
+	</div>
 
 </body>
 </html>

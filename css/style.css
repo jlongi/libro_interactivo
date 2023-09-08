@@ -393,10 +393,6 @@ body.dark iframe {
 
 iframe {
   border: none;
-  background-size: 1px 1px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url("img/interactive.svg");
 }
 
 video {
@@ -707,6 +703,11 @@ br {
 }
 
 .PDF_anchor {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* background-image: url("img/interactive.svg"); */
+
   background-color: transparent !important;
   position: absolute;
   left: 0;
@@ -716,6 +717,16 @@ br {
 }
 .break {
   word-break: break-all;
+}
+.fullwindow {
+  width: auto !important;
+  height: auto !important;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
 }
  
 /* Style for screen  */
@@ -885,7 +896,7 @@ br {
   }
 
   iframe {
-    background-size: contain;
+    display: none;
   }
 
   .page {
