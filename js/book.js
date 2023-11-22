@@ -350,13 +350,15 @@ function numerateSectionsAndFigures(pages_container) {
         // figure
         else if (tag_name == "figcaption") {
           if (!(ele.hasAttribute("prefix") && (ele.getAttribute("prefix") == ""))) {
-            figcaption_prefix = ele.getAttribute("prefix") || "Figura";
-            figcaption_counter = figcaption_prefix_counter[figcaption_prefix] || 0;
-            figcaption_counter++;
-            figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
-            ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${chapter_counter}.${figcaption_counter}</span>`;
-            ele.parentNode.ref_text = ele.ref_text;
-            ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
+            if (!(ele.hasAttribute("prefix") && (ele.getAttribute("prefix") == "_"))) {
+              figcaption_prefix = ele.getAttribute("prefix") || "Figura";
+              figcaption_counter = figcaption_prefix_counter[figcaption_prefix] || 0;
+              figcaption_counter++;
+              figcaption_prefix_counter[figcaption_prefix] = figcaption_counter;
+              ele.ref_text = `<span class="figcaption_prefix">${figcaption_prefix} ${chapter_counter}.${figcaption_counter}</span>`;
+              ele.parentNode.ref_text = ele.ref_text;
+              ele.innerHTML = `${ele.ref_text}. ${ele.innerHTML}`;
+            }
           }
         }
         // num_block
@@ -636,6 +638,8 @@ function addTableOfContentEntries(pages_container, pages_dom) {
     let link_clone;
     let tmp;
     for (entry of toc_links) {
+      if (entry.getAttribute("add_toc") && (entry.getAttribute("add_toc") == "no")) break;
+
       link_clone = entry.cloneNode(true);
 
       tmp = getChildOnClickStr(link_clone);
