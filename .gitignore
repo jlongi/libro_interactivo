@@ -1,3 +1,24 @@
 .DS_Store
 ._.*
 ._*
+
+# Evitar la inclusión de la carpeta de módulos de Node.js
+node_modules/
+
+# Evitar la inclusión de archivos de registro de npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Evitar la inclusión de archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Evitar la inclusión de archivos de salida de compilación
+dist/
+build/
+
+# Evitar la inclusión de archivos de directorios temporales
+temp/
+tmp/

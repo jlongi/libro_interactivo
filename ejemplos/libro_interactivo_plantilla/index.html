@@ -26,8 +26,7 @@
 	</script>
 
 	<!-- núcleo del libro interactivo -->
-	<link rel="stylesheet" href="../../css/style.css" type="text/css">
-	<script type="text/javascript" src="../../js/book.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../../book-min.js" charset="utf-8"></script>
 	
 	<!-- personalización del usuario -->
 	<link rel="stylesheet" href="extra/fonts.css" type="text/css">
@@ -35,40 +34,51 @@
 </head>
 
 <body>
+	<!-- se utiliza un elemento para que funcione como cargador del libro -->
 	<div id="book_loader_container">
-		<!-- se utiliza un elemento para que funcione como cargador del libro -->
+		<!-- el círculo que rota en la pantalla de carga -->
 		<div id="book_loader"></div>
 		<!-- y se indica la imagen a utilizar para personalizar el libro -->
 		<img src="images/general/icartesilibri_logo.svg" width="20%" style="padding-left:1em;">
 	</div>
-	
+
+	<!-- div que contiene todos los elementos del libro, este elemento es el que se escala para cubrir la ventana del navegador -->
 	<div id="book_container">
+		<!-- botones laterales para cambiar entre páginas -->
 		<div id="btn_back_page"></div>
 		<div id="btn_next_page"></div>
+
+		<!-- botón que se muestra en la esquina superior izquierda, que permite mostrar una tabla de contenidos externa -->
 		<button id="go_to_table_of_content"></button>
-		
+
+		<!-- si este elemento no esta presente, el botón de la tabla de contenido lleva a la primera página que contenga un elemento con class="toc_link" -->
+		<div id="table_of_content"></div>
+
+		<!-- botón que se muestra en la esquina superior derecha, que permite mostrar el botón de configuración o herramientas -->
 		<button id="btn_config"></button>
+
+		<!-- lista de elementos mostrados al pulsar el botón de configuración "btn_config" -->
 		<div id="config_options">
+			<!-- switch para cambiar entre el tema luminoso y el oscuro  -->
 			<div id="dark_light_mode"></div>
 		</div>
 
-		<!-- si este elemento no esta presente, el botón de la tabla de contenido lleva a la primera página con un elemento class="toc_link" -->
-		<div id="table_of_content"></div>
-
+		<!-- div que contiene solo las páginas del libro -->
 		<div id="pages_container">
-			<!--  -->
+			<!-- esta es la página 0, usualmente no es visible por lo que tiene un color de fondo transparente -->
 			<div class="page" style="background-color:transparent;"></div>
 
-			<!--  -->
+			<!-- la primera página es donde se muestra la portada -->
 			<div class="page invertcolor" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada.svg);">
-				<div class="cover_title">Título</div>
+				<div style="position:absolute; top:595px; left:57px; right:0; color:#0089cd; font-size:63px; text-align:center;">Título del libro</div>
 
-				<div class="cover_subtitle">Libro interactivo</div>
+				<div style="position:absolute; left:57px; right:0; bottom:45px; text-align:center; color:#0089cd; font-size:40px;">Autor o editorial</div>
 			</div>
 
-			<!--  -->
+			<!-- la parte interior de la portada -->
 			<div class="page" style="display:flex; align-items:center; justify-content:center;">
-				<a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img loading="lazy" src="images/general/logo_descartes.svg" width="100%"></a>
+				<!-- se muestra el logo del proyecto iCartesiLibri -->
+				<a style="width:50%" target="_blank" href="https://prometeo.matem.unam.mx/recursos/VariosNiveles/iCartesiLibri/"><img loading="lazy" src="images/general/icartesilibri_logo.svg" width="100%"></a>
 			</div>
 
 			<!--  -->
@@ -76,38 +86,40 @@
 			<!-- inicialmente los números de las páginas se numeran con numerales romanos -->
 			<!-- num="" es un parámetro que indica que esta página no lleva numeración visible -->
 			<!--  -->
-			<div class="page" style="text-align:center; font-size:120%;" init-page-num="true" num="">
-				<p>Nombre de la obra y autores</p>
+			<div class="page" init-page-num="true" num="">
+				<p style="text-align:center; font-size:50px; margin-top:100px;">Título del libro</p>
 
+				<p style="margin-top:200px; font-size:25px;">Nombre del o los autores</p>
 			</div>
 
-			<!--  -->
+			<!-- portada interior y derechos de autor -->
 			<div class="page" num="">
-				<p>
-					Título de la obra:<br> 
-					TÍTULO
-				</p>
-				<br>
-				<p>
-					Autores:<br> 
-					AUTORES
-				</p>
-				<br><br>
-				<p>
-					Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.
-					<br> 
-					Recursos interactivos: <a href="https://descartes.matem.unam.mx/" target="_blank">DescartesJS</a>
-					<br> 
-					Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a> y <a href="https://fonts.google.com/specimen/Ubuntu+Mono" target="_blank">UbuntuMono</a><br>
-					Núcleo del libro interactivo: septiembre 2023
-				</p>
-				<br>
+				<div>Título:</div>
+				<div>El título del libro</div>
 
-				<p>
-					DATOS DE LA EDICIÓN
-				</p>
+				<div style="margin-top:1.5em;">Autor o autores:</div>
+				<div>Nombre del autor o autores</div>
 
-				<div style="font-size:12px; position:absolute; bottom:var(--page-bottom-margin); left:var(--page-left-margin); right:var(--page-right-margin);">
+				<!-- atribución al autor del núcleo de presentación del libro interactivo -->
+				<div style="margin-top:1.5em;">Código JavaScript para el libro: <a href="https://github.com/jlongi/libro_interactivo" target="_blank">Joel Espinosa Longi</a>, <a href="https://www.matem.unam.mx/" target="_blank">IMATE</a>, UNAM.</div>
+				<!-- créditos de herramienta usada para los interactivos, en caso de que el libro los incorpore -->
+				<div>Recursos interactivos: <a href="https://descartes.matem.unam.mx/" target="_blank">DescartesJS</a></div>
+				<!-- los créditos a las fuentes tipográficas usadas -->
+				<div>Fuentes: <a href="https://fonts.google.com/specimen/Lato" target="_blank">Lato</a></div>
+				
+				<!-- datos de la editorial -->
+				<div style="margin-top:4em;">Datos de la Editorial</div>
+
+				<!-- referencia al proyecto iCartesiLibri -->
+				<div style="margin-top:2em;">
+					Proyecto iCartesiLibri<br>
+					<a href="https://proyectodescartes.org/iCartesiLibri/index.htm">https://proyectodescartes.org/iCartesiLibri/index.htm</a><br>
+					<a style="font-size:15px" href="https://prometeo.matem.unam.mx/recursos/VariosNiveles/iCartesiLibri/">https://prometeo.matem.unam.mx/recursos/VariosNiveles/iCartesiLibri/</a>
+				</div>
+				<div style="margin-top:2em;">ISBN: XXX-XX-XXXXX-XX-X</div>
+
+				<!-- licencia del libro -->
+				<div style="font-size:13px; position:absolute; bottom:var(--page-bottom-margin); left:var(--page-left-margin); right:var(--page-right-margin);">
 					<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank"><img loading="lazy" src="images/general/by-nc-sa.svg" style="height:35px; margin: 0px 10px 10px 0; float:left;"></a>
 					Esta obra está bajo una licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank">Creative Commons 4.0 internacional: Reconocimiento-No Comercial-Compartir Igual</a>.
 				</div>
@@ -117,81 +129,140 @@
 			<div class="page">
 				<h2>Tabla de contenido</h2>
 
-				<!-- con esto se agrega una entrada en la tabla de contenido,
+				<!-- con esto se agrega una entrada en la tabla de contenido, 
 				href="#prefacio" indica una referencia a una elemento html con 
 				el parámetro id="prefacio", automáticamente se busca está referencia
-				y se agrega el título correspondiente y la página donde se encuentra -->
-					
+				y se agrega el texto correspondiente y el número de página donde se encuentra -->
 				<div class="toc_link" href="#prefacio"></div>
 
 				<div class="toc_link" href="#capitulo_1"></div>
 				<div class="toc_link" href="#cap1_sec1"></div>
+				<div class="toc_link" href="#cap1_sec2"></div>
+				<div class="toc_link" href="#cap1_sec2_subsec1"></div>
+				<div class="toc_link" href="#cap1_sec2_subsec2"></div>
+
+				<div class="toc_link" href="#capitulo_2"></div>
+				<div class="toc_link" href="#cap2_sec1"></div>
+				<div class="toc_link" href="#cap2_sec2"></div>
+				<div class="toc_link" href="#cap2_sec2_subsec1"></div>
+				<div class="toc_link" href="#cap2_sec2_subsec2"></div>
 			</div>
 
-			<!--  -->
-			<!-- Una página en blanco y sin numeración visible -->
-			<!--  -->
+			<!-- una página en blanco y sin numeración visible (num="") -->
 			<div class="page" num=""></div>
 
-			<!--  -->
-			<!-- num-type-arabic="true" es un parámetro que indica que a partir de esta página la numeración utilizara numerales arábigos -->
-			<!--  -->
+			<!-- num-type-arabic="true" es un parámetro que indica que a partir de aquí la numeración utilizara numerales arábigos, solo es necesario usar este parámetro una vez -->
 			<div class="page" num-type-arabic="true">
 				<h1 id="prefacio">Prefacio</h1>
 
-				<p>Este es un ejemplo sin contenido para comenzar la creación de un libro interactivo.</p>
+				<p>Este es el primer párrafo del Prefacio.</p>
+
+				<p>Y este es el segundo.</p>
 			</div>
 
 			<!--  -->
-			<!-- Una página en blanco y sin numeración visible -->
-			<!--  -->
-			<div class="page" num=""></div>
+			<div class="page">
+			</div>
 
-			<!--  -->
-			<!-- Un nuevo capitulo -->
-			<!--  -->
+			<!-- capitulo 1 -->
 			<div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
 				<div class="chap_text">Capítulo I</div>
-				<h1 class="chap_name" id="capitulo_1">Ejemplo de capítulo</h1>
+				<!-- un elemento con la clase chap_name le indica al núcleo del libro que debe iniciar la numeración interna del capitulo -->
+				<h1 class="chap_name" id="capitulo_1">Título del capítulo 1</h1>
 			</div>
 
 			<!--  -->
-			<!-- Una página en blanco y sin numeración visible -->
+			<div class="page">
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<h2 id="cap1_sec1">Primera sección del capítulo 1</h2>
+
+				<p>Un párrafo de la primera sección.</p>
+
+				<h2 id="cap1_sec2">Segunda sección del capítulo 1</h2>
+
+				<p>Un párrafo de la segunda sección.</p>
+
+				<h3 id="cap1_sec2_subsec1">Primera subsección de la segunda sección del capítulo 1</h3>
+
+				<p>Un párrafo de la primera subsección.</p>
+
+				<h3 id="cap1_sec2_subsec2">Segunda subsección de la segunda sección del capítulo 1</h3>
+
+				<p>Un párrafo de la segunda subsección</p>
+
+				<p>Etcétera.</p>
+			</div>
+			
+			<!--  -->
+			<div class="page">
+			</div>
+
+			<!-- capitulo 2 -->
+			<div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+				<div class="chap_text">Capítulo II</div>
+				<!-- un elemento con la clase chap_name le indica al núcleo del libro que debe iniciar la numeración interna del capitulo -->
+				<h1 class="chap_name" id="capitulo_2">Título del capítulo 2</h1>
+			</div>
+
+			<!--  -->
+			<div class="page">
+			</div>
+
+			<!--  -->
+			<div class="page">
+				<h2 id="cap2_sec1">Primera sección del capítulo 2</h2>
+
+				<p>Un párrafo de la primera sección.</p>
+
+				<h2 id="cap2_sec2">Segunda sección del capítulo 2</h2>
+
+				<p>Un párrafo de la segunda sección.</p>
+
+				<h3 id="cap2_sec2_subsec1">Primera subsección de la segunda sección del capítulo 2</h3>
+
+				<p>Un párrafo de la primera subsección.</p>
+
+				<h3 id="cap2_sec2_subsec2">Segunda subsección de la segunda sección del capítulo 2</h3>
+
+				<p>Un párrafo de la segunda subsección</p>
+
+				<p>Etcétera.</p>
+			</div>
+			
+			<!--  -->
+			<div class="page">
+			</div>
+			
+			<!-- bibliografía -->
+			<div class="page invertcolor" num="" style="margin:0; padding:0; background-size:contain; background-image:url(images/general/portada_capitulos.svg);">
+				<h1 class="chap_name" id="bibliografia">Bibliografía</h1>
+			</div>
+
 			<!--  -->
 			<div class="page" num=""></div>
 
 			<!--  -->
 			<div class="page">
-				<h2 id="cap1_sec1">Ejemplo de sección</h2>
+				<bibitem id="id_del_libro_1">
+					El o los autores. <b>Título del libro referenciado</b>. Datos de publicación.
+				</bibitem>
 
-				<p>Texto</p>
-			</div>
-			
-			<!--  -->
-			<div class="page">
-
-			</div>
-			
-			<!--  -->
-			<div class="page">
-
+				<bibitem id="id_del_libro_2" label="bib_libro_1">
+					El o los autores. <b>Título del libro referenciado</b>. Datos de publicación.
+				</bibitem>
 			</div>
 
 			<!--  -->
-			<div class="page">
-
-			</div>
-
-			<!--  -->
-			<div class="page invertcolor" num="" style="background-image: radial-gradient(white, #ecf0f1, #e3e5e7); display:flex; align-items:center; justify-content:center;">
-					<a style="width:50%" target="_blank" href="https://descartes.matem.unam.mx/"><img loading="lazy" src="images/general/logo_descartes.svg" width="100%"></a>
-				</div>
+			<div class="page" num="" style="display:flex; align-items:center; justify-content:center;">
+				<a style="width:50%" target="_blank" href="https://prometeo.matem.unam.mx/recursos/VariosNiveles/iCartesiLibri/"><img loading="lazy" src="images/general/icartesilibri_logo.svg" width="100%"></a>
 			</div>
 
 		<!-- [cierra] pages_container -->
 		</div>
 	<!-- [cierra] book_container -->
 	</div>
-
 </body>
 </html>

@@ -6,66 +6,78 @@
 // constants used to indicate if the book is viewed in landscape or portrait mode
 const LANDSCAPE = 0;
 const PORTRAIT  = 1;
+let icons_url;
+
 /**
  * the status of the book:
  */
 let book_status = {
-	page : 0,  // the actual page index
-	dark : false,  // the color theme
-	printing : false,  // if the book is printing
-	init_page_num : 0,  // the index of the first numerated page
+	// the actual page index
+	page : 0,
+	// the color theme
+	dark : false,
+	// if the book is printing
+	printing : false,
+	// the index of the first numerated page
+	init_page_num : 0,
 };
 let pages_container;
 
 // function reference to show or hide the configuration options
-var show_hide_config_options;
+let show_hide_config_options;
 
 /**
- * Externa book configuration
+ * external book configuration
  */
 window.book_config = window.book_config || {
-	auto_numerate_sections_and_figures: false,  // use the auto numerate of sections and figures
-	bibitem_ref_id: false,  // use the bibitem id, instead of the number
-	open_interactives_fullscreen: false,  // show interactive in full window
+	// use the auto numerate of sections and figures
+	auto_numerate_sections_and_figures: false,
+	// use the bibitem id, instead of the number
+	bibitem_ref_id: false,
+	// show interactive in full window
+	open_interactives_fullscreen: false,
 };
 
 /**
- * The book is printing
+ * the book is printing
  */
-window.addEventListener("beforeprint", function(event) {
+window.addEventListener("beforeprint", () => {
 	book_status.printing = true;
 });
 
 /**
- * The book finish the printing
+ * the book finish the printing
  */
-window.addEventListener("afterprint", function(event) {
+window.addEventListener("afterprint", () => {
 	book_status.printing = false;
 });
 
-window.addEventListener("load", function(evt) {
-	//////////////////////////////////////////
-	// add tooltips
+window.addEventListener("load", () => {
+	// add tooltips when the layout of the book is finished
 	addTooltips(pages_container);
-	//////////////////////////////////////////
 });
 
 window.tryfull = function(node) {
-	if(document.fullscreenElement) {
+	if (document.fullscreenElement) {
 		document.exitFullscreen();
-	} else if(document.webkitFullscreenElement) {
+	}
+	else if (document.webkitFullscreenElement) {
 		document.webkitExitFullscreen();
-	} else if(document.mozFullScreenElement ) {
+	}
+	else if (document.mozFullScreenElement) {
 		document.mozExitFullscreen();
 	}
 	else {
-		if(node.requestFullscreen) {
+		if (node.requestFullscreen) {
 			node.requestFullscreen();
-		} else if(node.mozRequestFullScreen) {
+		}
+		else if (node.mozRequestFullScreen) {
 			node.mozRequestFullScreen();
-		} else if(node.webkitRequestFullscreen) {
+		}
+		else if (node.webkitRequestFullscreen) {
 			node.webkitRequestFullscreen();
-		} else if(node.msRequestFullscreen) {
+		}
+		else if (node.msRequestFullscreen) {
 			node.msRequestFullscreen();
 		}
 		else {
@@ -76,14 +88,16 @@ window.tryfull = function(node) {
 }
 
 /**
- * When the document is loaded, init the book construction
+ * when the document is loaded init the book construction
  */
 document.addEventListener("DOMContentLoaded", function(evt) {
+	// add the general stylesheet
+	try { addStyle() } catch(error) { console.warn(error) };
+
+	// hide the loader
 	document.getElementById("book_loader_container").style.display = "none";
 
-	/**
-	 * prevent the iframes to show
-	 */
+	// prevent the iframes to show
 	for (const iframe_i of document.querySelectorAll("iframe")) {
 		if (!iframe_i.hasAttribute("data-src")) {
 			iframe_i.setAttribute("data-src", iframe_i.src);
@@ -93,7 +107,6 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 		}
 		iframe_i.setAttribute("src", "about:blank");
 	}
-	/** */
 
 	// get the variable values defined in the style.css file
 	let body_style = getComputedStyle(document.body);
@@ -102,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 	let interactive_margin = parseInt(body_style.getPropertyValue("--interactive-margin"));
 	let page_width = parseInt(body_style.getPropertyValue("--page_width"));
 	let text_width = page_width - page_left_margin - page_right_margin;
+	document.body.style.setProperty("--text_width", text_width+"px");
 
 	// get some elements for the book
 	pages_container = document.getElementById("pages_container");
@@ -152,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 });
 
 /**
- * Search the elements with the "interactive" class and include the corresponding iframe
+ * search the elements with class="interactive" and include the corresponding iframe
  */
 function addInteractive(pages_container, text_width, interactive_margin) {
 	let i_w;
@@ -177,6 +191,8 @@ function addInteractive(pages_container, text_width, interactive_margin) {
 
 		inte.style.width  = `${i_w + interactive_margin*2}px`;
 		inte.style.height = `${i_h + interactive_margin*2}px`;
+		// inte.style.width = `${scale*100}%`;
+		// inte.style.height = "auto";
 
 		if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
 			inte.style.overflow = "hidden";
@@ -185,6 +201,7 @@ function addInteractive(pages_container, text_width, interactive_margin) {
 		new_iframe = document.createElement("iframe");
 		new_iframe.style.width  = "100%";
 		new_iframe.style.height = "100%";
+		// new_iframe.setAttribute("style", `width:100%; height:auto; aspect-ratio:${i_w}/${i_h}; max-height:100%;`);
 		new_iframe.setAttribute("data-src", src);
 		new_iframe.setAttribute("src", "about:blank");
 
@@ -220,7 +237,7 @@ function addInteractive(pages_container, text_width, interactive_margin) {
 			image_poster.setAttribute("src", inte.getAttribute("poster"));
 		}
 		else {
-			pdf_anchor.style["background-image"] = "url('book/css/img/interactive.svg')";
+			pdf_anchor.style["background-image"] = `url('book/icons.svg#interactive')`;
 		}
 
 		inte.appendChild(btn);
@@ -230,7 +247,7 @@ function addInteractive(pages_container, text_width, interactive_margin) {
 }
 
 /**
- * Add the image link functionality
+ * add the image link functionality
  */
 function addImageLinks(pages_container) {
 	let image_width;
@@ -261,7 +278,7 @@ function addImageLinks(pages_container) {
 }
 
 /**
- * Add footnote elements
+ * add footnote elements
  */
 function addFootnotes(pages_container) {
 	let footnote_list = pages_container.querySelectorAll(".footnote");
@@ -291,7 +308,7 @@ function addFootnotes(pages_container) {
 }
 
 /**
- * Add tooltips elements
+ * add tooltips elements
  */
 function addTooltips(pages_container) {
 	document.body.setAttribute("tabIndex", 0);
@@ -367,7 +384,7 @@ function addTooltips(pages_container) {
 }
 
 /**
- * Add the numbers to sections and figures
+ * add numbers to sections and figures
  */
 function numerateSectionsAndFigures(pages_container) {
 	let chapter_counter = 0;
@@ -404,6 +421,7 @@ function numerateSectionsAndFigures(pages_container) {
 					subsection_counter = 0;
 					ele.level = 1;
 					ele.innerHTML = `${chapter_counter}.${section_counter} ${ele.innerHTML}`;
+					ele.innerHTML = `${ele.innerHTML}`;
 				}
 				// subsection
 				else if (tag_name == "h3") {
@@ -499,7 +517,7 @@ function numerateSectionsAndFigures(pages_container) {
 }
 
 /**
- * Add references to pages
+ * add references to pages
  */
 function addPageReferences(pages_container, pages_dom) {
 	let prefs = pages_container.querySelectorAll("pageref");
@@ -551,7 +569,7 @@ function addPageReferences(pages_container, pages_dom) {
 }
 
 /**
- * Add the bibliography elements
+ * add the bibliography elements
  */
 function addBibliography(pages_container) {
 	let bibitems = pages_container.querySelectorAll("bibitem");
@@ -619,8 +637,8 @@ function addBibliography(pages_container) {
 }
 
 /**
- * Add the table of content entries
- */
+ * add the table of content entries
+*/
 function addTableOfContentEntries(pages_container, pages_dom) {
 	let init_page_num;
 	let toc_links = pages_container.querySelectorAll(".toc_link");
@@ -668,7 +686,7 @@ function addTableOfContentEntries(pages_container, pages_dom) {
 				continue;
 			}
 
-			elem_text = elem.textContent.trim().replace(/\.$/, "");
+			elem_text = elem.textContent.trim().replace(/\.$/, "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 			page_elem = getPageContainer(elem);
 			elem_level = parseInt( elem.level || 0 );
@@ -684,8 +702,9 @@ function addTableOfContentEntries(pages_container, pages_dom) {
 					if (auto_toc_links[i].innerHTML.trim() == "") {
 						prefix = elem.getAttribute("prefix") || auto_toc_links[i].getAttribute("prefix");
 
-						auto_toc_links[i].setAttribute("level", elem_level);
-						auto_toc_links[i].innerHTML = `<a><span>${(prefix)?prefix+".":""} ${elem_text}</span><span class="toc_number">${page_num - book_status.offset_page_number}</span></a>`;
+            auto_toc_links[i].setAttribute("level", elem_level);
+
+						auto_toc_links[i].innerHTML = `<span class="toc_name">${(prefix)?prefix+".":""} ${elem_text}</span><span class="toc_dots"></span><span class="toc_number">${page_num - book_status.offset_page_number}</span>`;
 					}
 
 					pdf_anchor = document.createElement("a");
@@ -730,7 +749,7 @@ function addTableOfContentEntries(pages_container, pages_dom) {
 }
 
 /**
- * Add images to show when the book is printing
+ * add images to show when the book is printing
  */
 function imagesForPDF(pages_container) {
 	let onclick;
@@ -765,7 +784,7 @@ function imagesForPDF(pages_container) {
 }
 
 /**
- * Add anchor tags when the book is printing
+ * add anchor tags when the book is printing
  */
 function videosAudiosForPDF(pages_container) {
 	let parent;
@@ -799,7 +818,7 @@ function videosAudiosForPDF(pages_container) {
 }
 
 /**
- * Get the page element that is the parent of an element
+ * get the page element that is the parent of elem
  */
 function getPageContainer(elem) {
 	while (elem && !elem.classList.contains("page")) {
@@ -809,7 +828,7 @@ function getPageContainer(elem) {
 }
 
 /**
- * Find the onclick string for page number of custom toc_links
+ * find the onclick string for page number of custom toc_links
  */
 function getChildOnClickStr(elem) {
 	let onclick = elem.getAttribute("onclick");
@@ -827,7 +846,7 @@ function getChildOnClickStr(elem) {
 }
 
 /** 
- * Set the information to the URL
+ * set the information to the URL
  */
 function setURLParams() {
 	let loc = window.location.pathname;
@@ -967,13 +986,11 @@ function addPopups(pages_container) {
 				let popup_html = pages_container.querySelector("#"+popup.getAttribute("ref_id"));
 
 				if (popup_html) {
-					popup_html = popup_html.cloneNode(true);
-
-					popup_html.removeAttribute("id");
-
 					popup.addEventListener("click", () => {
 						popup_container.style.display = "block";
 						popup_inner.innerHTML = "";
+						popup_html = popup_html.cloneNode(true);
+						popup_html.removeAttribute("id");
 						popup_inner.appendChild(popup_html);
 					});
 				}
@@ -983,7 +1000,7 @@ function addPopups(pages_container) {
 }
 
 /**
- * Add the number of pages
+ * add the number of pages
  */
 function addPageNumbers(pages) {
 	book_status.init_page_num = 0;
@@ -1047,10 +1064,10 @@ function init(body_style, pages_container, pages) {
 	let pages_container_height = parseInt(body_style.getPropertyValue("--pages_container_height"));
 	let page_width = parseInt(body_style.getPropertyValue("--page_width"));
 
-	let back = document.getElementById("btn_back_page");
-	let next = document.getElementById("btn_next_page");
+	let back = document.getElementById("btn_back_page") || document.createElement("button");
+	let next = document.getElementById("btn_next_page") || document.createElement("button");
 
-	let toc_btn = document.getElementById("go_to_table_of_content");
+	let toc_btn = document.getElementById("go_to_table_of_content") || document.createElement("button");
 
 	let orientation = (page_width > pages_container_height) ? LANDSCAPE : PORTRAIT;
 
@@ -1073,7 +1090,7 @@ function init(body_style, pages_container, pages) {
 
 	/** Hide the child nodes of each page to help the rendering in chrome */
 	for (const page_i of pages) {
-		page_i.setAttribute("show", "true");
+		page_i.setAttribute("hide", "true");
 	}
 
 	/** add the back and next actions to the buttons */
@@ -1113,7 +1130,7 @@ function init(body_style, pages_container, pages) {
 		for (let i=current_page-2; i<current_page+4; i++) {
 			if ((i >= 0) && (i < pages.length)) {
 				// hide the elements of the current pages
-				pages[i].setAttribute("show", "true");
+				pages[i].setAttribute("hide", "true");
 
 				if (!pages[i].iframes) {
 					pages[i].iframes = Array.from(pages[i].querySelectorAll("iframe"));
@@ -1151,7 +1168,7 @@ function init(body_style, pages_container, pages) {
 		for (let i=current_page-2; i<current_page+4; i++) {
 			if ((i >= 0) && (i < pages.length)) {
 				// show the elements in the current pages
-				pages[i].removeAttribute("show");
+				pages[i].removeAttribute("hide");
 
 				if (!pages[i].iframes) {
 					pages[i].iframes = Array.from(pages[i].querySelectorAll("iframe"));
