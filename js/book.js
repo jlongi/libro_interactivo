@@ -88,14 +88,15 @@ window.tryfull = function(node) {
 }
 
 /**
- * when the document is loaded init the book construction
+ * when the document is loaded start the book construction
  */
 document.addEventListener("DOMContentLoaded", function(evt) {
-	// add the general stylesheet
+	// add the general stylesheet (makefile.js add this function)
 	try { addStyle() } catch(error) { console.warn(error) };
 
-	// hide the loader
+	// hide and remove the loader
 	document.getElementById("book_loader_container").style.display = "none";
+	document.getElementById("book_loader_container").remove();
 
 	// prevent the iframes to show
 	for (const iframe_i of document.querySelectorAll("iframe")) {
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 		iframe_i.setAttribute("src", "about:blank");
 	}
 
-	// get the variable values defined in the style.css file
+	// get the values defined in the style.css file
 	let body_style = getComputedStyle(document.body);
 	let page_left_margin = parseInt(body_style.getPropertyValue("--page-left-margin"));
 	let page_right_margin = parseInt(body_style.getPropertyValue("--page-right-margin"));
@@ -191,17 +192,13 @@ function addInteractive(pages_container, text_width, interactive_margin) {
 
 		inte.style.width  = `${i_w + interactive_margin*2}px`;
 		inte.style.height = `${i_h + interactive_margin*2}px`;
-		// inte.style.width = `${scale*100}%`;
-		// inte.style.height = "auto";
 
 		if (! (((window.hasOwnProperty) && (window.hasOwnProperty("ontouchstart"))) || ("ontouchstart" in window))) {
 			inte.style.overflow = "hidden";
 		}
 
 		new_iframe = document.createElement("iframe");
-		new_iframe.style.width  = "100%";
-		new_iframe.style.height = "100%";
-		// new_iframe.setAttribute("style", `width:100%; height:auto; aspect-ratio:${i_w}/${i_h}; max-height:100%;`);
+		new_iframe.style.width = new_iframe.style.height = "100%";
 		new_iframe.setAttribute("data-src", src);
 		new_iframe.setAttribute("src", "about:blank");
 
@@ -749,7 +746,7 @@ function addTableOfContentEntries(pages_container, pages_dom) {
 }
 
 /**
- * add images to show when the book is printing
+ * add images when the book is printing
  */
 function imagesForPDF(pages_container) {
 	let onclick;
@@ -912,22 +909,19 @@ function addBtnConfig() {
 			let dark = div.appendChild(document.createElement("button"));
 
 			// init the theme
-			if (tmp_theme == "dark") {
-				sw.checked = true;
+			book_status.dark = sw.checked = (tmp_theme == "dark");
+			if (book_status.dark) {
 				document.body.classList.add("dark");
-			} else {
-				sw.checked = false;
+			}
+			else {
 				document.body.classList.remove("dark");
 			}
-			book_status.dark = sw.checked;
 
 			// light button action
 			light.setAttribute("id", "btn_light");
 			light.addEventListener("click", () => {
 				document.body.classList.remove("dark");
-				sw.checked = false;
-
-				book_status.dark = sw.checked;
+				book_status.dark = sw.checked = false;
 				setURLParams();
 			});
 			
@@ -947,9 +941,7 @@ function addBtnConfig() {
 			dark.setAttribute("id", "btn_dark");
 			dark.addEventListener("click", () => {
 				document.body.classList.add("dark");
-				sw.checked = true;
-
-				book_status.dark = "dark";
+				book_status.dark = sw.checked = true;
 				setURLParams();
 			});
 		}
@@ -1059,8 +1051,7 @@ function init(body_style, pages_container, pages) {
 		}, 100);
 	});
 
-
-	let pages_container_width = parseInt(body_style.getPropertyValue("--pages_container_width"));
+	let pages_container_width  = parseInt(body_style.getPropertyValue("--pages_container_width"));
 	let pages_container_height = parseInt(body_style.getPropertyValue("--pages_container_height"));
 	let page_width = parseInt(body_style.getPropertyValue("--page_width"));
 
@@ -1079,12 +1070,11 @@ function init(body_style, pages_container, pages) {
 	popup_bib_info_close.addEventListener("click", () => {
 		popup_bib_info.style.display = "none";
 	});
-
 	
 	// get the current page from the URL
 	let tmp_current_page = new URLSearchParams(window.location.search).get("page");
 	if (tmp_current_page != null) {
-		current_page = parseInt( tmp_current_page) + book_status.init_page_num-1;
+		current_page = parseInt(tmp_current_page) + book_status.init_page_num-1;
 	}
 	//
 
@@ -1095,17 +1085,17 @@ function init(body_style, pages_container, pages) {
 
 	/** add the back and next actions to the buttons */
 	let inc;
-	back.addEventListener("click", function(evt) {
+	back.addEventListener("click", (evt) => {
 		evt.preventDefault();
 		evt.stopPropagation();
 		inc = (orientation === LANDSCAPE) ? 2 : 1;
-		goToPage(Math.max(current_page-inc, 0));
+		goToPage(current_page-inc);
 	});
-	next.addEventListener("click", function(evt) {
+	next.addEventListener("click", (evt) => {
 		evt.preventDefault();
 		evt.stopPropagation();
 		inc = (orientation === LANDSCAPE) ? 2 : 1;
-		goToPage(Math.min(current_page+inc, pages.length-1));
+		goToPage(current_page+inc);
 	});
 
 	/**
@@ -1114,7 +1104,7 @@ function init(body_style, pages_container, pages) {
 	function goToPage(new_page) {
 		new_page = Math.max(0, Math.min(pages.length-1, new_page));
 
-		// set the value of the page in the book status
+		// set the page number in the book status (URL)
 		book_status.page = new_page - book_status.init_page_num + 1;
 		setURLParams();
 
@@ -1159,7 +1149,6 @@ function init(body_style, pages_container, pages) {
 			}
 		}
 
-
 		// change the current page
 		current_page = new_page;
 
@@ -1197,7 +1186,6 @@ function init(body_style, pages_container, pages) {
 			}
 		}
 
-
 		// get all the iframes to deactivate
 		let deactivate_iframes = last_iframes.filter((el) => {
 			return !(next_iframes.includes(el));
@@ -1233,11 +1221,12 @@ function init(body_style, pages_container, pages) {
 		pages_container.style.left = -(page_width * current_page) + "px";
 	}
 
-	
 	/** */
 	window.goToPage = function(num) {
 		goToPage( (orientation === LANDSCAPE) ? parseInt(parseInt((num+2) / 2) * 2) : num+2 );
 	}
+
+	let window_open_cfg = `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,`;
 
 	/** */
 	window.openImage = function(img, w, h) {
@@ -1256,17 +1245,17 @@ function init(body_style, pages_container, pages) {
 		
 		if ((book_config.open_interactives_fullscreen) && (typeof(img) == "object")) {
 			if (!tryfull(img)) {
-				window.open(src, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
+				window.open(src, "_blank", window_open_cfg + `left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
 			}
 		}
 		else {
-			window.open(src, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
+			window.open(src, "_blank", window_open_cfg + `left=${(screen.availWidth-w)/2},top=${(screen.availHeight-h)/2},width=${w},height=${h}`);
 		}
 	}
 
 	/** */
 	window.openInteractive = function(href, width, height, node) {
-		window.open(href, "_blank", `scrollbars=yes,resizable=yes,location=0,titlebar=0,menubar=0,status=0,toolbar=0,left=${(screen.availWidth-width)/2},top=${(screen.availHeight-height)/2},width=${width},height=${height}`);
+		window.open(href, "_blank", `left=${(screen.availWidth-width)/2},top=${(screen.availHeight-height)/2},width=${width},height=${height}`);
 	}
 
 	// if the page has table of content container then the button go_to_table_of_content shows the container
@@ -1277,6 +1266,8 @@ function init(body_style, pages_container, pages) {
 		let toc_links = toc.querySelectorAll(".toc_link");
 
 		toc_btn.addEventListener("click", function(evt) {
+			toc.style.display = "block";
+
 			let pn = parseInt(pages[current_page].getAttribute("page_num"));
 			let toc_selected = document.querySelector(".toc_selected");
 
@@ -1288,17 +1279,14 @@ function init(body_style, pages_container, pages) {
 				for (let i=0; i<toc_links.length; i++) {
 					if (pn >= parseInt(toc_links[i].getAttribute("page_num"))) {
 						last_toc_link = toc_links[i];
-					}
-					else {
-						break;
+						continue;
 					}
 				}
 				if (last_toc_link) {
 					last_toc_link.classList.add("toc_selected");
+					last_toc_link.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
 				}
 			}
-
-			toc.style.display = "block";
 		});
 	}
 	// if not table of content container then go to the first page with a toc_link class
