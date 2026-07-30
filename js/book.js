@@ -59,30 +59,13 @@ window.addEventListener("load", () => {
 
 window.tryfull = function(node) {
 	if (document.fullscreenElement) {
-		document.exitFullscreen();
+		document.exitFullscreen().catch(err => console.warn(err));
 	}
-	else if (document.webkitFullscreenElement) {
-		document.webkitExitFullscreen();
-	}
-	else if (document.mozFullScreenElement) {
-		document.mozExitFullscreen();
+	else if (node.requestFullscreen) {
+		node.requestFullscreen().catch(err => console.warn(err));
 	}
 	else {
-		if (node.requestFullscreen) {
-			node.requestFullscreen();
-		}
-		else if (node.mozRequestFullScreen) {
-			node.mozRequestFullScreen();
-		}
-		else if (node.webkitRequestFullscreen) {
-			node.webkitRequestFullscreen();
-		}
-		else if (node.msRequestFullscreen) {
-			node.msRequestFullscreen();
-		}
-		else {
-			return false
-		}
+		return false;
 	}
 	return true;
 }
@@ -317,10 +300,13 @@ function addTooltips(pages_container) {
 	let text_rect;
 	let tooltip_rect;
 	let hidden;
-	let range;
+
+	const batchData = [];
+	const range = document.createRange();
 
 	for (const t of pages_container.querySelectorAll(".tooltip_container")) {
 		page = getPageContainer(t);
+		hidden = false;
 
 		if (page.getAttribute("hide")) {
 			hidden = true;
@@ -328,27 +314,38 @@ function addTooltips(pages_container) {
 		}
 
 		page_rect = page.getBoundingClientRect();
-
-		scale = page.offsetWidth/page_rect.width;
+		scale = page.offsetWidth/(page_rect.width||1);
 
 		// parent of tooltip_container
-		range = document.createRange();
 		range.selectNode(t.parentNode);
 		parent_rect = range.getClientRects();
 		parent_rect = parent_rect[parent_rect.length-1];
 
 		// tooltip_container
-		range = document.createRange();
 		range.selectNode(t);
 		text_rect = range.getClientRects();
 		text_rect = text_rect[text_rect.length-1];
 
 		// tooltip
 		tooltip = t.querySelector(".tooltip");
-		range = document.createRange();
 		range.selectNode(tooltip);
 		tooltip_rect = range.getClientRects();
 		tooltip_rect = tooltip_rect[tooltip_rect.length-1];
+
+		batchData.push({
+			page,
+			tooltip,
+			scale,
+			page_rect,
+			parent_rect,
+			text_rect,
+			tooltip_rect,
+			hidden
+		});
+	}
+
+	for (const item of batchData) {
+		const { page, tooltip, scale, page_rect, parent_rect, text_rect, tooltip_rect, hidden } = item;
 
 		// centrado
 		let left = (text_rect.width - tooltip_rect.width)/2;
@@ -374,9 +371,8 @@ function addTooltips(pages_container) {
 		}
 
 		if (hidden) {
-			page.setAttribute("hide", true);
+			page.setAttribute("hide", "true");
 		}
-		hidden = false;
 	}
 }
 
@@ -723,16 +719,14 @@ function addTableOfContentEntries(pages_container, pages_dom) {
 
 		let link_clone;
 		let tmp;
-		for (entry of toc_links) {
+		for (const entry of toc_links) {
 			if (entry.getAttribute("add_toc") && (entry.getAttribute("add_toc") == "no")) break;
 
 			link_clone = entry.cloneNode(true);
-
 			tmp = getChildOnClickStr(link_clone);
 
 			if (tmp) {
 				link_clone.setAttribute("onclick", tmp.replace(/\)/g, ",true)"));
-
 				tmp = tmp.match(/(\d)+/g)[0];
 				link_clone.setAttribute("page_num", parseInt(tmp) -book_status.offset_page_number);
 			}
@@ -818,10 +812,7 @@ function videosAudiosForPDF(pages_container) {
  * get the page element that is the parent of elem
  */
 function getPageContainer(elem) {
-	while (elem && !elem.classList.contains("page")) {
-		elem = elem.parentNode;
-	}
-	return elem;
+  return (elem && elem.closest) ? elem.closest(".page") : null;
 }
 
 /**
@@ -868,7 +859,8 @@ function setURLParams() {
  * 
  */
 function escapeIdForQuerySelector(id) {
-	return `[id='${id}']`;
+	if (!id) return '';
+	return `#${CSS.escape(id)}`;
 }
 
 /**
@@ -1369,7 +1361,6 @@ function init(body_style, pages_container, pages) {
 	/**
 	 *
 	 */
-	window.addEventListener("resize", resize);
 	function resize(evt) {
 		let w = window.innerWidth;
 		let h = window.innerHeight;
@@ -1408,6 +1399,17 @@ function init(body_style, pages_container, pages) {
 		goToPage(current_page);
 	}
 	resize();
+
+	let resizeTimeout;
+	function resizeThrottled() {
+		if (resizeTimeout) {
+			cancelAnimationFrame(resizeTimeout);
+		}
+		resizeTimeout = requestAnimationFrame(() => {
+			resize();
+		});
+	}
+	window.addEventListener("resize", resizeThrottled);
 }
 
 const ROMAN_U = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
